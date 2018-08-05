@@ -1,0 +1,34 @@
+{
+  "name": "robowr",
+  "version": "1.0.0",
+  "description": "Application Robot",
+  "main": "index.js",
+  "scripts": {
+    "test": "find ./dist/ -name \"*.d.ts\" -delete && tsc && ./node_modules/.bin/mocha dist/test/ --recursive --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/terotests/robowr.git"
+  },
+  "keywords": [
+    "application",
+    "robot",
+    "code",
+    "writer"
+  ],
+  "author": "Tero Tolonen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/terotests/robowr/issues"
+  },
+  "homepage": "https://github.com/terotests/robowr#readme",
+  "dependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.5.6"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0"
+  }
+}
