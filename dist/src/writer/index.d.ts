@@ -11,7 +11,7 @@ export declare class CodeWriter {
     tabStr: string;
     nlStr: string;
     lineNumber: number;
-    indentAmount: number;
+    _indentAmount: number;
     compiledTags: {
         [key: string]: boolean;
     };
@@ -24,9 +24,13 @@ export declare class CodeWriter {
     tagOffset: number;
     parent: CodeWriter;
     had_nl: boolean;
+    state: {};
     constructor();
+    setState(...objs: any[]): void;
+    getState(): any;
     getFilesystem(): CodeFileSystem;
     getFileWriter(path: string, fileName: string): CodeWriter;
+    static withFS(path: string, fileName: string): CodeWriter;
     static emptyWithFS(): CodeWriter;
     createTag(tag: string): void;
     rewrite(str: string): void;
@@ -35,15 +39,21 @@ export declare class CodeWriter {
     findTag(name: string): CodeWriter;
     tag(name: string): CodeWriter;
     fork(): CodeWriter;
+    pushSlice(): void;
     newline(): CodeWriter;
     writeSlice(str: string, newLine: boolean): void;
     out(str: string, newLine?: boolean): CodeWriter;
-    raw(str: string, newLine: boolean): CodeWriter;
+    raw(str: string, newLine?: boolean): CodeWriter;
     getCode(): string;
 }
 export declare class CodeFileSystem {
     files: CodeFile[];
     getFile(path: string, name: string): CodeFile;
+    hasTagStart(str: string, tag: string, index: number): boolean;
+    readTagName(str: string, index: number): string;
+    openTaggedFile(path: string, name: string, tagStart: string, tagEnd: string): CodeFile;
+    mkdir(path: string): void;
+    saveTo(path: string): void;
 }
 export declare class CodeFile {
     path_name: string;

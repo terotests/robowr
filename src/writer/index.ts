@@ -1,4 +1,8 @@
 
+// The application generator has a global state
+let globalState = {
+  state : {}
+}
 
 export class CodeSlice {
 
@@ -20,7 +24,7 @@ export class CodeWriter {
   tabStr:string = "  "
   nlStr = "\n"
   lineNumber:number = 1
-  indentAmount:number = 0
+  _indentAmount:number = 0
 
   compiledTags:{[key:string]:boolean} = {}
   
@@ -36,11 +40,23 @@ export class CodeWriter {
 
   had_nl = true
 
+  state = {}
+
   constructor() {
     const new_slice = new CodeSlice ()
     this.slices.push( new_slice )
     this.current_slice = new_slice
   }  
+
+  setState( ...objs:any[] ) {
+    for(let obj of objs) {
+      globalState.state = { ...globalState.state, ...obj}
+    }
+  }
+
+  getState() : any {
+    return globalState.state
+  }
 
   getFilesystem():CodeFileSystem {
     if( !this.ownerFile ) {
@@ -62,7 +78,11 @@ export class CodeWriter {
     const file = fs.getFile( path, fileName )
     const wr = file.getWriter()
     return wr
-  }  
+  }     
+  
+  static withFS(path:string, fileName:string):CodeWriter {
+    return (new CodeFileSystem).getFile(path, fileName).getWriter()
+  }   
 
   static emptyWithFS():CodeWriter {
     const wr = new CodeWriter ()
@@ -83,9 +103,9 @@ export class CodeWriter {
   }
 
   indent(delta:number) : CodeWriter {
-    this.indentAmount = this.indentAmount + delta
-    if(this.indentAmount < 0) {
-      this.indentAmount = 0
+    this._indentAmount = this._indentAmount + delta
+    if(this._indentAmount < 0) {
+      this._indentAmount = 0
     }
     return this
   } 
@@ -93,7 +113,7 @@ export class CodeWriter {
   addIndent() {
     let i = 0 
     if ( 0 == this.currentLine.length)  {
-      while (i < this.indentAmount) {
+      while (i < this._indentAmount) {
         this.currentLine = this.currentLine + this.tabStr
         i = i + 1
       }
@@ -118,7 +138,7 @@ export class CodeWriter {
     new_writer.parent = this    // connects to the file system
 
     // think: should this be irrelevant ? 
-    new_writer.indentAmount = this.indentAmount
+    new_writer._indentAmount = this._indentAmount
 
     this.tags[name] = new_writer
     this.slices.push(new_slice)
@@ -135,7 +155,7 @@ export class CodeWriter {
     const new_slice = new CodeSlice ()
     new_slice.writer = new_writer
     new_writer.parent = this
-    new_writer.indentAmount = this.indentAmount
+    new_writer._indentAmount = this._indentAmount
 
     this.slices.push( new_slice )
 
@@ -145,6 +165,10 @@ export class CodeWriter {
     return new_writer
   }  
 
+  pushSlice() {
+    this.current_slice.code = this.current_slice.code + this.currentLine
+    this.currentLine = ""
+  }
 
   newline() : CodeWriter {
     if ( (this.currentLine.length) > 0) {
@@ -182,7 +206,7 @@ export class CodeWriter {
     return this
   }
 
-  raw (str:string, newLine:boolean) : CodeWriter {
+  raw (str:string, newLine:boolean = false) : CodeWriter {
     const lines:string[] = str.split('\n');
     const rowCnt = lines.length
     if (rowCnt == 1) {
@@ -192,7 +216,7 @@ export class CodeWriter {
         const row = lines[i]
         this.addIndent()
         if ( i < (rowCnt - 1) ) {
-          this.writeSlice( row.trim(), true)
+          this.writeSlice( row, true)
         } else {
           this.writeSlice( row, newLine )
         }
@@ -226,6 +250,99 @@ export class CodeFileSystem {
     return new_file
   }  
 
+  hasTagStart( str:string, tag:string, index:number) : boolean {
+    let i = 0
+    let len = tag.length
+    while( len > 0 ) {
+      if( str.charAt(index + i) !== tag.charAt(  i ) ) return false
+      len--;
+      i++;
+    }
+    return true
+  }
+
+  readTagName( str:string, index:number) : string {
+    let name = ''
+    let i = 0
+    let max_len = str.length
+    while( (index + i) < max_len ) {
+      if( str.charAt( index + i) == ')') {
+        return str.substring( index, index + i)
+      }
+      i++;
+    }
+    return ''
+  }
+  
+
+  // tagstart can be like tag#...
+  openTaggedFile( path:string, name:string, tagStart:string, tagEnd:string ) : CodeFile {
+    for( let file of this.files ) {
+      if(file.path_name === path && file.name === name) return file
+    }
+
+    const data = (require('fs')).readFileSync(path + name, 'utf8')
+    const slices = []
+    let last_i = 0
+
+    const wr = new CodeWriter()
+    for(let i=0; i<data.length; i++) {
+      // like //tag
+      if(this.hasTagStart( data, tagStart, i)) {
+        const tagName = this.readTagName( data, i + tagStart.length + 1)
+        if(tagName) {
+          i = i + tagStart.length + tagName.length + 2
+          let start_index = i
+          let end_index = i
+          // The position where to insert the code...
+          for( let a = i; a < data.length; a++) {
+            if(this.hasTagStart( data, tagEnd, a)) {
+              end_index = a  
+              break
+            }            
+          }
+          if(end_index > start_index) {
+            wr.raw( data.substring(last_i, start_index), false )
+            wr.pushSlice()
+            wr.tag(tagName)
+            i = end_index + tagEnd.length
+            last_i = end_index
+          }
+        }
+      }
+    }
+    wr.raw( data.substring( last_i ), false)
+    const new_file = new CodeFile (path , name)
+    new_file.fileSystem = this
+    this.files.push( new_file );
+    new_file.writer = wr
+    return new_file    
+  }
+
+
+  mkdir (path:string) {
+    const fs = require('fs')
+    const parts:string[] = path.split('/')
+    let curr_path = ''
+    for( let p of parts ) {
+      curr_path = curr_path + p + '/'
+      if(!fs.existsSync(curr_path)) {
+        fs.mkdirSync(curr_path);
+      }
+    }
+  }
+
+  saveTo (path:string) {
+    const fs = require('fs')
+    for(let file of this.files) {
+      const file_path = path + '/' + file.path_name
+      this.mkdir(file_path)     
+      const data = file.getCode()
+      if(data.length > 0 ) {
+        fs.writeFileSync( file_path + '/' + file.name.trim(), file.getCode() )
+      }
+    }
+  }  
 }
 
 export class CodeFile {
