@@ -1,5 +1,4 @@
 
-
-  // the starting point of the applictaion
+// the starting point of the applictaion
   
   
