@@ -14,18 +14,19 @@ var argv = require('minimist')(process.argv.slice(2));
 var readlineSync = require('readline-sync');
 var rootPath = process.env.ROBOWR || process.cwd() + '/.robowr/';
 var fs = require('fs');
+console.log(argv);
 var commands = [];
 fs.readdirSync(rootPath).forEach(function (file) {
     var name = file.split('.')[0];
     var ext = file.split('.')[1];
     if (ext === 'js') {
         try {
-            var cmd_1 = require(rootPath + '/' + file);
+            var cmd = require(rootPath + '/' + file);
             commands.push({
                 name: name,
-                short_doc: cmd_1.short_doc || '',
-                long_doc: cmd_1.long_doc || '',
-                init: cmd_1.init || {}
+                short_doc: cmd.short_doc || '',
+                long_doc: cmd.long_doc || '',
+                init: cmd.init || {}
             });
         }
         catch (e) {
@@ -33,32 +34,47 @@ fs.readdirSync(rootPath).forEach(function (file) {
     }
 });
 if (argv._.length < 1) {
-    console.log('robowr <command> <outputdir>');
+    console.log('robowr <command>');
+    var spaces_1 = function (s, len) {
+        var res = s;
+        var i = len - s.length;
+        while (i-- > 0)
+            res = res + ' ';
+        return res;
+    };
     commands.forEach(function (cmd) {
-        console.log('  ', cmd.name, '   ', cmd.short_doc || '');
+        console.log('  ', spaces_1(cmd.name, 15), cmd.short_doc || '');
     });
     process.exit();
 }
-if (argv._.length < 2) {
-    console.log('robowr <command> <outputdir>');
+// console.log(argv._)
+// TODO: can you undo the ROBOWR operatorions ? 
+// writing a lot of files can be a bit dangerous sometimes...
+var outputDir = argv.o || argv.output || './robo_output/';
+if (!outputDir) {
+    console.log('robowr <commands> --o <outputdir>');
     console.log('Please give the output directory');
     process.exit();
 }
 // console.log(fs.readFileSync('/dev/stdin').toString());
 var initData = {};
-try {
-    console.log(process.cwd() + '/' + argv._[0] + '.json');
-    var TryData = fs.readFileSync(process.cwd() + '/' + argv._[0] + '.json', 'utf8');
-    var TryObj = JSON.parse(TryData);
-    initData = __assign({}, initData, TryObj);
-}
-catch (e) {
-}
-if (argv._.length >= 1) {
-    var cmd_2 = argv._[0];
-    var givenCmd = commands.filter(function (c) { return c.name === cmd_2; }).pop();
+var readCommandData = function (CmdName) {
+    try {
+        console.log(process.cwd() + '/' + CmdName + '.json');
+        var TryData = fs.readFileSync(process.cwd() + '/' + CmdName + '.json', 'utf8');
+        var TryObj = JSON.parse(TryData);
+        return TryObj;
+    }
+    catch (e) {
+    }
+    return {};
+};
+var _loop_1 = function (CmdName) {
+    initData = __assign({}, initData, readCommandData(CmdName));
+    var givenCmd = commands.filter(function (c) { return c.name === CmdName; }).pop();
+    // initialize using the command 
     if (!givenCmd) {
-        console.log('Invalid command', cmd_2);
+        console.log('Invalid command', CmdName);
         process.exit();
     }
     else {
@@ -70,29 +86,33 @@ if (argv._.length >= 1) {
             }
         }
     }
+};
+// Initialize the command data
+for (var _i = 0, _a = argv._; _i < _a.length; _i++) {
+    var CmdName = _a[_i];
+    _loop_1(CmdName);
 }
 // Finding the commands...
-// try the command...
-var Name = argv._[0];
-var ScriptFile = Name;
-var ScriptFunction = Name;
-var parts = Name.split('/');
-if (parts.length == 2) {
-    ScriptFile = parts[0];
-    ScriptFunction = parts[1];
-}
-var cmd = require(rootPath + '/' + argv._[0]);
+// try the commands...
 var fileSystem = new _1.CodeFileSystem();
-// get data for the command...
-// and then output files to the directory...
-// create file...
 var rootFile = fileSystem.getFile('/', 'README.md');
-// (new CodeFileSystem).getFile(path, fileName).getWriter()
 var wr = rootFile.getWriter();
 wr.setState(initData);
-// Run command for the writer
-cmd[ScriptFunction](wr);
+// run all the commands...
+for (var _b = 0, _c = argv._; _b < _c.length; _b++) {
+    var Name = _c[_b];
+    console.log('Command ', Name);
+    var ScriptFile = Name;
+    var ScriptFunction = Name;
+    var parts = Name.split('/');
+    if (parts.length == 2) {
+        ScriptFile = parts[0];
+        ScriptFunction = parts[1];
+    }
+    var cmd = require(rootPath + '/' + ScriptFile);
+    cmd[ScriptFunction](wr);
+}
 // Then save results...
-fileSystem.saveTo(process.cwd() + '/' + (argv._[1] || ''));
+fileSystem.saveTo(process.cwd() + '/' + (outputDir || ''));
 // const writer = CodeWriter.withFS('')
 //# sourceMappingURL=index.js.map
