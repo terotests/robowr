@@ -1,11 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function run(wr) {
-    console.log('Hello was called with ', wr.getState().message);
-    wr.getFileWriter('/', 'hellou.md').out(wr.getState().message, true);
+    wr.getFileWriter('/', 'h.md').out(wr.getState().message, true);
 }
 exports.run = run;
-exports.short_doc = 'Creates a hello world';
+exports.short_doc = 'Creates a hello world, special cmd for this system';
 exports.long_doc = 'Creates a hello world';
 // the configuration...
 exports.init = {
