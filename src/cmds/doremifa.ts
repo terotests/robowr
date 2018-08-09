@@ -8,18 +8,36 @@ export const init = {
 
 export const short_doc = 'Initialize Doremifa project';
 
-export function doremifa( wr : CodeWriter ) {
+export function run( wr : CodeWriter ) {
 
   console.log('Could create the module...')
   console.log(wr.getState())
   const model = wr.getState();
 
-  wr.getFileWriter('/', 'doremifa.md').raw(
-`
-# ${model.name}
+  // creating the application basic structure...
+  
+  wr.getFileWriter('/src/', 'index.ts').raw(`
+// the starting point of the applictaion
+  
+  `)
 
-Ok, this could be the Doremifa example application with
-the directory structure required for it...
+  wr.getFileWriter('/src/model/', 'index.ts').raw(`
+// The application models come about here
+  
+  `)
+
+  wr.getFileWriter('/src/views/', 'index.ts').raw(`
+// Views
+  
+  `)
+
+  
+
+  wr.getFileWriter('/', 'README.md').raw(
+`
+# Project ${model.name}
+
+The project readme.
 
 `) 
 
@@ -54,6 +72,27 @@ the directory structure required for it...
     ]  
   }  
   `, true)
+
+  // 
+  const gitIgnore = wr.getFileWriter('/', '.gitignore');  
+  gitIgnore.raw(`
+# Dependency directories
+node_modules/
+
+# folder files
+data_folder/
+
+# Image files
+*.jpg
+*.png
+
+# MacOS
+.DS_Store
+.idea/
+
+# TypeScript compiled .map files
+*.map  
+  `)
 
   // write the package json file
   const p = wr.getFileWriter('/', 'package.json');

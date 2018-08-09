@@ -1,10 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ThisIsNotOverwritten = /** @class */ (function () {
-    function ThisIsNotOverwritten() {
-    }
-    return ThisIsNotOverwritten;
-}());
+class ThisIsNotOverwritten {
+}
 //tag(foobar)
 function foobar() {
     // created using the Foo!
@@ -13,7 +10,7 @@ function foobar() {
 function notOwerWritten() {
     // The colors could be written here:
     //tag(colors)
-    var colors = [
+    const colors = [
         'red',
         'blue',
         'green',

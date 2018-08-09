@@ -1,118 +1,165 @@
 #!/usr/bin/env node
 "use strict";
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var _1 = require("../writer/");
-var argv = require('minimist')(process.argv.slice(2));
+const _1 = require("../writer/");
+const argv = require('minimist')(process.argv.slice(2));
 var readlineSync = require('readline-sync');
-var rootPath = process.env.ROBOWR || process.cwd() + '/.robowr/';
-var fs = require('fs');
+const rootPath = process.env.ROBOWR || process.cwd() + '/.robowr/';
+const fs = require('fs');
 console.log(argv);
-var commands = [];
-fs.readdirSync(rootPath).forEach(function (file) {
-    var name = file.split('.')[0];
-    var ext = file.split('.')[1];
-    if (ext === 'js') {
-        try {
-            var cmd = require(rootPath + '/' + file);
-            commands.push({
-                name: name,
-                short_doc: cmd.short_doc || '',
-                long_doc: cmd.long_doc || '',
-                init: cmd.init || {}
-            });
+const commands = [];
+const find_cmd = (name) => {
+    return commands.filter(c => c.name === name).pop();
+};
+const find_commands = (rootPath) => {
+    fs.readdirSync(rootPath).forEach(file => {
+        const name = file.split('.')[0];
+        const ext = file.split('.')[1];
+        if (ext === 'js') {
+            try {
+                const cmd = require(rootPath + '/' + file);
+                commands.push({
+                    name,
+                    require_path: rootPath + '/' + file,
+                    short_doc: cmd.short_doc || '',
+                    long_doc: cmd.long_doc || '',
+                    init: cmd.init || {}
+                });
+            }
+            catch (e) {
+            }
         }
-        catch (e) {
-        }
-    }
-});
+    });
+};
+if (process.env.ROBOWR)
+    find_commands(process.env.ROBOWR);
+find_commands(process.cwd() + '/.robowr/cmds/');
+console.log(commands);
 if (argv._.length < 1) {
     console.log('robowr <command>');
-    var spaces_1 = function (s, len) {
-        var res = s;
-        var i = len - s.length;
+    const spaces = (s, len) => {
+        let res = s;
+        let i = len - s.length;
         while (i-- > 0)
             res = res + ' ';
         return res;
     };
-    commands.forEach(function (cmd) {
-        console.log('  ', spaces_1(cmd.name, 15), cmd.short_doc || '');
+    commands.forEach(cmd => {
+        console.log('  ', spaces(cmd.name, 15), cmd.short_doc || '');
     });
     process.exit();
 }
 // console.log(argv._)
 // TODO: can you undo the ROBOWR operatorions ? 
 // writing a lot of files can be a bit dangerous sometimes...
-var outputDir = argv.o || argv.output || './robo_output/';
+const outputDir = argv.o || argv.output;
 if (!outputDir) {
-    console.log('robowr <commands> --o <outputdir>');
+    console.log('robowr <commands> --o <outputdir> --m <message>');
     console.log('Please give the output directory');
     process.exit();
 }
+const commitMsg = argv.m || argv.message || 'robowr';
+if (!commitMsg) {
+    console.log('robowr <commands> --m <message>  --m <message>');
+    console.log('Please give the commit message');
+    process.exit();
+}
 // console.log(fs.readFileSync('/dev/stdin').toString());
-var initData = {};
-var readCommandData = function (CmdName) {
+let initData = {};
+const data_files = [];
+const readCommandData = (CmdName) => {
+    // try from .robowr subdirectory
     try {
-        console.log(process.cwd() + '/' + CmdName + '.json');
-        var TryData = fs.readFileSync(process.cwd() + '/' + CmdName + '.json', 'utf8');
-        var TryObj = JSON.parse(TryData);
+        const TryData = fs.readFileSync(process.cwd() + '/.robowr/data/' + CmdName + '.json', 'utf8');
+        const TryObj = JSON.parse(TryData);
+        const c = find_cmd(CmdName);
+        c.initData = TryObj;
         return TryObj;
     }
     catch (e) {
     }
+    // try from current directory with file having the same name
+    try {
+        const TryData = fs.readFileSync(process.cwd() + '/' + CmdName + '.json', 'utf8');
+        const TryObj = JSON.parse(TryData);
+        const c = find_cmd(CmdName);
+        c.initData = TryObj;
+        return TryObj;
+    }
+    catch (e) {
+    }
+    const c = find_cmd(CmdName);
+    c.initData = {};
     return {};
 };
-var _loop_1 = function (CmdName) {
-    initData = __assign({}, initData, readCommandData(CmdName));
-    var givenCmd = commands.filter(function (c) { return c.name === CmdName; }).pop();
+// Initialize the command data
+for (let CmdName of argv._) {
+    initData = Object.assign({}, initData, readCommandData(CmdName));
+    const givenCmd = commands.filter(c => c.name === CmdName).pop();
     // initialize using the command 
     if (!givenCmd) {
         console.log('Invalid command', CmdName);
         process.exit();
     }
     else {
-        initData = __assign({}, givenCmd.init, initData);
-        for (var _i = 0, _a = Object.keys(initData); _i < _a.length; _i++) {
-            var key = _a[_i];
+        initData = Object.assign({}, givenCmd.init, initData);
+        for (let key of Object.keys(initData)) {
             if (!initData[key]) {
                 initData[key] = readlineSync.question(key + ' : ');
             }
         }
     }
-};
-// Initialize the command data
-for (var _i = 0, _a = argv._; _i < _a.length; _i++) {
-    var CmdName = _a[_i];
-    _loop_1(CmdName);
 }
 // Finding the commands...
 // try the commands...
-var fileSystem = new _1.CodeFileSystem();
-var rootFile = fileSystem.getFile('/', 'README.md');
-var wr = rootFile.getWriter();
-wr.setState(initData);
-// run all the commands...
-for (var _b = 0, _c = argv._; _b < _c.length; _b++) {
-    var Name = _c[_b];
-    console.log('Command ', Name);
-    var ScriptFile = Name;
-    var ScriptFunction = Name;
-    var parts = Name.split('/');
-    if (parts.length == 2) {
-        ScriptFile = parts[0];
-        ScriptFunction = parts[1];
+// Try using the git...
+const save_data = () => __awaiter(this, void 0, void 0, function* () {
+    const fileSystem = new _1.CodeFileSystem();
+    const rootFile = fileSystem.getFile('/', 'README.md');
+    const wr = rootFile.getWriter();
+    wr.setState(initData);
+    // run all the commands...
+    for (let Name of argv._) {
+        const command = find_cmd(Name);
+        const cmd = require(command.require_path);
+        // read the source 
+        const cmd_src = fs.readFileSync(command.require_path, 'utf8');
+        const cmd_wr = wr.getFileWriter('.robowr/cmds/', Name + '.js');
+        cmd_wr.raw(cmd_src);
+        const cmd_data_wr = wr.getFileWriter('.robowr/data/', Name + '.json');
+        cmd_data_wr.raw(JSON.stringify(command.initData, null, 2));
+        cmd.run(wr);
     }
-    var cmd = require(rootPath + '/' + ScriptFile);
-    cmd[ScriptFunction](wr);
-}
-// Then save results...
-fileSystem.saveTo(process.cwd() + '/' + (outputDir || ''));
-// const writer = CodeWriter.withFS('')
+    // save and get versioned files...
+    const targetDir = process.cwd() + '/' + (outputDir || '');
+    const versioned = yield fileSystem.saveTo(targetDir);
+    const changed = versioned.filter(o => o.changed);
+    console.log(changed);
+    let had_changes = false;
+    const simpleGit = require('simple-git/promise')(targetDir);
+    if (changed.length) {
+        for (let f of changed) {
+            simpleGit.add(f.path);
+            had_changes = true;
+        }
+    }
+    for (let removed of versioned.filter(o => o.removed)) {
+        console.log('removing file ', removed.path);
+        yield simpleGit.rm(removed.path);
+        had_changes = true;
+    }
+    if (had_changes) {
+        yield simpleGit.commit(commitMsg);
+        yield simpleGit.push();
+    }
+});
+save_data();
 //# sourceMappingURL=index.js.map

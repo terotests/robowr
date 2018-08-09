@@ -1,8 +1,8 @@
 import { CodeWriter } from '../writer'
 
-export function hello( wr : CodeWriter ) {
+export function run( wr : CodeWriter ) {
   console.log('Hello was called with ', wr.getState().message)
-  wr.getFileWriter('/', 'hello.md').out(wr.getState().message, true)
+  wr.getFileWriter('/', 'hellou.md').out(wr.getState().message, true)
 }
 
 export const short_doc = 'Creates a hello world';

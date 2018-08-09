@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function hello(wr) {
+function run(wr) {
     console.log('Hello was called with ', wr.getState().message);
-    wr.getFileWriter('/', 'hello.md').out(wr.getState().message, true);
+    wr.getFileWriter('/', 'hellou.md').out(wr.getState().message, true);
 }
-exports.hello = hello;
+exports.run = run;
 exports.short_doc = 'Creates a hello world';
 exports.long_doc = 'Creates a hello world';
 // the configuration...

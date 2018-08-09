@@ -2,7 +2,7 @@
 
 import { CodeWriter } from '../writer'
 
-export function module( wr : CodeWriter ) {
+export function run( wr : CodeWriter ) {
 
   console.log('Could create the module...')
   console.log(wr.getState())

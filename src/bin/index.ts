@@ -4,7 +4,7 @@ import {CodeWriter, CodeFileSystem} from '../writer/'
 
 const argv = require('minimist')(process.argv.slice(2));
 var readlineSync = require('readline-sync');
- 
+
 const rootPath = process.env.ROBOWR || process.cwd() + '/.robowr/';
 const fs = require('fs')
 
@@ -12,23 +12,37 @@ console.log(argv);
 
 const commands = []
 
-fs.readdirSync(rootPath).forEach(file => {
-  const name = file.split('.')[0]
-  const ext = file.split('.')[1]
-  if(ext === 'js') {
-    try {
-      const cmd = require(rootPath + '/' + file)
-      commands.push( {
-        name,
-        short_doc : cmd.short_doc || '',
-        long_doc : cmd.long_doc || '',
-        init : cmd.init || {}
-      })
-    } catch(e) {
+const find_cmd = (name) => {
+  return commands.filter( c => c.name === name ).pop()
+}
 
+
+const find_commands = (rootPath) => {
+  fs.readdirSync(rootPath).forEach(file => {
+    const name = file.split('.')[0]
+    const ext = file.split('.')[1]
+    if(ext === 'js') {
+      try {
+        const cmd = require(rootPath + '/' + file)
+        commands.push( {
+          name,
+          require_path : rootPath + '/' + file,
+          short_doc : cmd.short_doc || '',
+          long_doc : cmd.long_doc || '',
+          init : cmd.init || {}
+        })
+      } catch(e) {
+  
+      }
     }
-  }
-}) 
+  })   
+}
+
+if(process.env.ROBOWR) find_commands(process.env.ROBOWR)
+find_commands(process.cwd() + '/.robowr/cmds/')
+
+
+console.log(commands)
 
 if(argv._.length < 1) {
   console.log('robowr <command>')
@@ -49,26 +63,52 @@ if(argv._.length < 1) {
 // TODO: can you undo the ROBOWR operatorions ? 
 // writing a lot of files can be a bit dangerous sometimes...
 
-const outputDir = argv.o || argv.output || './robo_output/'
-
+const outputDir = argv.o || argv.output
 if(!outputDir) {
-  console.log('robowr <commands> --o <outputdir>')
+  console.log('robowr <commands> --o <outputdir> --m <message>')
   console.log('Please give the output directory')
+  process.exit()
+}
+
+const commitMsg = argv.m || argv.message || 'robowr'
+if(!commitMsg) {
+  console.log('robowr <commands> --m <message>  --m <message>')
+  console.log('Please give the commit message')
   process.exit()
 }
 
 // console.log(fs.readFileSync('/dev/stdin').toString());
 let initData = {}
 
+const data_files = []
+
 const readCommandData = ( CmdName : string ) : any => {
+
+  // try from .robowr subdirectory
   try {
-    console.log(process.cwd() + '/' + CmdName + '.json')
+    const TryData = fs.readFileSync( process.cwd() + '/.robowr/data/' + CmdName + '.json', 'utf8' )
+    const TryObj = JSON.parse(TryData)
+    const c = find_cmd( CmdName )
+    c.initData = TryObj
+    return TryObj;
+  } catch(e) {
+
+  }
+
+  // try from current directory with file having the same name
+  try {
     const TryData = fs.readFileSync( process.cwd() + '/' + CmdName + '.json', 'utf8' )
     const TryObj = JSON.parse(TryData)
+
+    const c = find_cmd( CmdName )
+    c.initData = TryObj
+    
     return TryObj;
   } catch(e) {
 
   }  
+  const c = find_cmd( CmdName )
+  c.initData = {}
   return {}
 }
 
@@ -96,30 +136,61 @@ for( let CmdName of argv._) {
 
 // try the commands...
 
-const fileSystem = new CodeFileSystem();
-const rootFile = fileSystem.getFile('/', 'README.md');
-const wr = rootFile.getWriter()
+// Try using the git...
 
-wr.setState( initData )
 
-// run all the commands...
-for( let Name of argv._) {
-  console.log('Command ', Name)
-  let ScriptFile = Name
-  let ScriptFunction = Name
-  const parts = Name.split('/')
-  if(parts.length == 2) {
-    ScriptFile = parts[0]
-    ScriptFunction = parts[1]
+const save_data = async () => {
+  const fileSystem = new CodeFileSystem();
+  const rootFile = fileSystem.getFile('/', 'README.md');
+  const wr = rootFile.getWriter()
+  
+  wr.setState( initData )
+  
+  // run all the commands...
+  for( let Name of argv._) {
+    const command = find_cmd( Name )
+    const cmd = require(command.require_path)
+    
+    // read the source 
+    const cmd_src = fs.readFileSync( command.require_path, 'utf8' )
+    const cmd_wr = wr.getFileWriter('.robowr/cmds/', Name + '.js')
+    cmd_wr.raw( cmd_src ) 
+
+    const cmd_data_wr = wr.getFileWriter('.robowr/data/', Name + '.json')
+    cmd_data_wr.raw( JSON.stringify( command.initData, null, 2 ) )    
+    cmd.run( wr )
+  }
+  
+  // save and get versioned files...
+  const targetDir = process.cwd() + '/' +  (outputDir || '')
+  const versioned = await fileSystem.saveTo(targetDir )  
+
+  const changed = versioned.filter( o => o.changed )
+
+  console.log(changed)
+
+  let had_changes = false
+  const simpleGit = require('simple-git/promise')(targetDir);  
+
+  if(changed.length) {
+    for( let f of changed ) {
+      simpleGit.add( f.path )
+      had_changes = true
+    }    
+  }
+
+  for( let removed of versioned.filter( o => o.removed ) ) {
+    console.log('removing file ', removed.path)
+    await simpleGit.rm( removed.path )
+    had_changes = true
   }  
-  const cmd = require(rootPath + '/' + ScriptFile)
-  cmd[ScriptFunction]( wr )
+
+  if( had_changes ) {
+    await simpleGit.commit(commitMsg)
+    await simpleGit.push()
+  }
+
 }
 
-
-// Then save results...
-fileSystem.saveTo( process.cwd() + '/' +  (outputDir || ''))
-
-// const writer = CodeWriter.withFS('')
-
+save_data()
 

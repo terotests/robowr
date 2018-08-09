@@ -29,6 +29,7 @@ export declare class CodeWriter {
     setState(...objs: any[]): void;
     getState(): any;
     getFilesystem(): CodeFileSystem;
+    findFile(path: string, fileName: string): CodeFile;
     getFileWriter(path: string, fileName: string): CodeWriter;
     static withFS(path: string, fileName: string): CodeWriter;
     static emptyWithFS(): CodeWriter;
@@ -53,7 +54,7 @@ export declare class CodeFileSystem {
     readTagName(str: string, index: number): string;
     openTaggedFile(path: string, name: string, tagStart: string, tagEnd: string): CodeFile;
     mkdir(path: string): void;
-    saveTo(path: string): void;
+    saveTo(root_path: string): Promise<any[]>;
 }
 export declare class CodeFile {
     path_name: string;
