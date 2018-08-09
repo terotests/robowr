@@ -75,7 +75,7 @@
     "cmd": "moi",
     "path": ".robowr/cmds/",
     "name": "moi.js",
-    "data": "\n\nmodule.exports.run = function moi( wr ) {\n  wr.getFileWriter('/', 'moi.md')\n    .out(`\n      moi moi  \n  `, true)\n}"
+    "data": "\n\nmodule.exports.run = function moi( wr ) {\n  wr.getFileWriter('/', 'moi.md')\n    .out(`\n      moi moi moi\n  `, true)\n}"
   },
   {
     "cmd": "moi",
@@ -87,6 +87,6 @@
     "cmd": "moi",
     "path": "/",
     "name": "moi.md",
-    "data": "\nmoi moi\n  \n"
+    "data": "\nmoi moi moi\n  \n"
   }
 ]
