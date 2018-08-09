@@ -1,7 +1,7 @@
 {
-  "name": "testapp",
+  "name": "jeps",
   "version": "1.0.0",
-  "description": "testapp",
+  "description": "jeps",
   "main": "index.js",
   "scripts": {
     "test": "find ./dist/ -name \"*.d.ts\" -delete && tsc && ./node_modules/.bin/mocha dist/test/ --recursive --reporter spec"
