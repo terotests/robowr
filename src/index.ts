@@ -1,9 +1,4 @@
 
-import { CodeWriter, CodeFileSystem, CodeFile } from './writer/'
-
-export {
-  CodeWriter,
-  CodeFile,
-  CodeFileSystem
-}
-
+// the starting point of the applictaion
+  
+  
