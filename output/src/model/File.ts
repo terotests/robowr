@@ -1,7 +1,7 @@
 // Model definition for File
 
 
-class File {
-  
+class ModelFile {
+
 }    
     

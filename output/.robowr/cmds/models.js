@@ -9,8 +9,8 @@ module.exports.run = function ( wr ) {
 
     m.raw(`
 
-class ${entity.name} {
-  
+class Model${entity.name} {
+
 }    
     `, true)
   })
