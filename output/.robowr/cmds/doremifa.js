@@ -21,12 +21,16 @@ function run(wr) {
 // Views
   
   `);
-    wr.getFileWriter('/', 'README.md').raw(`
+    
+  const readme = wr.getFileWriter('/', 'README.md').raw(`
 # Project ${model.name}
 
 The project readme.
 
 `);
+
+  readme.tag('modules').out('# Module information ')
+  
     // create the typescript configuration file...
     wr.getFileWriter('/', 'tsconfig.json').raw(`{
     "compilerOptions": {
