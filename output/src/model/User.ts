@@ -1,7 +1,5 @@
 // Model definition for User
-
-
-class ModelUser {
-
-}    
-    
+class ModelUser 
+  first_name : string
+  last_name : string
+}

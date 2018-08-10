@@ -1,7 +1,5 @@
 // Model definition for File
-
-
-class ModelFile {
-
-}    
-    
+class ModelFile 
+  name : string
+  path : string
+}

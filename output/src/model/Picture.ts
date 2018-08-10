@@ -1,7 +1,5 @@
 // Model definition for Picture
-
-
-class ModelPicture {
-
-}    
-    
+class ModelPicture 
+  name : string
+  path : string
+}

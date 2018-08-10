@@ -3,13 +3,43 @@
   "message": "Message to the project. Looks good so far.",
   "entities": [
     {
-      "name": "User"
+      "name": "User",
+      "fields": [
+        {
+          "name": "first_name",
+          "type": "string"
+        },
+        {
+          "name": "last_name",
+          "type": "string"
+        }
+      ]
     },
     {
-      "name": "Picture"
+      "name": "Picture",
+      "fields": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "path",
+          "type": "string"
+        }
+      ]
     },
     {
-      "name": "File"
+      "name": "File",
+      "fields": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "path",
+          "type": "string"
+        }
+      ]
     }
   ]
 }
