@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 function run(wr) {
     console.log('Hello was called with ', wr.getState().message);
     wr.getFileWriter('/', 'hellou.md').out(wr.getState().message, true);
+
+    wr.getFileWriter('/', 'README.md').tag('modules').out('- hello module ', true)    
 }
 exports.run = run;
 exports.short_doc = 'Creates a hello world';
