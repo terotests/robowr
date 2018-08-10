@@ -7,6 +7,7 @@ module.exports.run = function moi( wr ) {
 
 This is moi application.
 Hello there world!!!
+What else ? 
   `, true);
 
   wr.getFileWriter('/', 'README.md')
