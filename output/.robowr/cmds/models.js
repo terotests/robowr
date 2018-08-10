@@ -6,5 +6,12 @@ module.exports.run = function ( wr ) {
   model.entities.forEach( entity => {
     const m = wr.getFileWriter('/src/model/', `${entity.name}.ts`)
     m.out('// Model definition for ' + entity.name, true)
+
+    m.raw(`
+
+class ${entity.name} {
+  
+}    
+    `, true)
   })
 }
