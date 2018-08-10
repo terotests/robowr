@@ -6,6 +6,6 @@ module.exports.run = function moi( wr ) {
 # Moi
 
 This is moi application.
-Does it work?
+Hello there world!!!
   `, true)
 }
