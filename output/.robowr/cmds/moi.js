@@ -7,5 +7,9 @@ module.exports.run = function moi( wr ) {
 
 This is moi application.
 Hello there world!!!
-  `, true)
+  `, true);
+
+  wr.getFileWriter('/', 'README.md')
+    .tag('modules')
+    .out('- Added module moi.js')
 }
