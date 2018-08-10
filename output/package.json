@@ -1,7 +1,7 @@
 {
-  "name": "asdf",
+  "name": "OK",
   "version": "1.0.0",
-  "description": "asdf",
+  "description": "OK",
   "main": "index.js",
   "scripts": {
     "test": "find ./dist/ -name \"*.d.ts\" -delete && tsc && ./node_modules/.bin/mocha dist/test/ --recursive --reporter spec"
