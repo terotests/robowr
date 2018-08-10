@@ -54,7 +54,7 @@ export declare class CodeFileSystem {
     readTagName(str: string, index: number): string;
     openTaggedFile(path: string, name: string, tagStart: string, tagEnd: string): CodeFile;
     mkdir(path: string): void;
-    saveTo(root_path: string): Promise<any[]>;
+    saveTo(root_path: string): Promise<void>;
 }
 export declare class CodeFile {
     path_name: string;

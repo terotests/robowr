@@ -310,52 +310,19 @@ class CodeFileSystem {
             }
         }
     }
+    // comparision to the old saved data...
     saveTo(root_path) {
         return __awaiter(this, void 0, void 0, function* () {
             const fs = require('fs');
-            const last_cmd = [];
-            const versioned = [];
-            let old_data = null;
-            try {
-                old_data = JSON.parse(fs.readFileSync(root_path + '/.robowr/last.json', 'utf8'));
-            }
-            catch (e) {
-            }
             for (let file of this.files) {
                 const file_path = root_path + '/' + file.path_name;
                 this.mkdir(file_path);
                 const data = file.getCode();
                 if (data.length > 0) {
                     const path = file_path + '/' + file.name.trim();
-                    // check if the file has changed
-                    let current_data = '';
-                    try {
-                        current_data = fs.readFileSync(path, 'utf8');
-                    }
-                    catch (e) {
-                    }
-                    const obj = {
-                        changed: current_data !== data,
-                        removed: false,
-                        path: path,
-                        data: data
-                    };
-                    versioned.push(obj);
-                    last_cmd.push({ path, data });
                     fs.writeFileSync(path, data);
                 }
             }
-            if (old_data) {
-                for (let old_file of old_data) {
-                    const has = versioned.filter(v => v.path === old_file.path).pop();
-                    if (!has) {
-                        versioned.push(Object.assign({}, old_file, { removed: true }));
-                    }
-                }
-            }
-            this.mkdir(root_path + '/.robowr');
-            fs.writeFileSync(root_path + '/.robowr/last.json', JSON.stringify(last_cmd, null, 2));
-            return versioned;
         });
     }
 }
