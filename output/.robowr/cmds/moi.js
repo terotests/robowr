@@ -14,5 +14,5 @@ What else ?
   readme.out('OK!!!', true)
     // tag('modules')
   //   .out('- Added module moi.js')
-  console.log('moi was run.')
+  console.log('moi was run!!!')
 }
