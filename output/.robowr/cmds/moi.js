@@ -11,7 +11,7 @@ What else ?
   `, true);
 
   const readme = wr.getFileWriter('/', 'README.md')
-  readme.out('OK!!!', true)
+  readme.out('added module moi.js', true)
     // tag('modules')
   //   .out('- Added module moi.js')
   console.log('moi was run!!!')
