@@ -3,4 +3,4 @@
 
 The project readme.
 
-# Module information OK!!!
+# Module information added module moi.js
