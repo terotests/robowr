@@ -1,6 +1,6 @@
 
 
-module.exports.run = function moi( wr ) {
+module.exports.run = function ( wr ) {
   wr.getFileWriter('/', 'moi.md')
     .out(`
 # Moi
