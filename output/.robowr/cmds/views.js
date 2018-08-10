@@ -6,6 +6,6 @@ module.exports.run = function ( wr ) {
 
   viewsFile.out('', true)
   model.entities.forEach( entity => {
-    viewsFile.out(`// view for ${entity.name}`, true)
+    viewsFile.out(`// view for model ${entity.name}`, true)
   })
 }
