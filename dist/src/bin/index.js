@@ -23,6 +23,10 @@ if (!outputDir) {
     console.log('Please give the output directory');
     process.exit();
 }
+const targetDir = process.cwd() + '/' + (outputDir || '');
+const normalizePath = (item) => {
+    return path.normalize(targetDir + '/' + (item.path || item.path_name) + '/' + item.name.trim());
+};
 const commands = [];
 const find_cmd = (name) => {
     return commands.filter(c => c.name === name).pop();
@@ -165,19 +169,24 @@ const save_data = () => __awaiter(this, void 0, void 0, function* () {
         cmd.run(wr);
         while (file_i < fileSystem.files.length) {
             const f = fileSystem.files[file_i];
+            // console.log('command ', Name, normalizePath( f ))
             write_history.push({
                 cmd: Name,
                 path: f.path_name,
                 name: f.name,
-                data: f.getCode()
+                data: f.getCode(),
+                filesys: f
             });
             file_i++;
         }
     }
+    write_history.forEach(c => {
+        c.data = c.filesys.getCode();
+        delete c.filesys;
+    });
     // TODO: check which commands are enabled and then update the filesystem
     // accordingly by removing the files which are missing and not written using
     // the current command set...
-    const targetDir = process.cwd() + '/' + (outputDir || '');
     let prevWriteHistory = null;
     try {
         prevWriteHistory = JSON.parse(fs.readFileSync(targetDir + '/.robowr/writes/history.json', 'utf8'));
@@ -202,9 +211,6 @@ const save_data = () => __awaiter(this, void 0, void 0, function* () {
     }
     yield fileSystem.saveTo(targetDir);
     let had_changes = false;
-    const normalizePath = (item) => {
-        return path.normalize(targetDir + '/' + item.path + '/' + item.name.trim());
-    };
     const processed = {};
     for (let old_file of this_cmd_list) {
         // 

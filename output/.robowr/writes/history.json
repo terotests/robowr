@@ -1,27 +1,45 @@
 [
   {
+    "cmd": "moi",
+    "path": ".robowr/cmds/",
+    "name": "moi.js",
+    "data": "\n\nmodule.exports.run = function ( wr ) {\n  wr.getFileWriter('/', 'moi.md')\n    .out(`\n# Moi\n\nThis is moi application.\nHello there world!!!\nWhat else ? \n  `, true);\n\n  const readme = wr.getFileWriter('/', 'README.md').tag('modules')\n  readme.out('- added module moi.js', true)\n    // tag('modules')\n  //   .out('- Added module moi.js')\n  console.log('moi was run!!!')\n}"
+  },
+  {
+    "cmd": "moi",
+    "path": ".robowr/data/",
+    "name": "moi.json",
+    "data": "{\n  \"name\": \"The Marshmallow Man Project\",\n  \"message\": \"Message to the project. Looks good so far.\"\n}"
+  },
+  {
+    "cmd": "moi",
+    "path": "/",
+    "name": "moi.md",
+    "data": "\n# Moi\n\nThis is moi application.\nHello there world!!!\nWhat else ?\n  \n"
+  },
+  {
     "cmd": "hello",
     "path": ".robowr/cmds/",
     "name": "hello.js",
-    "data": "\"use strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nfunction run(wr) {\n    console.log('Hello was called with ', wr.getState().message);\n    wr.getFileWriter('/', 'hellou.md').out(wr.getState().message, true);\n}\nexports.run = run;\nexports.short_doc = 'Creates a hello world';\nexports.long_doc = 'Creates a hello world';\n// the configuration...\nexports.init = {\n    message: ''\n};\n//# sourceMappingURL=hello.js.map"
+    "data": "\"use strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nfunction run(wr) {\n    console.log('Hello was called with ', wr.getState().message);\n    wr.getFileWriter('/', 'hellou.md').out(wr.getState().message, true);\n\n    wr.getFileWriter('/', 'README.md').tag('modules').out('- hello module ', true)    \n}\nexports.run = run;\nexports.short_doc = 'Creates a hello world';\nexports.long_doc = 'Creates a hello world';\n// the configuration...\nexports.init = {\n    message: ''\n};\n//# sourceMappingURL=hello.js.map"
   },
   {
     "cmd": "hello",
     "path": ".robowr/data/",
     "name": "hello.json",
-    "data": "{\n  \"name\": \"Testiohjelma\",\n  \"message\": \"This is my Message to people. Right now... Trying to make it. Long msg.\"\n}"
+    "data": "{}"
   },
   {
     "cmd": "hello",
     "path": "/",
     "name": "hellou.md",
-    "data": "This is my Message to people. Right now... Trying to make it. Long msg.\n"
+    "data": "Message to the project. Looks good so far.\n"
   },
   {
     "cmd": "doremifa",
     "path": ".robowr/cmds/",
     "name": "doremifa.js",
-    "data": "\"use strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nexports.init = {\n    \"name\": ''\n};\nexports.short_doc = 'Initialize Doremifa project';\nfunction run(wr) {\n    console.log('Could create the module...');\n    console.log(wr.getState());\n    const model = wr.getState();\n    // creating the application basic structure...\n    wr.getFileWriter('/src/', 'index.ts').raw(`\n// the starting point of the applictaion\n  \n  `);\n    wr.getFileWriter('/src/model/', 'index.ts').raw(`\n// The application models come about here\n  \n  `);\n    wr.getFileWriter('/src/views/', 'index.ts').raw(`\n// Views\n  \n  `);\n    wr.getFileWriter('/', 'README.md').raw(`\n# Project ${model.name}\n\nThe project readme.\n\n`);\n    // create the typescript configuration file...\n    wr.getFileWriter('/', 'tsconfig.json').raw(`{\n    \"compilerOptions\": {\n      \"target\": \"es5\",\n      \"moduleResolution\": \"node\",\n      \"module\": \"commonjs\",\n      \"rootDir\": \".\",\n      \"outDir\": \"dist\",\n      \"allowSyntheticDefaultImports\" : true,\n      \"sourceMap\": true,\n      \"inlineSources\": true,    \n      \"declaration\": true,\n      \"emitDecoratorMetadata\": true,\n      \"experimentalDecorators\": true,\n      \"removeComments\": false,\n      \"noImplicitAny\": false,\n      \"jsx\": \"react\",\n      \"lib\": [\"es6\", \"es2015\",\"dom\"]\n    },\n    \"include\": [\n        \"./**/*\",\n    ],  \n    \"exclude\": [\n      \"dist/**/*\",\n      \"node_modules\",\n      \".npm\",\n      \"docs\",\n    ]  \n  }  \n  `, true);\n    // \n    const gitIgnore = wr.getFileWriter('/', '.gitignore');\n    gitIgnore.raw(`\n# Dependency directories\nnode_modules/\n\n# folder files\ndata_folder/\n\n# Image files\n*.jpg\n*.png\n\n# MacOS\n.DS_Store\n.idea/\n\n# TypeScript compiled .map files\n*.map  \n  `);\n    // write the package json file\n    const p = wr.getFileWriter('/', 'package.json');\n    p.raw(`{\n  \"name\": \"${model.name}\",\n  \"version\": \"1.0.0\",\n  \"description\": \"${model.name}\",\n  \"main\": \"index.js\",\n  \"scripts\": {\n    \"test\": \"find ./dist/ -name \\\\\"*.d.ts\\\\\" -delete && tsc && ./node_modules/.bin/mocha dist/test/ --recursive --reporter spec\"\n  },\n  \"keywords\": [\n  ],\n  \"author\": \"Tero Tolonen\",\n  \"license\": \"MIT\",\n  \"dependencies\": {\n    \"@types/chai\": \"^4.1.4\",\n    \"@types/mocha\": \"^5.2.5\",\n    \"@types/node\": \"^10.5.6\"\n  },\n  \"devDependencies\": {\n    \"chai\": \"^4.1.2\",\n    \"mocha\": \"^5.2.0\"\n  }\n}\n    `, true);\n}\nexports.run = run;\n//# sourceMappingURL=doremifa.js.map"
+    "data": "\"use strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nexports.init = {\n    \"name\": ''\n};\nexports.short_doc = 'Initialize Doremifa project';\nfunction run(wr) {\n    console.log('Could create the module...');\n    console.log(wr.getState());\n    const model = wr.getState();\n    // creating the application basic structure...\n    wr.getFileWriter('/src/', 'index.ts').raw(`\n// the starting point of the applictaion ${model.name}\n  \n  `);\n    wr.getFileWriter('/src/model/', 'index.ts').raw(`\n// The ${model.name} models come about here\n  \n  `);\n    wr.getFileWriter('/src/views/', 'index.ts').raw(`\n// Views of ${model.name}\n  \n  `);\n    \n  const readme = wr.getFileWriter('/', 'README.md').raw(`\n# Project ${model.name}\n\nThe project readme.\n\n`);\n\n  readme.tag('modules').out('# Module information ', true)\n\n  readme.out('', true)\n  readme.out('The module information was added automatically', true)\n  \n    // create the typescript configuration file...\n    wr.getFileWriter('/', 'tsconfig.json').raw(`{\n    \"compilerOptions\": {\n      \"target\": \"es5\",\n      \"moduleResolution\": \"node\",\n      \"module\": \"commonjs\",\n      \"rootDir\": \".\",\n      \"outDir\": \"dist\",\n      \"allowSyntheticDefaultImports\" : true,\n      \"sourceMap\": true,\n      \"inlineSources\": true,    \n      \"declaration\": true,\n      \"emitDecoratorMetadata\": true,\n      \"experimentalDecorators\": true,\n      \"removeComments\": false,\n      \"noImplicitAny\": false,\n      \"jsx\": \"react\",\n      \"lib\": [\"es6\", \"es2015\",\"dom\"]\n    },\n    \"include\": [\n        \"./**/*\",\n    ],  \n    \"exclude\": [\n      \"dist/**/*\",\n      \"node_modules\",\n      \".npm\",\n      \"docs\",\n    ]  \n  }  \n  `, true);\n    // \n    const gitIgnore = wr.getFileWriter('/', '.gitignore');\n    gitIgnore.raw(`\n# Dependency directories\nnode_modules/\n\n# folder files\ndata_folder/\n\n# Image files\n*.jpg\n*.png\n\n# MacOS\n.DS_Store\n.idea/\n\n# TypeScript compiled .map files\n*.map  \n  `);\n    // write the package json file\n    const p = wr.getFileWriter('/', 'package.json');\n    p.raw(`{\n  \"name\": \"${model.name}\",\n  \"version\": \"1.0.0\",\n  \"description\": \"${model.name}\",\n  \"main\": \"index.js\",\n  \"scripts\": {\n    \"test\": \"find ./dist/ -name \\\\\"*.d.ts\\\\\" -delete && tsc && ./node_modules/.bin/mocha dist/test/ --recursive --reporter spec\"\n  },\n  \"keywords\": [\n  ],\n  \"author\": \"Tero Tolonen\",\n  \"license\": \"MIT\",\n  \"dependencies\": {\n    \"@types/chai\": \"^4.1.4\",\n    \"@types/mocha\": \"^5.2.5\",\n    \"@types/node\": \"^10.5.6\"\n  },\n  \"devDependencies\": {\n    \"chai\": \"^4.1.2\",\n    \"mocha\": \"^5.2.0\"\n  }\n}\n    `, true);\n}\nexports.run = run;\n//# sourceMappingURL=doremifa.js.map"
   },
   {
     "cmd": "doremifa",
@@ -33,25 +51,25 @@
     "cmd": "doremifa",
     "path": "/src/",
     "name": "index.ts",
-    "data": "\n// the starting point of the applictaion\n  \n  "
+    "data": "\n// the starting point of the applictaion The Marshmallow Man Project\n  \n  "
   },
   {
     "cmd": "doremifa",
     "path": "/src/model/",
     "name": "index.ts",
-    "data": "\n// The application models come about here\n  \n  "
+    "data": "\n// The The Marshmallow Man Project models come about here\n  \n  "
   },
   {
     "cmd": "doremifa",
     "path": "/src/views/",
     "name": "index.ts",
-    "data": "\n// Views\n  \n  "
+    "data": "\n// Views of The Marshmallow Man Project\n  \n  \n// view for model User\n// view for model Picture\n// view for model File\n"
   },
   {
     "cmd": "doremifa",
     "path": "/",
     "name": "README.md",
-    "data": "\n# Project Testiohjelma\n\nThe project readme.\n\n"
+    "data": "\n# Project The Marshmallow Man Project\n\nThe project readme.\n\n# Module information \n- hello module \n\nThe module information was added automatically\n"
   },
   {
     "cmd": "doremifa",
@@ -69,24 +87,120 @@
     "cmd": "doremifa",
     "path": "/",
     "name": "package.json",
-    "data": "{\n  \"name\": \"Testiohjelma\",\n  \"version\": \"1.0.0\",\n  \"description\": \"Testiohjelma\",\n  \"main\": \"index.js\",\n  \"scripts\": {\n    \"test\": \"find ./dist/ -name \\\"*.d.ts\\\" -delete && tsc && ./node_modules/.bin/mocha dist/test/ --recursive --reporter spec\"\n  },\n  \"keywords\": [\n  ],\n  \"author\": \"Tero Tolonen\",\n  \"license\": \"MIT\",\n  \"dependencies\": {\n    \"@types/chai\": \"^4.1.4\",\n    \"@types/mocha\": \"^5.2.5\",\n    \"@types/node\": \"^10.5.6\"\n  },\n  \"devDependencies\": {\n    \"chai\": \"^4.1.2\",\n    \"mocha\": \"^5.2.0\"\n  }\n}\n    \n"
+    "data": "{\n  \"name\": \"The Marshmallow Man Project\",\n  \"version\": \"1.0.0\",\n  \"description\": \"The Marshmallow Man Project\",\n  \"main\": \"index.js\",\n  \"scripts\": {\n    \"test\": \"find ./dist/ -name \\\"*.d.ts\\\" -delete && tsc && ./node_modules/.bin/mocha dist/test/ --recursive --reporter spec\"\n  },\n  \"keywords\": [\n  ],\n  \"author\": \"Tero Tolonen\",\n  \"license\": \"MIT\",\n  \"dependencies\": {\n    \"@types/chai\": \"^4.1.4\",\n    \"@types/mocha\": \"^5.2.5\",\n    \"@types/node\": \"^10.5.6\"\n  },\n  \"devDependencies\": {\n    \"chai\": \"^4.1.2\",\n    \"mocha\": \"^5.2.0\"\n  }\n}\n    \n"
   },
   {
-    "cmd": "moi",
+    "cmd": "models",
     "path": ".robowr/cmds/",
-    "name": "moi.js",
-    "data": "\n\nmodule.exports.run = function moi( wr ) {\n  wr.getFileWriter('/', 'moi.md')\n    .out(`\n# Moi\n\nThis is moi application.\nHello there world!!!\n  `, true)\n}"
+    "name": "models.js",
+    "data": "\n\n// create base models for the application...\nmodule.exports.run = function ( wr ) {\n  const model = wr.getState()\n  model.entities.forEach( entity => {\n    const m = wr.getFileWriter('/src/model/', `${entity.name}.ts`)\n    m.out('// Model definition for ' + entity.name, true)\n\n    // create base model for each entry\n    m.out(`export class Model${entity.name} {`, true)\n    m.indent(1)\n      entity.fields.forEach( field => {\n        m.out(`${field.name} : ${field.type}`, true)\n      })\n    m.indent(-1)\n    m.out(`}`, true)\n\n  })\n}"
   },
   {
-    "cmd": "moi",
+    "cmd": "models",
     "path": ".robowr/data/",
-    "name": "moi.json",
+    "name": "models.json",
+    "data": "{\n  \"name\": \"The Marshmallow Man Project\",\n  \"message\": \"Message to the project. Looks good so far.\",\n  \"entities\": [\n    {\n      \"name\": \"User\",\n      \"fields\": [\n        {\n          \"name\": \"first_name\",\n          \"type\": \"string\"\n        },\n        {\n          \"name\": \"last_name\",\n          \"type\": \"string\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Picture\",\n      \"fields\": [\n        {\n          \"name\": \"name\",\n          \"type\": \"string\"\n        },\n        {\n          \"name\": \"path\",\n          \"type\": \"string\"\n        }\n      ]\n    },\n    {\n      \"name\": \"File\",\n      \"fields\": [\n        {\n          \"name\": \"name\",\n          \"type\": \"string\"\n        },\n        {\n          \"name\": \"path\",\n          \"type\": \"string\"\n        }\n      ]\n    }\n  ]\n}"
+  },
+  {
+    "cmd": "models",
+    "path": "/src/model/",
+    "name": "User.ts",
+    "data": "// Model definition for User\nexport class ModelUser {\n  first_name : string\n  last_name : string\n}\n"
+  },
+  {
+    "cmd": "models",
+    "path": "/src/model/",
+    "name": "Picture.ts",
+    "data": "// Model definition for Picture\nexport class ModelPicture {\n  name : string\n  path : string\n}\n"
+  },
+  {
+    "cmd": "models",
+    "path": "/src/model/",
+    "name": "File.ts",
+    "data": "// Model definition for File\nexport class ModelFile {\n  name : string\n  path : string\n}\n"
+  },
+  {
+    "cmd": "views",
+    "path": ".robowr/cmds/",
+    "name": "views.js",
+    "data": "\nmodule.exports.run = function ( wr ) {\n  const model = wr.getState()\n  const viewsFile = wr.getFileWriter('/src/views/', 'index.ts');\n\n  viewsFile.out('', true)\n  model.entities.forEach( entity => {\n    viewsFile.out(`// view for model ${entity.name}`, true)\n  })\n}"
+  },
+  {
+    "cmd": "views",
+    "path": ".robowr/data/",
+    "name": "views.json",
     "data": "{}"
   },
   {
-    "cmd": "moi",
+    "cmd": "base",
+    "path": ".robowr/cmds/",
+    "name": "base.js",
+    "data": "\"use strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nexports.init = {\n    \"name\": ''\n};\nexports.short_doc = 'Initialize Project';\nfunction run(wr) {\n    const model = wr.getState();\n    // creating the application basic structure...\n    wr.getFileWriter('/src/', 'index.ts').raw(`\n// the starting point of the applictaion ${model.name}\n  \n  `);\n    wr.getFileWriter('/src/model/', 'index.ts').raw(`\n// The ${model.name} models come about here\n  \n  `);\n    wr.getFileWriter('/src/views/', 'index.ts').raw(`\n// Views of ${model.name}\n  \n  `);\n    \n  const readme = wr.getFileWriter('/', 'README.md').raw(`\n# Project ${model.name}\n\nThe project readme.\n\n`);\n\n  readme.tag('modules').out('# Module information ', true)\n\n  readme.out('', true)\n  readme.out('The module information was added automatically', true)\n  \n    // create the typescript configuration file...\n    wr.getFileWriter('/', 'tsconfig.json').raw(`{\n    \"compilerOptions\": {\n      \"target\": \"es5\",\n      \"moduleResolution\": \"node\",\n      \"module\": \"commonjs\",\n      \"rootDir\": \".\",\n      \"outDir\": \"dist\",\n      \"allowSyntheticDefaultImports\" : true,\n      \"sourceMap\": true,\n      \"inlineSources\": true,    \n      \"declaration\": true,\n      \"emitDecoratorMetadata\": true,\n      \"experimentalDecorators\": true,\n      \"removeComments\": false,\n      \"noImplicitAny\": false,\n      \"jsx\": \"react\",\n      \"lib\": [\"es6\", \"es2015\",\"dom\"]\n    },\n    \"include\": [\n        \"./**/*\",\n    ],  \n    \"exclude\": [\n      \"dist/**/*\",\n      \"node_modules\",\n      \".npm\",\n      \"docs\",\n    ]  \n  }  \n  `, true);\n    // \n    const gitIgnore = wr.getFileWriter('/', '.gitignore');\n    gitIgnore.raw(`\n# Dependency directories\nnode_modules/\n\n# folder files\ndata_folder/\n\n# Image files\n*.jpg\n*.png\n\n# MacOS\n.DS_Store\n.idea/\n\n# TypeScript compiled .map files\n*.map  \n  `);\n    // write the package json file\n    const p = wr.getFileWriter('/', 'package.json');\n    p.raw(`{\n  \"name\": \"${model.name}\",\n  \"version\": \"1.0.0\",\n  \"description\": \"${model.name}\",\n  \"main\": \"index.js\",\n  \"scripts\": {\n    \"test\": \"find ./dist/ -name \\\\\"*.d.ts\\\\\" -delete && tsc && ./node_modules/.bin/mocha dist/test/ --recursive --reporter spec\"\n  },\n  \"keywords\": [\n  ],\n  \"author\": \"Tero Tolonen\",\n  \"license\": \"MIT\",\n  \"dependencies\": {\n    \"@types/chai\": \"^4.1.4\",\n    \"@types/mocha\": \"^5.2.5\",\n    \"@types/node\": \"^10.5.6\"\n  },\n  \"devDependencies\": {\n    \"chai\": \"^4.1.2\",\n    \"mocha\": \"^5.2.0\"\n  }\n}\n    `, true);\n}\nexports.run = run;\n//# sourceMappingURL=doremifa.js.map"
+  },
+  {
+    "cmd": "base",
+    "path": ".robowr/data/",
+    "name": "base.json",
+    "data": "{}"
+  },
+  {
+    "cmd": "base",
+    "path": "/src/",
+    "name": "index.ts",
+    "data": "\n// the starting point of the applictaion The Marshmallow Man Project\n  \n  "
+  },
+  {
+    "cmd": "base",
+    "path": "/src/model/",
+    "name": "index.ts",
+    "data": "\n// The The Marshmallow Man Project models come about here\n  \n  "
+  },
+  {
+    "cmd": "base",
+    "path": "/src/views/",
+    "name": "index.ts",
+    "data": "\n// Views of The Marshmallow Man Project\n  \n  \n// view for model User\n// view for model Picture\n// view for model File\n"
+  },
+  {
+    "cmd": "base",
     "path": "/",
-    "name": "moi.md",
-    "data": "\n# Moi\n\nThis is moi application.\nHello there world!!!\n  \n"
+    "name": "README.md",
+    "data": "\n# Project The Marshmallow Man Project\n\nThe project readme.\n\n# Module information \n\nThe module information was added automatically\n"
+  },
+  {
+    "cmd": "base",
+    "path": "/",
+    "name": "tsconfig.json",
+    "data": "{\n    \"compilerOptions\": {\n      \"target\": \"es5\",\n      \"moduleResolution\": \"node\",\n      \"module\": \"commonjs\",\n      \"rootDir\": \".\",\n      \"outDir\": \"dist\",\n      \"allowSyntheticDefaultImports\" : true,\n      \"sourceMap\": true,\n      \"inlineSources\": true,    \n      \"declaration\": true,\n      \"emitDecoratorMetadata\": true,\n      \"experimentalDecorators\": true,\n      \"removeComments\": false,\n      \"noImplicitAny\": false,\n      \"jsx\": \"react\",\n      \"lib\": [\"es6\", \"es2015\",\"dom\"]\n    },\n    \"include\": [\n        \"./**/*\",\n    ],  \n    \"exclude\": [\n      \"dist/**/*\",\n      \"node_modules\",\n      \".npm\",\n      \"docs\",\n    ]  \n  }  \n  \n"
+  },
+  {
+    "cmd": "base",
+    "path": "/",
+    "name": ".gitignore",
+    "data": "\n# Dependency directories\nnode_modules/\n\n# folder files\ndata_folder/\n\n# Image files\n*.jpg\n*.png\n\n# MacOS\n.DS_Store\n.idea/\n\n# TypeScript compiled .map files\n*.map  \n  "
+  },
+  {
+    "cmd": "base",
+    "path": "/",
+    "name": "package.json",
+    "data": "{\n  \"name\": \"The Marshmallow Man Project\",\n  \"version\": \"1.0.0\",\n  \"description\": \"The Marshmallow Man Project\",\n  \"main\": \"index.js\",\n  \"scripts\": {\n    \"test\": \"find ./dist/ -name \\\"*.d.ts\\\" -delete && tsc && ./node_modules/.bin/mocha dist/test/ --recursive --reporter spec\"\n  },\n  \"keywords\": [\n  ],\n  \"author\": \"Tero Tolonen\",\n  \"license\": \"MIT\",\n  \"dependencies\": {\n    \"@types/chai\": \"^4.1.4\",\n    \"@types/mocha\": \"^5.2.5\",\n    \"@types/node\": \"^10.5.6\"\n  },\n  \"devDependencies\": {\n    \"chai\": \"^4.1.2\",\n    \"mocha\": \"^5.2.0\"\n  }\n}\n    \n"
+  },
+  {
+    "cmd": "example",
+    "path": ".robowr/cmds/",
+    "name": "example.js",
+    "data": "module.exports.run = function ( wr ) {\n  const state = wr.getState()\n  wr.getFileWriter('/', `helloworld.js`)\n    .out(`console.log(\"${state.hello}\");`, true)\n}"
+  },
+  {
+    "cmd": "example",
+    "path": ".robowr/data/",
+    "name": "example.json",
+    "data": "{\n  \"hello\": \"Hello World\"\n}"
+  },
+  {
+    "cmd": "example",
+    "path": "/",
+    "name": "helloworld.js",
+    "data": "console.log(\"Hello World\");\n"
   }
 ]

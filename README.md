@@ -1,47 +1,97 @@
-# robowr
+# Who is Robowr?
 
-Application Robot
+Robowr is a code generator, which can generate any code that can be written in texd format. Basicly anything, so just for examples sake you can write Scala, Haskell, Rust C++, Java, JavaScript, Docker files, Makefiles, repositories... the only requirement is that the resulting files are in text format.
 
-TODO:
-- reading the configuration .json files
-- perhaps with some format for the name for configuration files ? 
-- currently only one config file is read, but possibly you could read several files from directory
+The most important featurea are:
 
-Nice to have features
-- combine multiple operations for single file system
-- multiple datas
-
-# the input could be just reading the JSON from the STDIN ? 
-
-Optionally read from STDIN ? 
-
-```
-cat `mydata.json` | robowr --stdin
-```
+- version control for data, generators and results using Git
+- supports arbitary directory structures
+- supports tags in files so code writers can inject for example headers when needed
+- shared filesystem and multiple code writers
+- shared data for all the writers
+- maintains history file to detect changes 
 
 
-# How to get the commands
+# Installing 
 
-The commands are JavaScript npm files
+Note that `robowr` is not ready for production.
 
 ```
-/some/directory/doremifa.js
-/some/directory/npmmodule.js
+npm i robowr
 ```
 
-Input data are `.json` files, which could be merged from several directories
+# Usage
+
+Run N commands to output directory
+```
+robowr cmd1 cmd2 cmd3 --o output
+```
+
+Run all commands to output directory
+```
+robowr --a --o output
+```
+Git message
+```
+robowr --m "Some message to git"
+```
+
+# Simple Example
+
+What you need is directory `.robowr` having subdirectories `cmds` and `data`. For example
 
 ```
-/some/directory/doremifa.js
-/some/directory/npmmodule.js
+.robowr/cmds/example.js
+.robowr/data/example.json
 ```
 
-# Should you create some robo.json files ? 
+The `example.json` is JSON file which has the input data for code creation. Here we have a very simple state.
+```json
+{
+  "hello": "Hello World"
+}
+```
 
-A configuratio file which does have all the directories etc which are used
-for creating of the application.
+The `example.js` is npm module which gets the state and writes the code.
+```javascript
+module.exports.run = function ( wr ) {
+  const state = wr.getState()
+  wr.getFileWriter('/', `helloworld.js`)
+    .out(`console.log("${state.hello}");`, true)
+}
+```
+The result would be a file `helloworld.js` in root directory having text
+```javascript
+console.log("Hello World");
+```
 
-# Nice libs
+# Creating writers
+
+## Reading state
+
+```javascript
+  const state = wr.getState()
+```
+
+## Saving state
+
+```javascript
+  const state = wr.getState()
+```
+
+## Tags
+
+```javascript
+module.exports.run = function ( wr ) {
+  const state = wr.getState()
+  wr.getFileWriter('/', `helloworld.js`)
+    .out(`console.log("${state.hello}");`, true)
+}
+```
+
+
+
+# Other code generator tools
 
 - https://github.com/gretzky/golf/blob/master/golf
 

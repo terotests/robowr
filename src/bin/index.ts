@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import {CodeWriter, CodeFileSystem} from '../writer/'
+import { fail } from 'assert';
 
 const argv = require('minimist')(process.argv.slice(2));
 var readlineSync = require('readline-sync');
@@ -9,7 +10,9 @@ const rootPath = process.env.ROBOWR || process.cwd() + '/.robowr/';
 const fs = require('fs')
 const path = require('path')
 
+
 console.log('RoboWR 0.01')
+
 console.log(argv);
 
 const outputDir = argv.o || argv.output
@@ -17,6 +20,10 @@ if(!outputDir) {
   console.log('robowr <commands> --o <outputdir> --m <message>')
   console.log('Please give the output directory')
   process.exit()
+}
+const targetDir = process.cwd() + '/' +  (outputDir || '')
+const normalizePath = ( item ) => {
+  return path.normalize( targetDir + '/' + (item.path || item.path_name) + '/' + item.name.trim() ) 
 }
 
 const commands = []
@@ -189,22 +196,29 @@ const save_data = async () => {
     cmd_data_wr.raw( JSON.stringify( command.initData, null, 2 ) )    
     cmd.run( wr )
     while( file_i < fileSystem.files.length) {
+      
       const f = fileSystem.files[file_i]
+      // console.log('command ', Name, normalizePath( f ))
       write_history.push({
         cmd  : Name,
         path : f.path_name,
         name : f.name,
-        data : f.getCode()
+        data : f.getCode(),
+        filesys : f
       })
       file_i++;
     } 
   }
 
+  write_history.forEach( c => {
+    c.data = c.filesys.getCode()
+    delete c.filesys
+  })  
+
   // TODO: check which commands are enabled and then update the filesystem
   // accordingly by removing the files which are missing and not written using
   // the current command set...
 
-  const targetDir = process.cwd() + '/' +  (outputDir || '')
   let prevWriteHistory = null
   try {
     prevWriteHistory = JSON.parse( fs.readFileSync( targetDir + '/.robowr/writes/history.json', 'utf8') )
@@ -229,10 +243,9 @@ const save_data = async () => {
 
   await fileSystem.saveTo( targetDir );  
 
+
   let had_changes = false
-  const normalizePath = ( item ) => {
-    return path.normalize( targetDir + '/' + item.path + '/' + item.name.trim() ) 
-  }
+
   const processed = {}
   for( let old_file of this_cmd_list ) {
     // 
