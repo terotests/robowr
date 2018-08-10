@@ -9,7 +9,7 @@
     "cmd": "hello",
     "path": ".robowr/data/",
     "name": "hello.json",
-    "data": "{\n  \"name\": \"Testiohjelma 2\",\n  \"message\": \"This is my Message to people. Right now... Trying to make it. Long msg.\"\n}"
+    "data": "{\n  \"name\": \"Testiohjelma\",\n  \"message\": \"This is my Message to people. Right now... Trying to make it. Long msg.\"\n}"
   },
   {
     "cmd": "hello",
@@ -51,7 +51,7 @@
     "cmd": "doremifa",
     "path": "/",
     "name": "README.md",
-    "data": "\n# Project Testiohjelma 2\n\nThe project readme.\n\n"
+    "data": "\n# Project Testiohjelma\n\nThe project readme.\n\n"
   },
   {
     "cmd": "doremifa",
@@ -69,7 +69,7 @@
     "cmd": "doremifa",
     "path": "/",
     "name": "package.json",
-    "data": "{\n  \"name\": \"Testiohjelma 2\",\n  \"version\": \"1.0.0\",\n  \"description\": \"Testiohjelma 2\",\n  \"main\": \"index.js\",\n  \"scripts\": {\n    \"test\": \"find ./dist/ -name \\\"*.d.ts\\\" -delete && tsc && ./node_modules/.bin/mocha dist/test/ --recursive --reporter spec\"\n  },\n  \"keywords\": [\n  ],\n  \"author\": \"Tero Tolonen\",\n  \"license\": \"MIT\",\n  \"dependencies\": {\n    \"@types/chai\": \"^4.1.4\",\n    \"@types/mocha\": \"^5.2.5\",\n    \"@types/node\": \"^10.5.6\"\n  },\n  \"devDependencies\": {\n    \"chai\": \"^4.1.2\",\n    \"mocha\": \"^5.2.0\"\n  }\n}\n    \n"
+    "data": "{\n  \"name\": \"Testiohjelma\",\n  \"version\": \"1.0.0\",\n  \"description\": \"Testiohjelma\",\n  \"main\": \"index.js\",\n  \"scripts\": {\n    \"test\": \"find ./dist/ -name \\\"*.d.ts\\\" -delete && tsc && ./node_modules/.bin/mocha dist/test/ --recursive --reporter spec\"\n  },\n  \"keywords\": [\n  ],\n  \"author\": \"Tero Tolonen\",\n  \"license\": \"MIT\",\n  \"dependencies\": {\n    \"@types/chai\": \"^4.1.4\",\n    \"@types/mocha\": \"^5.2.5\",\n    \"@types/node\": \"^10.5.6\"\n  },\n  \"devDependencies\": {\n    \"chai\": \"^4.1.2\",\n    \"mocha\": \"^5.2.0\"\n  }\n}\n    \n"
   },
   {
     "cmd": "moi",
