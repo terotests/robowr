@@ -1,5 +1,5 @@
 
-# Project Testiohjelma 2
+# Project Testiohjelma
 
 The project readme.
 
