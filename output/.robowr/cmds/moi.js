@@ -12,4 +12,5 @@ Hello there world!!!
   wr.getFileWriter('/', 'README.md')
     .tag('modules')
     .out('- Added module moi.js')
+  console.log('moi was run.')
 }
