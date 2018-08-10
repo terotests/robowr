@@ -1,4 +1,4 @@
 
-// Views of The Marshmallo Man Project
+// Views of The Marshmallow Man Project
   
   
