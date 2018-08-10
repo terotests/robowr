@@ -3,6 +3,9 @@
 module.exports.run = function moi( wr ) {
   wr.getFileWriter('/', 'moi.md')
     .out(`
-      moi moi  
+# Moi
+
+This is moi application.
+Does it work?
   `, true)
 }
