@@ -5,8 +5,6 @@ exports.init = {
 };
 exports.short_doc = 'Initialize Project';
 function run(wr) {
-    console.log('Could create the module...');
-    console.log(wr.getState());
     const model = wr.getState();
     // creating the application basic structure...
     wr.getFileWriter('/src/', 'index.ts').raw(`
