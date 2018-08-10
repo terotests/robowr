@@ -10,8 +10,9 @@ Hello there world!!!
 What else ? 
   `, true);
 
-  wr.getFileWriter('/', 'README.md')
+  const readme = wr.getFileWriter('/', 'README.md')
+  readme.out('OK!!!', true)
     // tag('modules')
-    .out('- Added module moi.js')
+  //   .out('- Added module moi.js')
   console.log('moi was run.')
 }
