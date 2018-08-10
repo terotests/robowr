@@ -1,5 +1,5 @@
 // Model definition for Picture
-class ModelPicture {
+export class ModelPicture {
   name : string
   path : string
 }

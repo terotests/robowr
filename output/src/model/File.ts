@@ -1,5 +1,5 @@
 // Model definition for File
-class ModelFile {
+export class ModelFile {
   name : string
   path : string
 }

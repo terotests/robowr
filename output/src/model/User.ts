@@ -1,5 +1,5 @@
 // Model definition for User
-class ModelUser {
+export class ModelUser {
   first_name : string
   last_name : string
 }
