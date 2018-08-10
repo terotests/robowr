@@ -10,15 +10,15 @@ function run(wr) {
     const model = wr.getState();
     // creating the application basic structure...
     wr.getFileWriter('/src/', 'index.ts').raw(`
-// the starting point of the applictaion
+// the starting point of the applictaion ${model.name}
   
   `);
     wr.getFileWriter('/src/model/', 'index.ts').raw(`
-// The application models come about here
+// The ${model.name} models come about here
   
   `);
     wr.getFileWriter('/src/views/', 'index.ts').raw(`
-// Views
+// Views of ${model.name}
   
   `);
     

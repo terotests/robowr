@@ -1,4 +1,4 @@
 
-// The application models come about here
+// The The Marshmallo Man Project models come about here
   
   
