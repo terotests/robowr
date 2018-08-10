@@ -29,7 +29,7 @@ The project readme.
 
 `);
 
-  readme.tag('modules').out('# Module information ')
+  readme.tag('modules').out('# Module information ', true)
   
     // create the typescript configuration file...
     wr.getFileWriter('/', 'tsconfig.json').raw(`{
