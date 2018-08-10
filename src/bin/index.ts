@@ -68,8 +68,6 @@ if( argv.a ) {
   })
 }
 
-console.log(argv)
-
 if(process.env.ROBOWR) find_commands(process.env.ROBOWR)
 
 
@@ -106,18 +104,6 @@ let initData = {}
 const data_files = []
 
 const readCommandData = ( CmdName : string ) : any => {
-
-  // try from the output directory
-  try {
-    console.log('try ', process.cwd() + '/' + outputDir + '/.robowr/data/' + CmdName + '.json')
-    const TryData = fs.readFileSync( process.cwd() + '/' + outputDir + '/.robowr/data/' + CmdName + '.json', 'utf8' )
-    const TryObj = JSON.parse(TryData)
-    const c = find_cmd( CmdName )
-    c.initData = TryObj
-    return TryObj;
-  } catch(e) {
-
-  }
 
   // try from .robowr subdirectory
   try {
@@ -208,18 +194,11 @@ const save_data = async () => {
         cmd  : Name,
         path : f.path_name,
         name : f.name,
-        data : f.getCode(),
-        file : f
+        data : f.getCode()
       })
       file_i++;
     } 
   }
-
-  // update latest code
-  write_history.forEach( h => {
-    h.data = h.file.getCode()
-    delete h.file
-  })
 
   // TODO: check which commands are enabled and then update the filesystem
   // accordingly by removing the files which are missing and not written using
