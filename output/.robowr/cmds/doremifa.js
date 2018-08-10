@@ -31,6 +31,7 @@ The project readme.
 
   readme.tag('modules').out('# Module information ', true)
 
+  readme.out('', true)
   readme.out('The module information was added automatically', true)
   
     // create the typescript configuration file...
