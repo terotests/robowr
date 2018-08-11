@@ -104,12 +104,6 @@
   {
     "cmd": "models",
     "path": "/src/model/",
-    "name": "User.ts",
-    "data": "// Model definition for User\nexport class ModelUser {\n  first_name : string\n  last_name : string\n}\n"
-  },
-  {
-    "cmd": "models",
-    "path": "/src/model/",
     "name": "Picture.ts",
     "data": "// Model definition for Picture\nexport class ModelPicture {\n  name : string\n  path : string\n}\n"
   },
@@ -202,5 +196,11 @@
     "path": "/",
     "name": "helloworld.js",
     "data": "console.log(\"Hello World\");\n"
+  },
+  {
+    "cmd": "models",
+    "path": "/src/model/",
+    "name": "User.ts",
+    "data": "// Model definition for User\nexport class ModelUser {\n  first_name : string\n  last_name : string\n}\n"
   }
 ]
