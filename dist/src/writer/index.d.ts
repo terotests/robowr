@@ -23,6 +23,7 @@ export declare class CodeWriter {
     forks: CodeWriter[];
     tagOffset: number;
     parent: CodeWriter;
+    fs: CodeFileSystem;
     had_nl: boolean;
     state: {};
     constructor();

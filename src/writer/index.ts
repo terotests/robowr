@@ -38,6 +38,7 @@ export class CodeWriter {
 
   tagOffset:number = 0 
   parent:CodeWriter
+  fs:CodeFileSystem
 
   had_nl = true
 
@@ -60,6 +61,7 @@ export class CodeWriter {
   }
 
   getFilesystem():CodeFileSystem {
+    if(this.fs) return this.fs
     if( !this.ownerFile ) {
       if(!this.parent) {
           return (this.parent.getFilesystem())
@@ -71,20 +73,20 @@ export class CodeWriter {
   }  
 
   findFile(path:string, fileName:string) : CodeFile {
-    if( !this.ownerFile ) {
+    if( !this.fs && !this.ownerFile ) {
       if(this.parent) return this.parent.findFile( path, fileName)
       throw "getFileWriter: no filesystem defined for the writer"
     }
-    const fs = this.ownerFile.fileSystem
+    const fs = this.fs || this.ownerFile.fileSystem
     return fs.getFile( path, fileName )
   }   
 
   getFileWriter(path:string, fileName:string) : CodeWriter {
-    if( !this.ownerFile ) {
+    if( !this.fs && !this.ownerFile ) {
       if(this.parent) return this.parent.getFileWriter( path, fileName)
       throw "getFileWriter: no filesystem defined for the writer"
     }
-    const fs = this.ownerFile.fileSystem
+    const fs = this.fs || this.ownerFile.fileSystem
     const file = fs.getFile( path, fileName )
     const wr = file.getWriter()
     return wr

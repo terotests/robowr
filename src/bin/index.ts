@@ -168,9 +168,10 @@ for( let key of Object.keys( initData ) ) {
 
 const save_data = async () => {
   const fileSystem = new CodeFileSystem();
-
-  const rootFile = fileSystem.getFile('/', '.');
-  const wr = rootFile.getWriter()
+  const wr = new CodeWriter()
+  wr.fs = fileSystem
+  // const rootFile = fileSystem.getFile('/', '.');
+  // const wr = rootFile.getWriter()
   
   wr.setState( initData )
 

@@ -149,8 +149,10 @@ for (let key of Object.keys(initData)) {
 }
 const save_data = () => __awaiter(this, void 0, void 0, function* () {
     const fileSystem = new _1.CodeFileSystem();
-    const rootFile = fileSystem.getFile('/', '.');
-    const wr = rootFile.getWriter();
+    const wr = new _1.CodeWriter();
+    wr.fs = fileSystem;
+    // const rootFile = fileSystem.getFile('/', '.');
+    // const wr = rootFile.getWriter()
     wr.setState(initData);
     const write_history = [];
     const all_cmds = [];

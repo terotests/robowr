@@ -52,6 +52,8 @@ class CodeWriter {
         return globalState.state;
     }
     getFilesystem() {
+        if (this.fs)
+            return this.fs;
         if (!this.ownerFile) {
             if (!this.parent) {
                 return (this.parent.getFilesystem());
@@ -63,21 +65,21 @@ class CodeWriter {
         return this.ownerFile.fileSystem;
     }
     findFile(path, fileName) {
-        if (!this.ownerFile) {
+        if (!this.fs && !this.ownerFile) {
             if (this.parent)
                 return this.parent.findFile(path, fileName);
             throw "getFileWriter: no filesystem defined for the writer";
         }
-        const fs = this.ownerFile.fileSystem;
+        const fs = this.fs || this.ownerFile.fileSystem;
         return fs.getFile(path, fileName);
     }
     getFileWriter(path, fileName) {
-        if (!this.ownerFile) {
+        if (!this.fs && !this.ownerFile) {
             if (this.parent)
                 return this.parent.getFileWriter(path, fileName);
             throw "getFileWriter: no filesystem defined for the writer";
         }
-        const fs = this.ownerFile.fileSystem;
+        const fs = this.fs || this.ownerFile.fileSystem;
         const file = fs.getFile(path, fileName);
         const wr = file.getWriter();
         return wr;
