@@ -3,7 +3,7 @@
   "message": "Message to the project. Looks good so far.",
   "entities": [
     {
-      "name": "Users",
+      "name": "User",
       "fields": [
         {
           "name": "first_name",
