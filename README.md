@@ -13,6 +13,15 @@ The most important features are:
 - shared data for all the writers
 - maintains history file to detect changes 
 
+## Current TODO
+
+This project is not ready yet.
+
+- command order / priority
+- merging models so that they can add new data to arrays
+- saving default command settings
+
+
 # Why Robowr?
 
 You can generate beautiful code using Robowr, because all the code generated is actually coming from hand written functions, which just type the code a bit like you would using the keyboard.
