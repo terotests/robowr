@@ -1,4 +1,4 @@
-# SQL statements for the digi_m_file
+-- SQL statements for the digi_m_file
 CREATE TABLE digi_m_file (
   id  int not null PRIMARY KEY,
   created  int,

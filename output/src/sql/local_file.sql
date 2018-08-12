@@ -1,4 +1,4 @@
-# SQL statements for the local_file
+-- SQL statements for the local_file
 CREATE TABLE local_file (
   id  int not null PRIMARY KEY,
   type  text ,

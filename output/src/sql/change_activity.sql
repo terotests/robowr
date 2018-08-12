@@ -1,4 +1,4 @@
-# SQL statements for the change_activity
+-- SQL statements for the change_activity
 CREATE TABLE change_activity (
   id  int not null PRIMARY KEY,
   started  int,

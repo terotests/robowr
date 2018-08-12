@@ -1,4 +1,4 @@
-# SQL statements for the NodeMeta
+-- SQL statements for the NodeMeta
 CREATE TABLE NodeMeta (
   id  int,
   user_id  int,

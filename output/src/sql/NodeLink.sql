@@ -1,4 +1,4 @@
-# SQL statements for the NodeLink
+-- SQL statements for the NodeLink
 CREATE TABLE NodeLink (
   id  int,
   userid  int,

@@ -1,4 +1,4 @@
-# SQL statements for the app_setting
+-- SQL statements for the app_setting
 CREATE TABLE app_setting (
   id  int not null PRIMARY KEY,
   key  varchar(255),

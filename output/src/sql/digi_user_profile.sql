@@ -1,4 +1,4 @@
-# SQL statements for the digi_user_profile
+-- SQL statements for the digi_user_profile
 CREATE TABLE digi_user_profile (
   id  int not null PRIMARY KEY,
   nodeid  int,

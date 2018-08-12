@@ -1,4 +1,4 @@
-# SQL statements for the node_sem
+-- SQL statements for the node_sem
 CREATE TABLE node_sem (
   id  int not null PRIMARY KEY,
   userid  int,

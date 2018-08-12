@@ -1,4 +1,4 @@
-# SQL statements for the NodeName
+-- SQL statements for the NodeName
 CREATE TABLE NodeName (
   id  int,
   nodeid  int,

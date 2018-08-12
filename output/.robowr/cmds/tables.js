@@ -8,7 +8,7 @@ module.exports.run = function ( wr ) {
     const name = table['-name'];
     const fields = table.field;
     const m = wr.getFileWriter('/src/sql/', `${name}.sql`)
-    m.out('# SQL statements for the ' + name, true)
+    m.out('-- SQL statements for the ' + name, true)
 
     m.out('CREATE TABLE '+name+' (', true)
     m.indent(1)

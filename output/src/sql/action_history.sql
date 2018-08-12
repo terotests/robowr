@@ -1,4 +1,4 @@
-# SQL statements for the action_history
+-- SQL statements for the action_history
 CREATE TABLE action_history (
   id  int not null PRIMARY KEY,
   ctrl_name  text ,
