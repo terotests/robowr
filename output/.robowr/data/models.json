@@ -16,6 +16,19 @@
       ]
     },
     {
+      "name": "Picture",
+      "fields": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "path",
+          "type": "string"
+        }
+      ]
+    },
+    {
       "name": "File",
       "fields": [
         {
