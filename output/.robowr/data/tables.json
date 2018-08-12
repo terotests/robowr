@@ -1,0 +1,1721 @@
+{
+  "tables": {
+    "table": [
+      {
+        "-name": "digi_node",
+        "field": [
+          {
+            "-name": "id",
+            "-title": "Primary key",
+            "-type": "int_primary",
+            "-searchable": "1"
+          },
+          {
+            "-name": "created",
+            "-title": "Time created, UTC value",
+            "-type": "int_utc_created",
+            "-searchable": "0"
+          },
+          {
+            "-name": "updated",
+            "-title": "Time updated, UTC value",
+            "-type": "int_utc_modified",
+            "-searchable": "0"
+          },
+          {
+            "-name": "creator",
+            "-title": "The item creator userid",
+            "-type": "int_userid",
+            "-searchable": "0"
+          },
+          {
+            "-name": "updater",
+            "-title": "The item updater userid",
+            "-type": "int_userid",
+            "-searchable": "0"
+          },
+          {
+            "-name": "orderid",
+            "-title": "The node ordering field",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "parentid",
+            "-title": "The parent of the node",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "classname",
+            "-title": "Nodes classname",
+            "-type": "varchar",
+            "-searchable": "0"
+          },
+          {
+            "-name": "objid",
+            "-title": "Reference to external table (obsolete)",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "name",
+            "-title": "Common name for the node, like name of city, person, project or similar entry.",
+            "-type": "varchar",
+            "-searchable": "0"
+          },
+          {
+            "-name": "draftspace",
+            "-title": "if node is a draft version",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "archived",
+            "-title": "undefined",
+            "-type": "int",
+            "-searchable": "0"
+          }
+        ]
+      },
+      {
+        "-name": "digi_m_text",
+        "field": [
+          {
+            "-name": "id",
+            "-title": "Primary key",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "created",
+            "-title": "Time created, UTC value",
+            "-type": "int_utc_created",
+            "-searchable": "0"
+          },
+          {
+            "-name": "updated",
+            "-title": "Time updated, UTC value",
+            "-type": "int_utc_modified",
+            "-searchable": "0"
+          },
+          {
+            "-name": "creator",
+            "-title": "The item creator userid",
+            "-type": "int_userid_created",
+            "-searchable": "0"
+          },
+          {
+            "-name": "updater",
+            "-title": "The item updater userid",
+            "-type": "int_userid_modified",
+            "-searchable": "0"
+          },
+          {
+            "-name": "orderid",
+            "-title": "The node ordering field",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "parentid",
+            "-title": "The parent of the node",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "nodeid",
+            "-title": "The node which has the text",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "mytxt",
+            "-title": "Text",
+            "-type": "text",
+            "-searchable": "0"
+          },
+          {
+            "-name": "heading",
+            "-title": "The data heading",
+            "-type": "varchar",
+            "-searchable": "0"
+          }
+        ],
+        "indexes": {
+          "index": {
+            "-name": "digi_m_text_1",
+            "col": {
+              "-name": "nodeid"
+            }
+          }
+        }
+      },
+      {
+        "-name": "digi_m_blob",
+        "field": [
+          {
+            "-name": "id",
+            "-title": "Primary key",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "created",
+            "-title": "Time created, UTC value",
+            "-type": "int_utc_created",
+            "-searchable": "0"
+          },
+          {
+            "-name": "updated",
+            "-title": "Time updated, UTC value",
+            "-type": "int_utc_modified",
+            "-searchable": "0"
+          },
+          {
+            "-name": "creator",
+            "-title": "The item creator userid",
+            "-type": "int_userid",
+            "-searchable": "0"
+          },
+          {
+            "-name": "updater",
+            "-title": "The item updater userid",
+            "-type": "int_userid",
+            "-searchable": "0"
+          },
+          {
+            "-name": "orderid",
+            "-title": "The node ordering field",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "parentid",
+            "-title": "The parent of the node",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "nodeid",
+            "-title": "The node which has the text",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "heading",
+            "-title": "The data heading",
+            "-type": "varchar",
+            "-searchable": "0"
+          },
+          {
+            "-name": "mytxt",
+            "-title": "The blob data",
+            "-type": "text",
+            "-searchable": "0"
+          }
+        ],
+        "indexes": {
+          "index": {
+            "-name": "digi_m_blob_1",
+            "col": {
+              "-name": "nodeid"
+            }
+          }
+        }
+      },
+      {
+        "-name": "digi_m_file",
+        "field": [
+          {
+            "-name": "id",
+            "-title": "Primary key",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "created",
+            "-title": "Time created, UTC value",
+            "-type": "int_utc_created",
+            "-searchable": "0"
+          },
+          {
+            "-name": "updated",
+            "-title": "Time updated, UTC value",
+            "-type": "int_utc_modified",
+            "-searchable": "0"
+          },
+          {
+            "-name": "creator",
+            "-title": "The item creator userid",
+            "-type": "int_userid",
+            "-searchable": "0"
+          },
+          {
+            "-name": "updater",
+            "-title": "The item updater userid",
+            "-type": "int_userid",
+            "-searchable": "0"
+          },
+          {
+            "-name": "orderid",
+            "-title": "The node ordering field",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "parentid",
+            "-title": "The parent of the node",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "nodeid",
+            "-title": "The node which has the text",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "path",
+            "-title": "Path of the file in the filesystem",
+            "-type": "varchar",
+            "-searchable": "0"
+          },
+          {
+            "-name": "filename",
+            "-title": "?",
+            "-type": "varchar",
+            "-searchable": "0"
+          },
+          {
+            "-name": "orignal_name",
+            "-title": "original name of the file",
+            "-type": "varchar",
+            "-searchable": "0"
+          },
+          {
+            "-name": "filetype",
+            "-title": "Extension or file type",
+            "-type": "varchar",
+            "-searchable": "0"
+          },
+          {
+            "-name": "name",
+            "-title": "?",
+            "-type": "varchar",
+            "-searchable": "0"
+          },
+          {
+            "-name": "tnpath",
+            "-title": "path for thumbnail image created from the file",
+            "-type": "varchar",
+            "-searchable": "0"
+          },
+          {
+            "-name": "encrypted",
+            "-title": "if the file is encrypted",
+            "-type": "int",
+            "-searchable": "0"
+          }
+        ],
+        "indexes": {
+          "index": {
+            "-name": "digi_m_file_1",
+            "col": {
+              "-name": "nodeid"
+            }
+          }
+        }
+      },
+      {
+        "-name": "digi_m_auth",
+        "field": [
+          {
+            "-name": "id",
+            "-title": "Primary key",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "created",
+            "-title": "Time created, UTC value",
+            "-type": "int_utc_created",
+            "-searchable": "0"
+          },
+          {
+            "-name": "updated",
+            "-title": "Time updated, UTC value",
+            "-type": "int_utc_modified",
+            "-searchable": "0"
+          },
+          {
+            "-name": "creator",
+            "-title": "The item creator userid",
+            "-type": "int_userid",
+            "-searchable": "0"
+          },
+          {
+            "-name": "updater",
+            "-title": "The item updater userid",
+            "-type": "int_userid",
+            "-searchable": "0"
+          },
+          {
+            "-name": "orderid",
+            "-title": "The node ordering field",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "parentid",
+            "-title": "The parent of the node",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "nodeid",
+            "-title": "The node which has the text",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "rolename",
+            "-title": "authentication role name",
+            "-type": "varchar",
+            "-searchable": "0"
+          },
+          {
+            "-name": "username",
+            "-title": "username",
+            "-type": "varchar",
+            "-searchable": "1"
+          },
+          {
+            "-name": "password",
+            "-title": "password",
+            "-type": "varchar",
+            "-searchable": "0"
+          }
+        ],
+        "indexes": {
+          "index": [
+            {
+              "-name": "digi_m_auth_1",
+              "col": {
+                "-name": "nodeid"
+              }
+            },
+            {
+              "-name": "digi_m_auth_2",
+              "col": {
+                "-name": "username"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "-name": "digi_user_profile",
+        "field": [
+          {
+            "-name": "id",
+            "-title": "Primary key",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "nodeid",
+            "-title": "The node which has the text",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "email",
+            "-title": "Email address, can be separated by comme",
+            "-type": "varchar",
+            "-searchable": "0"
+          },
+          {
+            "-name": "allow_email",
+            "-title": "0 = email allowed, 1 = email not allowed",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "vain_tiedotus",
+            "-title": "0 = tiedostus ei sallittu, 1 = sallittu",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "b_seuraan_kirj",
+            "-title": "1 = seuraan kirjautumisia",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "b_seuraan_reissareita",
+            "-title": "1 = seuraan reissuvihkoviestejä",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "tele",
+            "-title": "Puhelinnumero",
+            "-type": "varchar",
+            "-searchable": "0"
+          },
+          {
+            "-name": "email_t",
+            "-title": "Sähköpostin lähetystunti?",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "email_p",
+            "-title": "Sähköpostin periodi, tunneissa?",
+            "-type": "int",
+            "-searchable": "0"
+          }
+        ],
+        "indexes": {
+          "index": {
+            "-name": "digi_user_profile_1",
+            "col": {
+              "-name": "nodeid"
+            }
+          }
+        }
+      },
+      {
+        "-name": "node_sem",
+        "field": [
+          {
+            "-name": "id",
+            "-title": "Primary key",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "userid",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "objid",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "typeid",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "starts",
+            "-type": "datetime",
+            "-searchable": "0"
+          },
+          {
+            "-name": "ends",
+            "-type": "datetime",
+            "-searchable": "0"
+          },
+          {
+            "-name": "value",
+            "-type": "double",
+            "-searchable": "0"
+          },
+          {
+            "-name": "creator",
+            "-title": "The user which has created the semantics",
+            "-type": "int_userid",
+            "-searchable": "0"
+          },
+          {
+            "-name": "creator_class",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "create_time",
+            "-type": "int_utc",
+            "-searchable": "0"
+          },
+          {
+            "-name": "order_nro",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p00",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p01",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p02",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p03",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p10",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p11",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p12",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p13",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p20",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p21",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p22",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p23",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p30",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p31",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p32",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p33",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "local",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "local_rem",
+            "-type": "int",
+            "-searchable": "0"
+          }
+        ],
+        "indexes": {
+          "index": [
+            {
+              "-name": "node_sem_i1",
+              "col": [
+                {
+                  "-name": "userid"
+                },
+                {
+                  "-name": "typeid"
+                },
+                {
+                  "-name": "objid"
+                }
+              ]
+            },
+            {
+              "-name": "node_sem_i2",
+              "col": [
+                {
+                  "-name": "objid"
+                },
+                {
+                  "-name": "typeid"
+                },
+                {
+                  "-name": "userid"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "-name": "node_sem_history",
+        "field": [
+          {
+            "-name": "id",
+            "-title": "Primary key",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "semid",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "moduserid",
+            "-type": "int_userid_modified",
+            "-searchable": "0"
+          },
+          {
+            "-name": "modtime",
+            "-type": "int_utc_modified",
+            "-searchable": "0"
+          },
+          {
+            "-name": "removed",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "userid",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "objid",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "typeid",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "starts",
+            "-type": "datetime",
+            "-searchable": "0"
+          },
+          {
+            "-name": "ends",
+            "-type": "datetime",
+            "-searchable": "0"
+          },
+          {
+            "-name": "value",
+            "-type": "double",
+            "-searchable": "0"
+          },
+          {
+            "-name": "creator",
+            "-title": "The user which has created the semantics",
+            "-type": "int_userid",
+            "-searchable": "0"
+          },
+          {
+            "-name": "creator_class",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "create_time",
+            "-type": "int_utc",
+            "-searchable": "0"
+          },
+          {
+            "-name": "order_nro",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p00",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p01",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p02",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p03",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p10",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p11",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p12",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p13",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p20",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p21",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p22",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p23",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p30",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p31",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p32",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "p33",
+            "-type": "int",
+            "-searchable": "0"
+          }
+        ]
+      },
+      {
+        "-name": "graph_journal",
+        "field": [
+          {
+            "-name": "id",
+            "-title": "Primary key",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "src_node",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "link_id",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "target_id",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "change_type",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "timestamp",
+            "-type": "int_utc",
+            "-searchable": "0"
+          },
+          {
+            "-name": "user_id",
+            "-type": "int",
+            "-searchable": "0"
+          }
+        ]
+      },
+      {
+        "-name": "action_history",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "ctrl_name",
+            "-type": "text",
+            "-searchable": "0"
+          },
+          {
+            "-name": "data_url",
+            "-type": "text",
+            "-searchable": "0"
+          },
+          {
+            "-name": "server_ack",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "nodeid",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "process_time",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "field_update",
+            "-type": "int",
+            "-searchable": "0"
+          }
+        ]
+      },
+      {
+        "-name": "local_file",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "type",
+            "-type": "text",
+            "-searchable": "0"
+          },
+          {
+            "-name": "filepath",
+            "-type": "text",
+            "-searchable": "0"
+          },
+          {
+            "-name": "time_created",
+            "-type": "int_utc_created",
+            "-searchable": "0"
+          },
+          {
+            "-name": "size",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "nodeid",
+            "-type": "int",
+            "-searchable": "1"
+          }
+        ]
+      },
+      {
+        "-name": "change_activity",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "started",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "completed",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "created",
+            "-type": "int_utc_created",
+            "-searchable": "0"
+          },
+          {
+            "-name": "name",
+            "-type": "varchar",
+            "-searchable": "0"
+          },
+          {
+            "-name": "errors",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "error_txt",
+            "-type": "text",
+            "-searchable": "0"
+          }
+        ],
+        "indexes": {
+          "index": {
+            "-name": "change_activity_1",
+            "col": {
+              "-name": "completed"
+            }
+          }
+        }
+      },
+      {
+        "-name": "change_field",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "activityid",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "tablename",
+            "-type": "varchar",
+            "-searchable": "0"
+          },
+          {
+            "-name": "fieldname",
+            "-type": "varchar",
+            "-searchable": "0"
+          },
+          {
+            "-name": "int_value",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "str_value",
+            "-type": "text",
+            "-searchable": "0"
+          },
+          {
+            "-name": "was_new",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "table_id",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "nodeid",
+            "-type": "int",
+            "-searchable": "1"
+          }
+        ],
+        "indexes": {
+          "index": {
+            "-name": "change_field_1",
+            "col": {
+              "-name": "activityid"
+            }
+          }
+        }
+      },
+      {
+        "-name": "change_insert_node",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "activityid",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "node_class",
+            "-type": "string",
+            "-searchable": "1"
+          },
+          {
+            "-name": "node_id",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "node_name",
+            "-type": "string",
+            "-searchable": "1"
+          }
+        ],
+        "indexes": {
+          "index": {
+            "-name": "change_insert_node_1",
+            "col": {
+              "-name": "activityid"
+            }
+          }
+        }
+      },
+      {
+        "-name": "change_insert_link",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "activityid",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "typeid",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "userid",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "objid",
+            "-type": "int",
+            "-searchable": "1"
+          }
+        ],
+        "indexes": {
+          "index": {
+            "-name": "change_insert_link_1",
+            "col": {
+              "-name": "activityid"
+            }
+          }
+        }
+      },
+      {
+        "-name": "change_remove_link",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "activityid",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "typeid",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "userid",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "objid",
+            "-type": "int",
+            "-searchable": "1"
+          }
+        ],
+        "indexes": {
+          "index": {
+            "-name": "change_remove_link_1",
+            "col": {
+              "-name": "activityid"
+            }
+          }
+        }
+      },
+      {
+        "-name": "change_upload_file",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "activityid",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "nodeid",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "local_path",
+            "-type": "text",
+            "-searchable": "0"
+          },
+          {
+            "-name": "upload_progress",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "upload_done",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "upload_key",
+            "-type": "text",
+            "-searchable": "1"
+          }
+        ],
+        "indexes": {
+          "index": {
+            "-name": "change_upload_file_1",
+            "col": {
+              "-name": "activityid"
+            }
+          }
+        }
+      },
+      {
+        "-name": "local_ids",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "local_id",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "remote_id",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "updated",
+            "-type": "int",
+            "-searchable": "1"
+          }
+        ],
+        "indexes": {
+          "index": [
+            {
+              "-name": "local_ids_1",
+              "col": [
+                {
+                  "-name": "remote_id"
+                },
+                {
+                  "-name": "local_id"
+                }
+              ]
+            },
+            {
+              "-name": "local_ids_2",
+              "col": [
+                {
+                  "-name": "local_id"
+                },
+                {
+                  "-name": "remote_id"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "-name": "app_tables",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "name",
+            "-type": "varchar",
+            "-searchable": "0"
+          }
+        ],
+        "indexes": {
+          "index": {
+            "-name": "app_tables_1",
+            "col": {
+              "-name": "name"
+            }
+          }
+        }
+      },
+      {
+        "-name": "app_table_field",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "tableid",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "fieldname",
+            "-type": "varchar",
+            "-searchable": "0"
+          },
+          {
+            "-name": "fieldtype",
+            "-type": "varchar",
+            "-searchable": "0"
+          },
+          {
+            "-name": "is_password",
+            "-type": "int",
+            "-searchable": "0"
+          }
+        ],
+        "indexes": {
+          "index": {
+            "-name": "app_table_field_1",
+            "col": {
+              "-name": "tableid"
+            }
+          }
+        }
+      },
+      {
+        "-name": "app_setting",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "key",
+            "-type": "varchar",
+            "-searchable": "1"
+          },
+          {
+            "-name": "str_value",
+            "-type": "text",
+            "-searchable": "0"
+          },
+          {
+            "-name": "int_value",
+            "-type": "int",
+            "-searchable": "0"
+          }
+        ],
+        "indexes": {
+          "index": {
+            "-name": "app_settings_1",
+            "col": {
+              "-name": "key"
+            }
+          }
+        }
+      },
+      {
+        "-name": "action_dictionary",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "name",
+            "-type": "text",
+            "-searchable": "0"
+          },
+          {
+            "-name": "completed",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "complete_pros",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "errors",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "error_txt",
+            "-type": "text",
+            "-searchable": "0"
+          },
+          {
+            "-name": "action_data",
+            "-type": "text",
+            "-searchable": "0"
+          },
+          {
+            "-name": "created",
+            "-type": "int_utc_created",
+            "-searchable": "0"
+          },
+          {
+            "-name": "response_txt",
+            "-type": "text",
+            "-searchable": "0"
+          },
+          {
+            "-name": "response_handled",
+            "-type": "int",
+            "-searchable": "1"
+          },
+          {
+            "-name": "response_handler",
+            "-type": "varchar",
+            "-searchable": "0"
+          }
+        ],
+        "indexes": {
+          "index": {
+            "-name": "action_dictionary_1",
+            "col": [
+              {
+                "-name": "completed"
+              },
+              {
+                "-name": "response_handled"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "-name": "app_log",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "logtype",
+            "-type": "varchar",
+            "-searchable": "1"
+          },
+          {
+            "-name": "logmessage",
+            "-type": "text",
+            "-searchable": "0"
+          },
+          {
+            "-name": "logtime",
+            "-type": "int_utc_created",
+            "-searchable": "0"
+          }
+        ]
+      },
+      {
+        "-name": "node_link",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "userid",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "typeid",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "objid",
+            "-type": "int",
+            "-searchable": "0"
+          }
+        ]
+      },
+      {
+        "-name": "NodeText",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "nodeid",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "heading",
+            "-type": "varchar",
+            "-searchable": "0"
+          },
+          {
+            "-name": "value",
+            "-type": "text",
+            "-searchable": "0"
+          },
+          {
+            "-name": "user_id",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "update_time",
+            "-type": "datetime",
+            "-searchable": "0"
+          },
+          {
+            "-name": "session_id",
+            "-type": "int",
+            "-searchable": "0"
+          }
+        ],
+        "indexes": {
+          "index": {
+            "-name": "NodeText_1",
+            "col": {
+              "-name": "nodeid"
+            }
+          }
+        }
+      },
+      {
+        "-name": "NodeName",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "nodeid",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "name",
+            "-type": "varchar",
+            "-searchable": "0"
+          },
+          {
+            "-name": "user_id",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "update_time",
+            "-type": "datetime",
+            "-searchable": "0"
+          },
+          {
+            "-name": "session_id",
+            "-type": "int",
+            "-searchable": "0"
+          }
+        ]
+      },
+      {
+        "-name": "NodeMeta",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "user_id",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "update_time",
+            "-type": "datetime",
+            "-searchable": "0"
+          },
+          {
+            "-name": "session_id",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "class_id",
+            "-type": "int",
+            "-searchable": "0"
+          }
+        ]
+      },
+      {
+        "-name": "NodeLink",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "userid",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "typeid",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "objid",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "user_id",
+            "-type": "int",
+            "-searchable": "0"
+          },
+          {
+            "-name": "update_time",
+            "-type": "datetime",
+            "-searchable": "0"
+          },
+          {
+            "-name": "session_id",
+            "-type": "int",
+            "-searchable": "0"
+          }
+        ],
+        "indexes": {
+          "index": [
+            {
+              "-name": "NodeLink_1",
+              "col": [
+                {
+                  "-name": "userid"
+                },
+                {
+                  "-name": "typeid"
+                },
+                {
+                  "-name": "objid"
+                }
+              ]
+            },
+            {
+              "-name": "NodeLink_2",
+              "col": [
+                {
+                  "-name": "objid"
+                },
+                {
+                  "-name": "typeid"
+                },
+                {
+                  "-name": "userid"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "-name": "NodeLinkNames",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "name",
+            "-type": "varchar",
+            "-searchable": "0"
+          }
+        ],
+        "indexes": {
+          "index": {
+            "-name": "NodeLinkNames_1",
+            "col": {
+              "-name": "name"
+            }
+          }
+        }
+      },
+      {
+        "-name": "NodeClassNames",
+        "field": [
+          {
+            "-name": "id",
+            "-type": "int_primary",
+            "-searchable": "0"
+          },
+          {
+            "-name": "name",
+            "-type": "varchar",
+            "-searchable": "0"
+          }
+        ],
+        "indexes": {
+          "index": {
+            "-name": "NodeClassNames_1",
+            "col": {
+              "-name": "name"
+            }
+          }
+        }
+      }
+    ]
+  }
+}
