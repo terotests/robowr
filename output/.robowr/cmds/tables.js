@@ -3,7 +3,9 @@
 // create base models for the application...
 module.exports.run = function ( wr ) {
 
+  // possibly new files are generated during the code creation also...
   wr.fn( wr => {
+
     const model = wr.getState()
     model.tables.table.forEach( table => {
       const name = table['-name'];
