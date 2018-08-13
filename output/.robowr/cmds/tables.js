@@ -3,18 +3,15 @@
 // create base models for the application...
 module.exports.run = function ( wr ) {
 
-  // possibly new files are generated during the code creation also...
-  wr.fn( wr => {
+  const model = wr.getState()
+  model.tables.table.forEach( table => {
+    const name = table['-name'];
+    const fields = table.field;
+    const m = wr.getFileWriter('/src/sql/', `${name}.sql`)
 
-    console.log('Tables Writer was called...')
-
-    const model = wr.getState()
-    model.tables.table.forEach( table => {
-      const name = table['-name'];
-      const fields = table.field;
-      const m = wr.getFileWriter('/src/sql/', `${name}.sql`)
+    m.fn( m => {
       m.out('-- sample SQL statements for the ' + name, true)
-  
+
       m.out('CREATE TABLE '+name+' (', true)
       m.indent(1)
         fields.forEach( f => {
@@ -41,6 +38,8 @@ module.exports.run = function ( wr ) {
         })
       m.indent(-1)
       m.out(')', true)
+  
     })
   })
+
 }

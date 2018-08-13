@@ -5,36 +5,36 @@ The project readme.
 
 
 ### Tables in the system
- - TblTblTblTblTbldigi_node
- - TblTblTblTblTbldigi_m_text
- - TblTblTblTblTbldigi_m_blob
- - TblTblTblTblTbldigi_m_file
- - TblTblTblTblTbldigi_m_auth
- - TblTblTblTblTbldigi_user_profile
- - TblTblTblTblTblnode_sem
- - TblTblTblTblTblnode_sem_history
- - TblTblTblTblTblgraph_journal
- - TblTblTblTblTblaction_history
- - TblTblTblTblTbllocal_file
- - TblTblTblTblTblchange_activity
- - TblTblTblTblTblchange_field
- - TblTblTblTblTblchange_insert_node
- - TblTblTblTblTblchange_insert_link
- - TblTblTblTblTblchange_remove_link
- - TblTblTblTblTblchange_upload_file
- - TblTblTblTblTbllocal_ids
- - TblTblTblTblTblapp_tables
- - TblTblTblTblTblapp_table_field
- - TblTblTblTblTblapp_setting
- - TblTblTblTblTblaction_dictionary
- - TblTblTblTblTblapp_log
- - TblTblTblTblTblnode_link
- - TblTblTblTblTblNodeText
- - TblTblTblTblTblNodeName
- - TblTblTblTblTblNodeMeta
- - TblTblTblTblTblNodeLink
- - TblTblTblTblTblNodeLinkNames
- - TblTblTblTblTblNodeClassNames
+ - TblTblTblTblTblTbldigi_node
+ - TblTblTblTblTblTbldigi_m_text
+ - TblTblTblTblTblTbldigi_m_blob
+ - TblTblTblTblTblTbldigi_m_file
+ - TblTblTblTblTblTbldigi_m_auth
+ - TblTblTblTblTblTbldigi_user_profile
+ - TblTblTblTblTblTblnode_sem
+ - TblTblTblTblTblTblnode_sem_history
+ - TblTblTblTblTblTblgraph_journal
+ - TblTblTblTblTblTblaction_history
+ - TblTblTblTblTblTbllocal_file
+ - TblTblTblTblTblTblchange_activity
+ - TblTblTblTblTblTblchange_field
+ - TblTblTblTblTblTblchange_insert_node
+ - TblTblTblTblTblTblchange_insert_link
+ - TblTblTblTblTblTblchange_remove_link
+ - TblTblTblTblTblTblchange_upload_file
+ - TblTblTblTblTblTbllocal_ids
+ - TblTblTblTblTblTblapp_tables
+ - TblTblTblTblTblTblapp_table_field
+ - TblTblTblTblTblTblapp_setting
+ - TblTblTblTblTblTblaction_dictionary
+ - TblTblTblTblTblTblapp_log
+ - TblTblTblTblTblTblnode_link
+ - TblTblTblTblTblTblNodeText
+ - TblTblTblTblTblTblNodeName
+ - TblTblTblTblTblTblNodeMeta
+ - TblTblTblTblTblTblNodeLink
+ - TblTblTblTblTblTblNodeLinkNames
+ - TblTblTblTblTblTblNodeClassNames
 # Module information 
 
 The module information was added automatically
