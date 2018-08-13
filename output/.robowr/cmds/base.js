@@ -27,6 +27,12 @@ The project readme.
 
 `);
 
+  readme.fn( wr => {
+    const state = wr.getState()
+    console.log('The State was called')
+    wr.out('... some module info', true)
+  })
+
   readme.tag('modules').out('# Module information ', true)
 
   readme.out('', true)
