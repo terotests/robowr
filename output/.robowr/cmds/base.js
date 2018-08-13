@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.init = {
     "name": 'Base Project'
 };
+exports.priority = 10
 exports.short_doc = 'Initialize Project';
 function run(wr) {
     const model = wr.getState();
