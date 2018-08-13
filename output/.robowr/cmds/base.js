@@ -29,9 +29,8 @@ The project readme.
 
   readme.fn( wr => {
     const state = wr.getState()
-    console.log('The State was called')
     wr.out('', true)
-    wr.out('### some module info', true)
+    wr.out('### Tables in the system', true)
     state.tables.table.forEach( tbl => {
       wr.out( ' - ' + tbl['-name'], true)
     })

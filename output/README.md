@@ -4,7 +4,7 @@
 The project readme.
 
 
-### some module info
+### Tables in the system
  - digi_node
  - digi_m_text
  - digi_m_blob
