@@ -4,10 +4,6 @@
 The project readme.
 
 ... some module info
-... some module info
-... some module info
-... some module info
-... some module info
 # Module information 
 
 The module information was added automatically
