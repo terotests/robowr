@@ -30,7 +30,11 @@ The project readme.
   readme.fn( wr => {
     const state = wr.getState()
     console.log('The State was called')
-    wr.out('... some module info', true)
+    wr.out('', true)
+    wr.out('### some module info', true)
+    state.tables.table.forEach( tbl => {
+      wr.out( ' - ' + tbl['-name'], true)
+    })
   })
 
   readme.tag('modules').out('# Module information ', true)
