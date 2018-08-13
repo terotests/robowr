@@ -1,10 +1,6 @@
--- sample SQL statements for the tbl_TblTblTblTblTblTblnode_sem_history
-CREATE TABLE tbl_TblTblTblTblTblTblnode_sem_history (
+-- sample SQL statements for the tbl_node_sem
+CREATE TABLE tbl_node_sem (
   id  int not null PRIMARY KEY,
-  semid  int,
-  moduserid ,
-  modtime ,
-  removed  int,
   userid  int,
   objid  int,
   typeid  int,
@@ -31,4 +27,6 @@ CREATE TABLE tbl_TblTblTblTblTblTblnode_sem_history (
   p31  int,
   p32  int,
   p33  int,
+  local  int,
+  local_rem  int,
 )

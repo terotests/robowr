@@ -5,36 +5,36 @@ The project readme.
 
 
 ### Tables in the system
- - tbl_TblTblTblTblTblTbldigi_node
- - tbl_TblTblTblTblTblTbldigi_m_text
- - tbl_TblTblTblTblTblTbldigi_m_blob
- - tbl_TblTblTblTblTblTbldigi_m_file
- - tbl_TblTblTblTblTblTbldigi_m_auth
- - tbl_TblTblTblTblTblTbldigi_user_profile
- - tbl_TblTblTblTblTblTblnode_sem
- - tbl_TblTblTblTblTblTblnode_sem_history
- - tbl_TblTblTblTblTblTblgraph_journal
- - tbl_TblTblTblTblTblTblaction_history
- - tbl_TblTblTblTblTblTbllocal_file
- - tbl_TblTblTblTblTblTblchange_activity
- - tbl_TblTblTblTblTblTblchange_field
- - tbl_TblTblTblTblTblTblchange_insert_node
- - tbl_TblTblTblTblTblTblchange_insert_link
- - tbl_TblTblTblTblTblTblchange_remove_link
- - tbl_TblTblTblTblTblTblchange_upload_file
- - tbl_TblTblTblTblTblTbllocal_ids
- - tbl_TblTblTblTblTblTblapp_tables
- - tbl_TblTblTblTblTblTblapp_table_field
- - tbl_TblTblTblTblTblTblapp_setting
- - tbl_TblTblTblTblTblTblaction_dictionary
- - tbl_TblTblTblTblTblTblapp_log
- - tbl_TblTblTblTblTblTblnode_link
- - tbl_TblTblTblTblTblTblNodeText
- - tbl_TblTblTblTblTblTblNodeName
- - tbl_TblTblTblTblTblTblNodeMeta
- - tbl_TblTblTblTblTblTblNodeLink
- - tbl_TblTblTblTblTblTblNodeLinkNames
- - tbl_TblTblTblTblTblTblNodeClassNames
+ - tbl_digi_node
+ - tbl_digi_m_text
+ - tbl_digi_m_blob
+ - tbl_digi_m_file
+ - tbl_digi_m_auth
+ - tbl_digi_user_profile
+ - tbl_node_sem
+ - tbl_node_sem_history
+ - tbl_graph_journal
+ - tbl_action_history
+ - tbl_local_file
+ - tbl_change_activity
+ - tbl_change_field
+ - tbl_change_insert_node
+ - tbl_change_insert_link
+ - tbl_change_remove_link
+ - tbl_change_upload_file
+ - tbl_local_ids
+ - tbl_app_tables
+ - tbl_app_table_field
+ - tbl_app_setting
+ - tbl_action_dictionary
+ - tbl_app_log
+ - tbl_node_link
+ - tbl_NodeText
+ - tbl_NodeName
+ - tbl_NodeMeta
+ - tbl_NodeLink
+ - tbl_NodeLinkNames
+ - tbl_NodeClassNames
 # Module information 
 
 The module information was added automatically

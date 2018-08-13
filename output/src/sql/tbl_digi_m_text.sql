@@ -1,5 +1,5 @@
--- sample SQL statements for the tbl_TblTblTblTblTblTbldigi_m_text
-CREATE TABLE tbl_TblTblTblTblTblTbldigi_m_text (
+-- sample SQL statements for the tbl_digi_m_text
+CREATE TABLE tbl_digi_m_text (
   id  int not null PRIMARY KEY,
   created  int,
   updated ,

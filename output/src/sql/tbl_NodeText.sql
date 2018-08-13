@@ -1,5 +1,5 @@
--- sample SQL statements for the tbl_TblTblTblTblTblTblNodeText
-CREATE TABLE tbl_TblTblTblTblTblTblNodeText (
+-- sample SQL statements for the tbl_NodeText
+CREATE TABLE tbl_NodeText (
   id  int,
   nodeid  int,
   heading  varchar(255),

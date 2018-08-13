@@ -1,5 +1,5 @@
--- sample SQL statements for the tbl_TblTblTblTblTblTbldigi_node
-CREATE TABLE tbl_TblTblTblTblTblTbldigi_node (
+-- sample SQL statements for the tbl_digi_node
+CREATE TABLE tbl_digi_node (
   id  int not null PRIMARY KEY,
   created  int,
   updated ,

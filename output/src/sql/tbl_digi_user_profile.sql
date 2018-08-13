@@ -1,5 +1,5 @@
--- sample SQL statements for the tbl_TblTblTblTblTblTbldigi_user_profile
-CREATE TABLE tbl_TblTblTblTblTblTbldigi_user_profile (
+-- sample SQL statements for the tbl_digi_user_profile
+CREATE TABLE tbl_digi_user_profile (
   id  int not null PRIMARY KEY,
   nodeid  int,
   email  varchar(255),
