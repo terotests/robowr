@@ -38,7 +38,10 @@ The project readme.
 
   // alter state a bit
   model.tables.table.forEach( table => {
-    table['-name'] = 'Tbl' + table['-name'];
+    const n = table['-name']
+    if(n.indexOf('tbl_') < 0 ) {
+      table['-name'] = 'tbl_' + table['-name'];
+    }
   })  
 
   readme.tag('modules').out('# Module information ', true)

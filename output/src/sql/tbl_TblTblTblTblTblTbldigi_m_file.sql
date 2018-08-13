@@ -1,5 +1,5 @@
--- sample SQL statements for the TblTblTblTblTblTbldigi_m_file
-CREATE TABLE TblTblTblTblTblTbldigi_m_file (
+-- sample SQL statements for the tbl_TblTblTblTblTblTbldigi_m_file
+CREATE TABLE tbl_TblTblTblTblTblTbldigi_m_file (
   id  int not null PRIMARY KEY,
   created  int,
   updated ,

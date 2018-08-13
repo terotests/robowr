@@ -1,5 +1,5 @@
--- sample SQL statements for the TblTblTblTblTblTblaction_history
-CREATE TABLE TblTblTblTblTblTblaction_history (
+-- sample SQL statements for the tbl_TblTblTblTblTblTblaction_history
+CREATE TABLE tbl_TblTblTblTblTblTblaction_history (
   id  int not null PRIMARY KEY,
   ctrl_name  text ,
   data_url  text ,

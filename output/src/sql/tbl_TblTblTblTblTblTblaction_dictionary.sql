@@ -1,5 +1,5 @@
--- sample SQL statements for the TblTblTblTblTblTblaction_dictionary
-CREATE TABLE TblTblTblTblTblTblaction_dictionary (
+-- sample SQL statements for the tbl_TblTblTblTblTblTblaction_dictionary
+CREATE TABLE tbl_TblTblTblTblTblTblaction_dictionary (
   id  int not null PRIMARY KEY,
   name  text ,
   completed  int,

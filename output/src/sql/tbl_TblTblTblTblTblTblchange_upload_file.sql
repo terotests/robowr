@@ -1,5 +1,5 @@
--- sample SQL statements for the TblTblTblTblTblTblchange_upload_file
-CREATE TABLE TblTblTblTblTblTblchange_upload_file (
+-- sample SQL statements for the tbl_TblTblTblTblTblTblchange_upload_file
+CREATE TABLE tbl_TblTblTblTblTblTblchange_upload_file (
   id  int not null PRIMARY KEY,
   activityid  int,
   nodeid  int,

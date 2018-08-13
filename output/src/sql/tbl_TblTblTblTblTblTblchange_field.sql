@@ -1,5 +1,5 @@
--- sample SQL statements for the TblTblTblTblTblTblchange_field
-CREATE TABLE TblTblTblTblTblTblchange_field (
+-- sample SQL statements for the tbl_TblTblTblTblTblTblchange_field
+CREATE TABLE tbl_TblTblTblTblTblTblchange_field (
   id  int not null PRIMARY KEY,
   activityid  int,
   tablename  varchar(255),

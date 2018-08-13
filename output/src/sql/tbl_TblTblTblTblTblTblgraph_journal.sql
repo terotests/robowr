@@ -1,5 +1,5 @@
--- sample SQL statements for the TblTblTblTblTblTblgraph_journal
-CREATE TABLE TblTblTblTblTblTblgraph_journal (
+-- sample SQL statements for the tbl_TblTblTblTblTblTblgraph_journal
+CREATE TABLE tbl_TblTblTblTblTblTblgraph_journal (
   id  int not null PRIMARY KEY,
   src_node  int,
   link_id  int,
