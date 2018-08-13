@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.init = {
-    "name": ''
+    "name": 'Base Project'
 };
 exports.short_doc = 'Initialize Project';
 function run(wr) {

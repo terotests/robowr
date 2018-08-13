@@ -1,4 +1,4 @@
 
-// the starting point of the applictaion Jee2
+// the starting point of the applictaion Base Project
   
   

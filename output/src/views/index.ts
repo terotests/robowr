@@ -1,5 +1,5 @@
 
-// Views of Jee2
+// Views of Base Project
   
   
 // view for model User
