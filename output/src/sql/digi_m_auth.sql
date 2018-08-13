@@ -1,4 +1,4 @@
--- SQL statements for the digi_m_auth
+-- sample SQL statements for the digi_m_auth
 CREATE TABLE digi_m_auth (
   id  int not null PRIMARY KEY,
   created  int,

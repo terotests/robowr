@@ -1,7 +1,7 @@
 {
-  "name": "The Marshmallow Man Project",
+  "name": "Jee",
   "version": "1.0.0",
-  "description": "The Marshmallow Man Project",
+  "description": "Jee",
   "main": "index.js",
   "scripts": {
     "test": "find ./dist/ -name \"*.d.ts\" -delete && tsc && ./node_modules/.bin/mocha dist/test/ --recursive --reporter spec"

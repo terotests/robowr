@@ -1,4 +1,4 @@
--- SQL statements for the node_sem_history
+-- sample SQL statements for the node_sem_history
 CREATE TABLE node_sem_history (
   id  int not null PRIMARY KEY,
   semid  int,

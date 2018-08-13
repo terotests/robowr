@@ -1,4 +1,4 @@
--- SQL statements for the graph_journal
+-- sample SQL statements for the graph_journal
 CREATE TABLE graph_journal (
   id  int not null PRIMARY KEY,
   src_node  int,

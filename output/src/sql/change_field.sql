@@ -1,4 +1,4 @@
--- SQL statements for the change_field
+-- sample SQL statements for the change_field
 CREATE TABLE change_field (
   id  int not null PRIMARY KEY,
   activityid  int,

@@ -1,5 +1,5 @@
 
-// Views of The Marshmallow Man Project
+// Views of Jee
   
   
 // view for model User

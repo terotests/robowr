@@ -1,4 +1,4 @@
--- SQL statements for the digi_node
+-- sample SQL statements for the digi_node
 CREATE TABLE digi_node (
   id  int not null PRIMARY KEY,
   created  int,

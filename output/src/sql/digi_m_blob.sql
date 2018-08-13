@@ -1,4 +1,4 @@
--- SQL statements for the digi_m_blob
+-- sample SQL statements for the digi_m_blob
 CREATE TABLE digi_m_blob (
   id  int not null PRIMARY KEY,
   created  int,

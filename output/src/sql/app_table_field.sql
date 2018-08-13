@@ -1,4 +1,4 @@
--- SQL statements for the app_table_field
+-- sample SQL statements for the app_table_field
 CREATE TABLE app_table_field (
   id  int not null PRIMARY KEY,
   tableid  int,

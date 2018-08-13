@@ -1,4 +1,4 @@
--- SQL statements for the NodeText
+-- sample SQL statements for the NodeText
 CREATE TABLE NodeText (
   id  int,
   nodeid  int,

@@ -1,4 +1,4 @@
--- SQL statements for the action_dictionary
+-- sample SQL statements for the action_dictionary
 CREATE TABLE action_dictionary (
   id  int not null PRIMARY KEY,
   name  text ,

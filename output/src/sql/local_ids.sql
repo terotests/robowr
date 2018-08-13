@@ -1,4 +1,4 @@
--- SQL statements for the local_ids
+-- sample SQL statements for the local_ids
 CREATE TABLE local_ids (
   id  int not null PRIMARY KEY,
   local_id  int,
