@@ -2,7 +2,7 @@
   "tables": {
     "table": [
       {
-        "-name": "TblTblTblTbldigi_node",
+        "-name": "TblTblTblTblTbldigi_node",
         "field": [
           {
             "-name": "id",
@@ -79,7 +79,7 @@
         ]
       },
       {
-        "-name": "TblTblTblTbldigi_m_text",
+        "-name": "TblTblTblTblTbldigi_m_text",
         "field": [
           {
             "-name": "id",
@@ -152,7 +152,7 @@
         }
       },
       {
-        "-name": "TblTblTblTbldigi_m_blob",
+        "-name": "TblTblTblTblTbldigi_m_blob",
         "field": [
           {
             "-name": "id",
@@ -225,7 +225,7 @@
         }
       },
       {
-        "-name": "TblTblTblTbldigi_m_file",
+        "-name": "TblTblTblTblTbldigi_m_file",
         "field": [
           {
             "-name": "id",
@@ -328,7 +328,7 @@
         }
       },
       {
-        "-name": "TblTblTblTbldigi_m_auth",
+        "-name": "TblTblTblTblTbldigi_m_auth",
         "field": [
           {
             "-name": "id",
@@ -415,7 +415,7 @@
         }
       },
       {
-        "-name": "TblTblTblTbldigi_user_profile",
+        "-name": "TblTblTblTblTbldigi_user_profile",
         "field": [
           {
             "-name": "id",
@@ -488,7 +488,7 @@
         }
       },
       {
-        "-name": "TblTblTblTblnode_sem",
+        "-name": "TblTblTblTblTblnode_sem",
         "field": [
           {
             "-name": "id",
@@ -672,7 +672,7 @@
         }
       },
       {
-        "-name": "TblTblTblTblnode_sem_history",
+        "-name": "TblTblTblTblTblnode_sem_history",
         "field": [
           {
             "-name": "id",
@@ -834,7 +834,7 @@
         ]
       },
       {
-        "-name": "TblTblTblTblgraph_journal",
+        "-name": "TblTblTblTblTblgraph_journal",
         "field": [
           {
             "-name": "id",
@@ -875,7 +875,7 @@
         ]
       },
       {
-        "-name": "TblTblTblTblaction_history",
+        "-name": "TblTblTblTblTblaction_history",
         "field": [
           {
             "-name": "id",
@@ -915,7 +915,7 @@
         ]
       },
       {
-        "-name": "TblTblTblTbllocal_file",
+        "-name": "TblTblTblTblTbllocal_file",
         "field": [
           {
             "-name": "id",
@@ -950,7 +950,7 @@
         ]
       },
       {
-        "-name": "TblTblTblTblchange_activity",
+        "-name": "TblTblTblTblTblchange_activity",
         "field": [
           {
             "-name": "id",
@@ -998,7 +998,7 @@
         }
       },
       {
-        "-name": "TblTblTblTblchange_field",
+        "-name": "TblTblTblTblTblchange_field",
         "field": [
           {
             "-name": "id",
@@ -1056,7 +1056,7 @@
         }
       },
       {
-        "-name": "TblTblTblTblchange_insert_node",
+        "-name": "TblTblTblTblTblchange_insert_node",
         "field": [
           {
             "-name": "id",
@@ -1094,7 +1094,7 @@
         }
       },
       {
-        "-name": "TblTblTblTblchange_insert_link",
+        "-name": "TblTblTblTblTblchange_insert_link",
         "field": [
           {
             "-name": "id",
@@ -1132,7 +1132,7 @@
         }
       },
       {
-        "-name": "TblTblTblTblchange_remove_link",
+        "-name": "TblTblTblTblTblchange_remove_link",
         "field": [
           {
             "-name": "id",
@@ -1170,7 +1170,7 @@
         }
       },
       {
-        "-name": "TblTblTblTblchange_upload_file",
+        "-name": "TblTblTblTblTblchange_upload_file",
         "field": [
           {
             "-name": "id",
@@ -1218,7 +1218,7 @@
         }
       },
       {
-        "-name": "TblTblTblTbllocal_ids",
+        "-name": "TblTblTblTblTbllocal_ids",
         "field": [
           {
             "-name": "id",
@@ -1269,7 +1269,7 @@
         }
       },
       {
-        "-name": "TblTblTblTblapp_tables",
+        "-name": "TblTblTblTblTblapp_tables",
         "field": [
           {
             "-name": "id",
@@ -1292,7 +1292,7 @@
         }
       },
       {
-        "-name": "TblTblTblTblapp_table_field",
+        "-name": "TblTblTblTblTblapp_table_field",
         "field": [
           {
             "-name": "id",
@@ -1330,7 +1330,7 @@
         }
       },
       {
-        "-name": "TblTblTblTblapp_setting",
+        "-name": "TblTblTblTblTblapp_setting",
         "field": [
           {
             "-name": "id",
@@ -1363,7 +1363,7 @@
         }
       },
       {
-        "-name": "TblTblTblTblaction_dictionary",
+        "-name": "TblTblTblTblTblaction_dictionary",
         "field": [
           {
             "-name": "id",
@@ -1436,7 +1436,7 @@
         }
       },
       {
-        "-name": "TblTblTblTblapp_log",
+        "-name": "TblTblTblTblTblapp_log",
         "field": [
           {
             "-name": "id",
@@ -1461,7 +1461,7 @@
         ]
       },
       {
-        "-name": "TblTblTblTblnode_link",
+        "-name": "TblTblTblTblTblnode_link",
         "field": [
           {
             "-name": "id",
@@ -1486,7 +1486,7 @@
         ]
       },
       {
-        "-name": "TblTblTblTblNodeText",
+        "-name": "TblTblTblTblTblNodeText",
         "field": [
           {
             "-name": "id",
@@ -1534,7 +1534,7 @@
         }
       },
       {
-        "-name": "TblTblTblTblNodeName",
+        "-name": "TblTblTblTblTblNodeName",
         "field": [
           {
             "-name": "id",
@@ -1569,7 +1569,7 @@
         ]
       },
       {
-        "-name": "TblTblTblTblNodeMeta",
+        "-name": "TblTblTblTblTblNodeMeta",
         "field": [
           {
             "-name": "id",
@@ -1599,7 +1599,7 @@
         ]
       },
       {
-        "-name": "TblTblTblTblNodeLink",
+        "-name": "TblTblTblTblTblNodeLink",
         "field": [
           {
             "-name": "id",
@@ -1671,7 +1671,7 @@
         }
       },
       {
-        "-name": "TblTblTblTblNodeLinkNames",
+        "-name": "TblTblTblTblTblNodeLinkNames",
         "field": [
           {
             "-name": "id",
@@ -1694,7 +1694,7 @@
         }
       },
       {
-        "-name": "TblTblTblTblNodeClassNames",
+        "-name": "TblTblTblTblTblNodeClassNames",
         "field": [
           {
             "-name": "id",
