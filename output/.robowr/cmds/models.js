@@ -15,7 +15,6 @@ module.exports.run = function ( wr ) {
       })
     m.indent(-1)
     m.out(`}`, true)
-
   })
   
 }

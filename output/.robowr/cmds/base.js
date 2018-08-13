@@ -36,6 +36,11 @@ The project readme.
     })
   })
 
+  // alter state a bit
+  model.tables.table.forEach( table => {
+    table['-name'] = 'Tbl' + table['-name'];
+  })  
+
   readme.tag('modules').out('# Module information ', true)
 
   readme.out('', true)

@@ -5,36 +5,36 @@ The project readme.
 
 
 ### Tables in the system
- - digi_node
- - digi_m_text
- - digi_m_blob
- - digi_m_file
- - digi_m_auth
- - digi_user_profile
- - node_sem
- - node_sem_history
- - graph_journal
- - action_history
- - local_file
- - change_activity
- - change_field
- - change_insert_node
- - change_insert_link
- - change_remove_link
- - change_upload_file
- - local_ids
- - app_tables
- - app_table_field
- - app_setting
- - action_dictionary
- - app_log
- - node_link
- - NodeText
- - NodeName
- - NodeMeta
- - NodeLink
- - NodeLinkNames
- - NodeClassNames
+ - Tbldigi_node
+ - Tbldigi_m_text
+ - Tbldigi_m_blob
+ - Tbldigi_m_file
+ - Tbldigi_m_auth
+ - Tbldigi_user_profile
+ - Tblnode_sem
+ - Tblnode_sem_history
+ - Tblgraph_journal
+ - Tblaction_history
+ - Tbllocal_file
+ - Tblchange_activity
+ - Tblchange_field
+ - Tblchange_insert_node
+ - Tblchange_insert_link
+ - Tblchange_remove_link
+ - Tblchange_upload_file
+ - Tbllocal_ids
+ - Tblapp_tables
+ - Tblapp_table_field
+ - Tblapp_setting
+ - Tblaction_dictionary
+ - Tblapp_log
+ - Tblnode_link
+ - TblNodeText
+ - TblNodeName
+ - TblNodeMeta
+ - TblNodeLink
+ - TblNodeLinkNames
+ - TblNodeClassNames
 # Module information 
 
 The module information was added automatically
