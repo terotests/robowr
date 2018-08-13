@@ -1,5 +1,5 @@
--- sample SQL statements for the tbl_digi_m_blob
-CREATE TABLE tbl_digi_m_blob (
+-- sample SQL statements for the digi_m_blob
+CREATE TABLE digi_m_blob (
   id  int not null PRIMARY KEY,
   created  int,
   updated ,

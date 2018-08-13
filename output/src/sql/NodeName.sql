@@ -1,5 +1,5 @@
--- sample SQL statements for the tbl_NodeName
-CREATE TABLE tbl_NodeName (
+-- sample SQL statements for the NodeName
+CREATE TABLE NodeName (
   id  int,
   nodeid  int,
   name  varchar(255),

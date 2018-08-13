@@ -9,6 +9,7 @@ module.exports.run = function ( wr ) {
     const fields = table.field;
     const m = wr.getFileWriter('/src/sql/', `${name}.sql`)
 
+    // Delay the writing...
     m.fn( m => {
       m.out('-- sample SQL statements for the ' + name, true)
 

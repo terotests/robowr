@@ -5,36 +5,36 @@ The project readme.
 
 
 ### Tables in the system
- - tbl_digi_node
- - tbl_digi_m_text
- - tbl_digi_m_blob
- - tbl_digi_m_file
- - tbl_digi_m_auth
- - tbl_digi_user_profile
- - tbl_node_sem
- - tbl_node_sem_history
- - tbl_graph_journal
- - tbl_action_history
- - tbl_local_file
- - tbl_change_activity
- - tbl_change_field
- - tbl_change_insert_node
- - tbl_change_insert_link
- - tbl_change_remove_link
- - tbl_change_upload_file
- - tbl_local_ids
- - tbl_app_tables
- - tbl_app_table_field
- - tbl_app_setting
- - tbl_action_dictionary
- - tbl_app_log
- - tbl_node_link
- - tbl_NodeText
- - tbl_NodeName
- - tbl_NodeMeta
- - tbl_NodeLink
- - tbl_NodeLinkNames
- - tbl_NodeClassNames
+ - digi_node
+ - digi_m_text
+ - digi_m_blob
+ - digi_m_file
+ - digi_m_auth
+ - digi_user_profile
+ - node_sem
+ - node_sem_history
+ - graph_journal
+ - action_history
+ - local_file
+ - change_activity
+ - change_field
+ - change_insert_node
+ - change_insert_link
+ - change_remove_link
+ - change_upload_file
+ - local_ids
+ - app_tables
+ - app_table_field
+ - app_setting
+ - action_dictionary
+ - app_log
+ - node_link
+ - NodeText
+ - NodeName
+ - NodeMeta
+ - NodeLink
+ - NodeLinkNames
+ - NodeClassNames
 # Module information 
 
 The module information was added automatically

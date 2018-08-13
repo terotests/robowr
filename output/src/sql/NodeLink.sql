@@ -1,5 +1,5 @@
--- sample SQL statements for the tbl_NodeLink
-CREATE TABLE tbl_NodeLink (
+-- sample SQL statements for the NodeLink
+CREATE TABLE NodeLink (
   id  int,
   userid  int,
   typeid  int,

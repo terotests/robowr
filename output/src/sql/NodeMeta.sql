@@ -1,5 +1,5 @@
--- sample SQL statements for the tbl_NodeMeta
-CREATE TABLE tbl_NodeMeta (
+-- sample SQL statements for the NodeMeta
+CREATE TABLE NodeMeta (
   id  int,
   user_id  int,
   update_time ,

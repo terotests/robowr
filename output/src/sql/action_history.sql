@@ -1,5 +1,5 @@
--- sample SQL statements for the tbl_action_history
-CREATE TABLE tbl_action_history (
+-- sample SQL statements for the action_history
+CREATE TABLE action_history (
   id  int not null PRIMARY KEY,
   ctrl_name  text ,
   data_url  text ,

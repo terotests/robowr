@@ -1,5 +1,5 @@
--- sample SQL statements for the tbl_local_file
-CREATE TABLE tbl_local_file (
+-- sample SQL statements for the local_file
+CREATE TABLE local_file (
   id  int not null PRIMARY KEY,
   type  text ,
   filepath  text ,
