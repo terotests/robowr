@@ -2,7 +2,7 @@
   "tables": {
     "table": [
       {
-        "-name": "TblTbldigi_node",
+        "-name": "TblTblTbldigi_node",
         "field": [
           {
             "-name": "id",
@@ -79,7 +79,7 @@
         ]
       },
       {
-        "-name": "TblTbldigi_m_text",
+        "-name": "TblTblTbldigi_m_text",
         "field": [
           {
             "-name": "id",
@@ -152,7 +152,7 @@
         }
       },
       {
-        "-name": "TblTbldigi_m_blob",
+        "-name": "TblTblTbldigi_m_blob",
         "field": [
           {
             "-name": "id",
@@ -225,7 +225,7 @@
         }
       },
       {
-        "-name": "TblTbldigi_m_file",
+        "-name": "TblTblTbldigi_m_file",
         "field": [
           {
             "-name": "id",
@@ -328,7 +328,7 @@
         }
       },
       {
-        "-name": "TblTbldigi_m_auth",
+        "-name": "TblTblTbldigi_m_auth",
         "field": [
           {
             "-name": "id",
@@ -415,7 +415,7 @@
         }
       },
       {
-        "-name": "TblTbldigi_user_profile",
+        "-name": "TblTblTbldigi_user_profile",
         "field": [
           {
             "-name": "id",
@@ -488,7 +488,7 @@
         }
       },
       {
-        "-name": "TblTblnode_sem",
+        "-name": "TblTblTblnode_sem",
         "field": [
           {
             "-name": "id",
@@ -672,7 +672,7 @@
         }
       },
       {
-        "-name": "TblTblnode_sem_history",
+        "-name": "TblTblTblnode_sem_history",
         "field": [
           {
             "-name": "id",
@@ -834,7 +834,7 @@
         ]
       },
       {
-        "-name": "TblTblgraph_journal",
+        "-name": "TblTblTblgraph_journal",
         "field": [
           {
             "-name": "id",
@@ -875,7 +875,7 @@
         ]
       },
       {
-        "-name": "TblTblaction_history",
+        "-name": "TblTblTblaction_history",
         "field": [
           {
             "-name": "id",
@@ -915,7 +915,7 @@
         ]
       },
       {
-        "-name": "TblTbllocal_file",
+        "-name": "TblTblTbllocal_file",
         "field": [
           {
             "-name": "id",
@@ -950,7 +950,7 @@
         ]
       },
       {
-        "-name": "TblTblchange_activity",
+        "-name": "TblTblTblchange_activity",
         "field": [
           {
             "-name": "id",
@@ -998,7 +998,7 @@
         }
       },
       {
-        "-name": "TblTblchange_field",
+        "-name": "TblTblTblchange_field",
         "field": [
           {
             "-name": "id",
@@ -1056,7 +1056,7 @@
         }
       },
       {
-        "-name": "TblTblchange_insert_node",
+        "-name": "TblTblTblchange_insert_node",
         "field": [
           {
             "-name": "id",
@@ -1094,7 +1094,7 @@
         }
       },
       {
-        "-name": "TblTblchange_insert_link",
+        "-name": "TblTblTblchange_insert_link",
         "field": [
           {
             "-name": "id",
@@ -1132,7 +1132,7 @@
         }
       },
       {
-        "-name": "TblTblchange_remove_link",
+        "-name": "TblTblTblchange_remove_link",
         "field": [
           {
             "-name": "id",
@@ -1170,7 +1170,7 @@
         }
       },
       {
-        "-name": "TblTblchange_upload_file",
+        "-name": "TblTblTblchange_upload_file",
         "field": [
           {
             "-name": "id",
@@ -1218,7 +1218,7 @@
         }
       },
       {
-        "-name": "TblTbllocal_ids",
+        "-name": "TblTblTbllocal_ids",
         "field": [
           {
             "-name": "id",
@@ -1269,7 +1269,7 @@
         }
       },
       {
-        "-name": "TblTblapp_tables",
+        "-name": "TblTblTblapp_tables",
         "field": [
           {
             "-name": "id",
@@ -1292,7 +1292,7 @@
         }
       },
       {
-        "-name": "TblTblapp_table_field",
+        "-name": "TblTblTblapp_table_field",
         "field": [
           {
             "-name": "id",
@@ -1330,7 +1330,7 @@
         }
       },
       {
-        "-name": "TblTblapp_setting",
+        "-name": "TblTblTblapp_setting",
         "field": [
           {
             "-name": "id",
@@ -1363,7 +1363,7 @@
         }
       },
       {
-        "-name": "TblTblaction_dictionary",
+        "-name": "TblTblTblaction_dictionary",
         "field": [
           {
             "-name": "id",
@@ -1436,7 +1436,7 @@
         }
       },
       {
-        "-name": "TblTblapp_log",
+        "-name": "TblTblTblapp_log",
         "field": [
           {
             "-name": "id",
@@ -1461,7 +1461,7 @@
         ]
       },
       {
-        "-name": "TblTblnode_link",
+        "-name": "TblTblTblnode_link",
         "field": [
           {
             "-name": "id",
@@ -1486,7 +1486,7 @@
         ]
       },
       {
-        "-name": "TblTblNodeText",
+        "-name": "TblTblTblNodeText",
         "field": [
           {
             "-name": "id",
@@ -1534,7 +1534,7 @@
         }
       },
       {
-        "-name": "TblTblNodeName",
+        "-name": "TblTblTblNodeName",
         "field": [
           {
             "-name": "id",
@@ -1569,7 +1569,7 @@
         ]
       },
       {
-        "-name": "TblTblNodeMeta",
+        "-name": "TblTblTblNodeMeta",
         "field": [
           {
             "-name": "id",
@@ -1599,7 +1599,7 @@
         ]
       },
       {
-        "-name": "TblTblNodeLink",
+        "-name": "TblTblTblNodeLink",
         "field": [
           {
             "-name": "id",
@@ -1671,7 +1671,7 @@
         }
       },
       {
-        "-name": "TblTblNodeLinkNames",
+        "-name": "TblTblTblNodeLinkNames",
         "field": [
           {
             "-name": "id",
@@ -1694,7 +1694,7 @@
         }
       },
       {
-        "-name": "TblTblNodeClassNames",
+        "-name": "TblTblTblNodeClassNames",
         "field": [
           {
             "-name": "id",
