@@ -272,12 +272,21 @@ const save_data = async () => {
   if(is_git) {
     // Branch summary
     const branch_info =  await simpleGit.branchLocal()
-    if(branch_info.current === 'master') {
+    console.log(branch_info)
+    if(branch_info.current != 'robowr') {
       // console.log('SORRY, robowr does not work with master branches....')
       // return
       current_branch = branch_info.current
       new_branch = 'robowr'
-      simpleGit.checkoutLocalBranch( new_branch)
+
+      // possibly commit currren status...
+      
+
+      if(branch_info.branches[new_branch]) {
+        await simpleGit.checkout( new_branch )
+      } else {
+        await simpleGit.checkoutLocalBranch( new_branch)
+      }
     }
   }
 

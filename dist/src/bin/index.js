@@ -237,12 +237,18 @@ const save_data = () => __awaiter(this, void 0, void 0, function* () {
     if (is_git) {
         // Branch summary
         const branch_info = yield simpleGit.branchLocal();
-        if (branch_info.current === 'master') {
+        console.log(branch_info);
+        if (branch_info.current != 'robowr') {
             // console.log('SORRY, robowr does not work with master branches....')
             // return
             current_branch = branch_info.current;
             new_branch = 'robowr';
-            simpleGit.checkoutLocalBranch(new_branch);
+            if (branch_info.branches[new_branch]) {
+                yield simpleGit.checkout(new_branch);
+            }
+            else {
+                yield simpleGit.checkoutLocalBranch(new_branch);
+            }
         }
     }
     const processed = {};
