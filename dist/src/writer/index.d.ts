@@ -3,6 +3,13 @@ export declare class CodeSlice {
     writer: CodeWriter;
     getCode(): string;
 }
+export declare type WriterFn = (wr: CodeWriter) => void;
+export declare class CodeSliceFn extends CodeSlice {
+    code: string;
+    writer: CodeWriter;
+    fn: WriterFn;
+    getCode(): string;
+}
 export declare class CodeWriter {
     ownerFile: CodeFile;
     tagName: string;
@@ -27,6 +34,7 @@ export declare class CodeWriter {
     had_nl: boolean;
     state: {};
     constructor();
+    fn(fn: WriterFn): CodeWriter;
     setState(...objs: any[]): void;
     getState(): any;
     getFilesystem(): CodeFileSystem;
@@ -55,7 +63,7 @@ export declare class CodeFileSystem {
     readTagName(str: string, index: number): string;
     openTaggedFile(path: string, name: string, tagStart: string, tagEnd: string): CodeFile;
     mkdir(path: string): void;
-    saveTo(root_path: string): Promise<void>;
+    saveTo(root_path: string, onlyIfNotExists?: boolean): Promise<void>;
 }
 export declare class CodeFile {
     path_name: string;
