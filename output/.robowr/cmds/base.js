@@ -27,7 +27,6 @@ function run(wr) {
 The project readme.
 
 `);
-
   readme.fn( wr => {
     const state = wr.getState()
     wr.out('', true)
