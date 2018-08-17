@@ -1,7 +1,7 @@
 {
-  "name": "Base Project",
+  "name": "Base Project Test",
   "version": "1.0.0",
-  "description": "Base Project",
+  "description": "Base Project Test",
   "main": "index.js",
   "scripts": {
     "test": "find ./dist/ -name \"*.d.ts\" -delete && tsc && ./node_modules/.bin/mocha dist/test/ --recursive --reporter spec"
