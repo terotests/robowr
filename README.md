@@ -21,6 +21,11 @@ This project is not ready yet.
 - merging models so that they can add new data to arrays
 - saving default command settings
 
+## Think about branch safetu
+
+- perhaps you should always work in some branch?
+- Robowr could require some working branch to be used so that master is not destroyed
+
 ## Done
 
 - command order / priority
