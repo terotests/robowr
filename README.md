@@ -40,7 +40,7 @@ You don't have to write all the code using `robowr`, so it plays nicely with act
 Note that `robowr` is not ready for production.
 
 ```
-npm i robowr
+npm i -g robowr
 ```
 
 # Usage

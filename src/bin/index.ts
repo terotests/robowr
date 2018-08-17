@@ -26,7 +26,7 @@ const normalizePath = ( item ) => {
   return path.normalize( targetDir + '/' + (item.path || item.path_name) + '/' + item.name.trim() ) 
 }
 
-const commands = []
+let commands = []
 
 const find_cmd = (name) => {
   return commands.filter( c => c.name === name ).pop()
@@ -37,19 +37,23 @@ const find_commands = (rootPath) => {
     fs.readdirSync(rootPath).forEach(file => {
       const name = file.split('.')[0]
       const ext = file.split('.')[1]
+      console.log(file)
       if(find_cmd(name)) return
       if(ext === 'js') {
         try {
           const cmd = require(rootPath + '/' + file)
           commands.push( {
             name,
+            order : cmd.order || argv._.indexOf( name ),
             require_path : rootPath + '/' + file,
             short_doc : cmd.short_doc || '',
             long_doc : cmd.long_doc || '',
             init : cmd.init || {}
           })
         } catch(e) {
-    
+          console.error(e)
+          console.log('Could not require command' + name + ' from file')
+
         }
       }
     })     
@@ -73,10 +77,19 @@ if( argv.a ) {
       argv._.push( c.name )
     }
   })
+} else {
+  commands = commands.filter( c => {
+    return argv._.indexOf( c.name ) >= 0
+  })
 }
 
-if(process.env.ROBOWR) find_commands(process.env.ROBOWR)
+commands.sort( (a,b) => a.order - b.order )
 
+console.log('Commands')
+console.log(commands)
+
+// Filter not present commands...
+// if(process.env.ROBOWR) find_commands(process.env.ROBOWR)
 
 if(argv._.length < 1) {
   console.log('robowr <command>')
@@ -111,7 +124,6 @@ let initData = {}
 const data_files = []
 
 const readCommandData = ( CmdName : string ) : any => {
-
   // try from .robowr subdirectory
   try {
     const TryData = fs.readFileSync( process.cwd() + '/.robowr/data/' + CmdName + '.json', 'utf8' )
@@ -143,19 +155,13 @@ const readCommandData = ( CmdName : string ) : any => {
   return {}
 }
 
-// Initialize the command data
-for( let CmdName of argv._) {
-
-  initData = { ...initData, ...readCommandData(CmdName)}
-  const givenCmd = commands.filter( c => c.name === CmdName ).pop()
-
-  // initialize using the command 
-  if(!givenCmd) {
-    console.log('Invalid command', CmdName)
-    process.exit()
-  } else {
-    initData = { ...givenCmd.init, ...initData }
-  }
+// Initilize Commands
+for( let givenCmd of commands) {
+  // initialize the command data into the current nodes
+  initData = { 
+    ...initData, 
+    ...givenCmd.init,
+    ...readCommandData(givenCmd.name)}
 }
 
 for( let key of Object.keys( initData ) ) {
@@ -179,29 +185,28 @@ const save_data = async () => {
   const all_cmds = []
 
   // run all the commands...
-  for( let Name of argv._) {
+  for( let command of commands) {
     
-    all_cmds.push(Name)
-
+    all_cmds.push(command.name)
     let file_i = fileSystem.files.length
-
-    const command = find_cmd( Name )
     const cmd = require(command.require_path)
     
     // read the source 
     const cmd_src = fs.readFileSync( command.require_path, 'utf8' )
-    const cmd_wr = wr.getFileWriter('.robowr/cmds/', Name + '.js')
+    const cmd_wr = wr.getFileWriter('.robowr/cmds/', command.name + '.js')
     cmd_wr.raw( cmd_src ) 
 
-    const cmd_data_wr = wr.getFileWriter('.robowr/data/', Name + '.json')
+    const cmd_data_wr = wr.getFileWriter('.robowr/data/', command.name + '.json')
     cmd_data_wr.raw( JSON.stringify( command.initData, null, 2 ) )    
     cmd.run( wr )
-    while( file_i < fileSystem.files.length) {
-      
+
+    // first pass
+    const file_cnt1 = fileSystem.files.length
+    while( file_i < file_cnt1) {      
       const f = fileSystem.files[file_i]
       // console.log('command ', Name, normalizePath( f ))
       write_history.push({
-        cmd  : Name,
+        cmd  : command.name,
         path : f.path_name,
         name : f.name,
         data : f.getCode(),
@@ -209,6 +214,20 @@ const save_data = async () => {
       })
       file_i++;
     } 
+
+    // second pass, new files could be created by writers...
+    const file_cnt2 = fileSystem.files.length
+    while( file_i < file_cnt2) {      
+      const f = fileSystem.files[file_i]
+      write_history.push({
+        cmd  : command.name,
+        path : f.path_name,
+        name : f.name,
+        data : f.getCode(),
+        filesys : f
+      })
+      file_i++;
+    }     
   }
 
   write_history.forEach( c => {
@@ -226,8 +245,7 @@ const save_data = async () => {
   } catch(e) {
 
   }
-  const simpleGit = require('simple-git/promise')(targetDir);  
-  const is_git = await simpleGit.checkIsRepo()
+
   const newList = []
   const this_cmd_list = []
   if(prevWriteHistory) {
@@ -242,16 +260,46 @@ const save_data = async () => {
     }
   }
 
-  await fileSystem.saveTo( targetDir );  
-
+  // save only new files into directory
+  await fileSystem.saveTo( targetDir, true );
+  
+  const simpleGit = require('simple-git/promise')(targetDir);  
+  const is_git = await simpleGit.checkIsRepo()  
 
   let had_changes = false
+  let current_branch = ''
+  let new_branch = ''
+  if(is_git) {
+    // Branch summary
+    const branch_info =  await simpleGit.branchLocal()
+    if(branch_info.current === 'master') {
+      // console.log('SORRY, robowr does not work with master branches....')
+      // return
+      current_branch = branch_info.current
+      new_branch = 'robowr'
+      simpleGit.checkoutLocalBranch( new_branch)
+    }
+  }
 
   const processed = {}
   for( let old_file of this_cmd_list ) {
     // 
+    const the_path = normalizePath( old_file ) 
     const curr_file = write_history.filter( v => normalizePath(v) === normalizePath( old_file) ).pop()
+
+    /*
+    if(fs.existsSync(the_path)) {
+      const current_data = fs.readFileSync( the_path, 'utf8')
+      if(current_data != old_file.data ) {
+        // If there is data which is not same as previously...
+        console.log(`WARNING, file ${the_path} was modified by user, skipping`)
+        continue 
+      }
+    }
+    */
+
     if(!curr_file) {
+      // if the file has been removed...
       console.log(`removed : ${normalizePath( old_file )}`)
       had_changes = true
       if(is_git) {
@@ -270,7 +318,14 @@ const save_data = async () => {
     }
   }  
   for( let new_file of write_history ) {
+    const the_path = normalizePath( new_file )
     if(!processed[normalizePath( new_file )]) {
+      /*
+      if(fs.existsSync(the_path)) {
+        console.log(`WARNING, file ${the_path} was already created by the user, can not re-create.`)
+        continue 
+      }        
+      */
       had_changes = true
       newList.push( new_file )
       console.log(`added : ${normalizePath( new_file )}`)      
@@ -296,6 +351,11 @@ const save_data = async () => {
   if(!had_changes) {
     console.log('Nothing changed.')
   }
+
+  // restore to the current branch
+  if(is_git && (current_branch !== new_branch)) {
+    await simpleGit.checkoutLocalBranch( current_branch )
+  }  
 }
 
 save_data()

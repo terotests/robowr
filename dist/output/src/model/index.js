@@ -1,2 +1,2 @@
-// The The Marshmallow Man Project models come about here
+// The Base Project models come about here
 //# sourceMappingURL=index.js.map

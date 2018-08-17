@@ -1,5 +1,5 @@
-// Views of The Marshmallow Man Project
-// view for model User
-// view for model Picture
-// view for model File
+// view for model User ...
+// view for model Picture ...
+// view for model File ...
+// Views of Base Project
 //# sourceMappingURL=index.js.map

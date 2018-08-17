@@ -23,6 +23,22 @@ class CodeSlice {
     }
 }
 exports.CodeSlice = CodeSlice;
+class CodeSliceFn extends CodeSlice {
+    constructor() {
+        super(...arguments);
+        this.code = '';
+    }
+    getCode() {
+        if (!this.writer || !this.fn)
+            return '';
+        const localWriter = new CodeWriter();
+        localWriter.parent = this.writer;
+        localWriter.fs = this.writer.getFilesystem();
+        this.fn(localWriter);
+        return localWriter.getCode();
+    }
+}
+exports.CodeSliceFn = CodeSliceFn;
 class CodeWriter {
     constructor() {
         this.tagName = "";
@@ -42,6 +58,21 @@ class CodeWriter {
         const new_slice = new CodeSlice();
         this.slices.push(new_slice);
         this.current_slice = new_slice;
+    }
+    fn(fn) {
+        const position = this.fork();
+        const new_writer = new CodeWriter();
+        const new_slice = new CodeSliceFn();
+        new_slice.fn = fn;
+        new_slice.writer = position;
+        position.fs = this.getFilesystem();
+        new_writer.parent = this;
+        new_writer._indentAmount = this._indentAmount;
+        this.slices.push(new_slice);
+        const new_active_slice = new CodeSlice();
+        this.slices.push(new_active_slice);
+        this.current_slice = new_active_slice;
+        return this;
     }
     setState(...objs) {
         for (let obj of objs) {
@@ -312,8 +343,8 @@ class CodeFileSystem {
             }
         }
     }
-    // comparision to the old saved data...
-    saveTo(root_path) {
+    // onlyIfNotExists = write files only if the do exist
+    saveTo(root_path, onlyIfNotExists = false) {
         return __awaiter(this, void 0, void 0, function* () {
             const fs = require('fs');
             for (let file of this.files) {
@@ -322,7 +353,9 @@ class CodeFileSystem {
                 const data = file.getCode();
                 if (data.length > 0) {
                     const path = file_path + '/' + file.name.trim();
-                    fs.writeFileSync(path, data);
+                    if (!onlyIfNotExists || (!fs.existsSync(path))) {
+                        fs.writeFileSync(path, data);
+                    }
                 }
             }
         });
