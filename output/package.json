@@ -1,7 +1,7 @@
 {
-  "name": "Base Project Test 2",
+  "name": "The Marshmallow Man Project 1.0",
   "version": "1.0.0",
-  "description": "Base Project Test 2",
+  "description": "The Marshmallow Man Project 1.0",
   "main": "index.js",
   "scripts": {
     "test": "find ./dist/ -name \"*.d.ts\" -delete && tsc && ./node_modules/.bin/mocha dist/test/ --recursive --reporter spec"
