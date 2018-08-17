@@ -1,5 +1,5 @@
 
-# Project The Marshmallow Man Project 1.0
+# Project The Marshmallow Man Project 1.1
 
 The project readme.
 

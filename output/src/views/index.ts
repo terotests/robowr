@@ -1,5 +1,5 @@
 
-// Views of The Marshmallow Man Project 1.0
+// Views of The Marshmallow Man Project 1.1
   
   
 // view for model User
