@@ -350,6 +350,7 @@ async function run_writer() {
     // save and get versioned files...
 
     if( is_git && had_changes ) {
+      await simpleGit.add( targetDir + '/.robowr/writes/history.json' )
       await simpleGit.commit(commitMsg)
       await simpleGit.push()
       console.log('*** pushed to git ***')
