@@ -254,6 +254,7 @@ const save_data = () => __awaiter(this, void 0, void 0, function* () {
     yield fileSystem.saveTo(targetDir);
     // save and get versioned files...
     if (is_git && had_changes) {
+        yield simpleGit.add(targetDir + '/.robowr/writes/history.json');
         yield simpleGit.commit(commitMsg);
         yield simpleGit.push();
         console.log('*** pushed to git ***');
