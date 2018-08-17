@@ -1,2 +1,2 @@
-// the starting point of the applictaion The Marshmallow Man Project
+// the starting point of the applictaion Base Project
 //# sourceMappingURL=index.js.map
