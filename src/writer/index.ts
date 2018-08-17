@@ -16,6 +16,26 @@ export class CodeSlice {
   }
 }
 
+export type WriterFn = (wr:CodeWriter) => void
+
+export class CodeSliceFn extends CodeSlice {
+
+  code:string = ''
+  writer:CodeWriter 
+  fn:WriterFn
+
+  getCode():string {
+    if(!this.writer || !this.fn ) return ''
+    
+    const localWriter = new CodeWriter()
+    localWriter.parent = this.writer
+    localWriter.fs = this.writer.getFilesystem()
+
+    this.fn( localWriter )
+    return localWriter.getCode()
+  }
+}
+
 export class CodeWriter {
 
   ownerFile : CodeFile
@@ -49,6 +69,28 @@ export class CodeWriter {
     this.slices.push( new_slice )
     this.current_slice = new_slice
   }  
+
+  fn( fn:WriterFn ) :CodeWriter {
+
+    const position = this.fork()
+
+    const new_writer = new CodeWriter ()
+    const new_slice = new CodeSliceFn ()
+    new_slice.fn = fn 
+    new_slice.writer = position 
+    position.fs = this.getFilesystem()
+
+    new_writer.parent = this
+    new_writer._indentAmount = this._indentAmount
+
+    this.slices.push( new_slice )
+
+    const new_active_slice = new CodeSlice()
+    this.slices.push( new_active_slice )
+    this.current_slice = new_active_slice
+    return this
+
+  }
 
   setState( ...objs:any[] ) {
     for(let obj of objs) {
@@ -344,8 +386,8 @@ export class CodeFileSystem {
     }
   }
 
-  // comparision to the old saved data...
-  async saveTo (root_path:string) {
+  // onlyIfNotExists = write files only if the do exist
+  async saveTo (root_path:string, onlyIfNotExists:boolean = false) {
     const fs = require('fs')
     for(let file of this.files) {
       const file_path = root_path + '/' + file.path_name
@@ -353,7 +395,9 @@ export class CodeFileSystem {
       const data = file.getCode()
       if(data.length > 0 ) {
         const path = file_path + '/' + file.name.trim()
-        fs.writeFileSync( path, data )
+        if(!onlyIfNotExists || (!fs.existsSync(path))) {
+          fs.writeFileSync( path, data )
+        }
       }
     }
   }  
