@@ -17,10 +17,13 @@ The most important features are:
 
 This project is not ready yet.
 
-- command order / priority
+- working in separate branch for the Robowr by default
 - merging models so that they can add new data to arrays
 - saving default command settings
 
+## Done
+
+- command order / priority
 
 # Why Robowr?
 
