@@ -129,25 +129,25 @@
     "cmd": "base",
     "path": "/src/",
     "name": "index.ts",
-    "data": "\n// the starting point of the applictaion Base Project Test 4\n  \n  "
+    "data": "\n// the starting point of the applictaion The Marshmallow Man Project 1.1\n  \n  "
   },
   {
     "cmd": "base",
     "path": "/src/model/",
     "name": "index.ts",
-    "data": "\n// The Base Project Test 4 models come about here\n  \n  "
+    "data": "\n// The The Marshmallow Man Project 1.1 models come about here\n  \n  "
   },
   {
-    "cmd": "views",
+    "cmd": "base",
     "path": "/src/views/",
     "name": "index.ts",
-    "data": "\n// view for model User\n// view for model Picture\n// view for model File\n\n// Views of Base Project Test 4\n  \n  "
+    "data": "\n// Views of The Marshmallow Man Project 1.1\n  \n  \n// view for model User\n// view for model Picture\n// view for model File\n"
   },
   {
     "cmd": "base",
     "path": "/",
     "name": "README.md",
-    "data": "\n# Project Base Project Test 4\n\nThe project readme.\n\n\n### Tables in the system\n - digi_node\n - digi_m_text\n - digi_m_blob\n - digi_m_file\n - digi_m_auth\n - digi_user_profile\n - node_sem\n - node_sem_history\n - graph_journal\n - action_history\n - local_file\n - change_activity\n - change_field\n - change_insert_node\n - change_insert_link\n - change_remove_link\n - change_upload_file\n - local_ids\n - app_tables\n - app_table_field\n - app_setting\n - action_dictionary\n - app_log\n - node_link\n - NodeText\n - NodeName\n - NodeMeta\n - NodeLink\n - NodeLinkNames\n - NodeClassNames\n# Module information \n\nThe module information was added automatically\n"
+    "data": "\n# Project The Marshmallow Man Project 1.1\n\nThe project readme.\n\n\n### Tables in the system\n - digi_node\n - digi_m_text\n - digi_m_blob\n - digi_m_file\n - digi_m_auth\n - digi_user_profile\n - node_sem\n - node_sem_history\n - graph_journal\n - action_history\n - local_file\n - change_activity\n - change_field\n - change_insert_node\n - change_insert_link\n - change_remove_link\n - change_upload_file\n - local_ids\n - app_tables\n - app_table_field\n - app_setting\n - action_dictionary\n - app_log\n - node_link\n - NodeText\n - NodeName\n - NodeMeta\n - NodeLink\n - NodeLinkNames\n - NodeClassNames\n# Module information \n\nThe module information was added automatically\n"
   },
   {
     "cmd": "base",
@@ -165,7 +165,7 @@
     "cmd": "base",
     "path": "/",
     "name": "package.json",
-    "data": "{\n  \"name\": \"Base Project Test 4\",\n  \"version\": \"1.0.0\",\n  \"description\": \"Base Project Test 4\",\n  \"main\": \"index.js\",\n  \"scripts\": {\n    \"test\": \"find ./dist/ -name \\\"*.d.ts\\\" -delete && tsc && ./node_modules/.bin/mocha dist/test/ --recursive --reporter spec\"\n  },\n  \"keywords\": [\n  ],\n  \"author\": \"Tero Tolonen\",\n  \"license\": \"MIT\",\n  \"dependencies\": {\n    \"@types/chai\": \"^4.1.4\",\n    \"@types/mocha\": \"^5.2.5\",\n    \"@types/node\": \"^10.5.6\"\n  },\n  \"devDependencies\": {\n    \"chai\": \"^4.1.2\",\n    \"mocha\": \"^5.2.0\"\n  }\n}\n    \n"
+    "data": "{\n  \"name\": \"The Marshmallow Man Project 1.1\",\n  \"version\": \"1.0.0\",\n  \"description\": \"The Marshmallow Man Project 1.1\",\n  \"main\": \"index.js\",\n  \"scripts\": {\n    \"test\": \"find ./dist/ -name \\\"*.d.ts\\\" -delete && tsc && ./node_modules/.bin/mocha dist/test/ --recursive --reporter spec\"\n  },\n  \"keywords\": [\n  ],\n  \"author\": \"Tero Tolonen\",\n  \"license\": \"MIT\",\n  \"dependencies\": {\n    \"@types/chai\": \"^4.1.4\",\n    \"@types/mocha\": \"^5.2.5\",\n    \"@types/node\": \"^10.5.6\"\n  },\n  \"devDependencies\": {\n    \"chai\": \"^4.1.2\",\n    \"mocha\": \"^5.2.0\"\n  }\n}\n    \n"
   },
   {
     "cmd": "example",
