@@ -243,6 +243,7 @@ const save_data = () => __awaiter(this, void 0, void 0, function* () {
             // return
             current_branch = branch_info.current;
             new_branch = 'robowr';
+            // possibly commit currren status...
             if (branch_info.branches[new_branch]) {
                 yield simpleGit.checkout(new_branch);
             }
@@ -320,7 +321,7 @@ const save_data = () => __awaiter(this, void 0, void 0, function* () {
     }
     // restore to the current branch
     if (is_git && (current_branch !== new_branch)) {
-        yield simpleGit.checkoutLocalBranch(current_branch);
+        yield simpleGit.checkout(current_branch);
     }
 });
 save_data();

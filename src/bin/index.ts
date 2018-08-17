@@ -363,7 +363,7 @@ const save_data = async () => {
 
   // restore to the current branch
   if(is_git && (current_branch !== new_branch)) {
-    await simpleGit.checkoutLocalBranch( current_branch )
+    await simpleGit.checkout( current_branch )
   }  
 }
 
