@@ -12,7 +12,6 @@ async function run_writer() {
   const fs = require('fs')
   const path = require('path')
 
-
   console.log('RoboWR 0.01')
   console.log(argv);
   const outputDir = argv.o || argv.output
@@ -34,6 +33,8 @@ async function run_writer() {
   }
   const is_git = simpleGit && await simpleGit.checkIsRepo()  
 
+  // currently the branch check is disabled
+  /*
   let current_branch = ''
   let new_branch = ''
   if(is_git) {
@@ -49,6 +50,7 @@ async function run_writer() {
       }
     }
   }
+  */
   let commands = []
 
   const find_cmd = (name) => {
@@ -147,29 +149,36 @@ async function run_writer() {
   const data_files = []
 
   const readCommandData = ( CmdName : string ) : any => {
-    // try from .robowr subdirectory
-    try {
-      const TryData = fs.readFileSync( process.cwd() + '/.robowr/data/' + CmdName + '.json', 'utf8' )
-      const TryObj = JSON.parse(TryData)
-      const c = find_cmd( CmdName )
-      c.initData = TryObj
-      return TryObj;
-    } catch(e) {
 
+    const extensions = ['json', 'xml']
+
+    for( let ext of extensions) {
+      // try from .robowr subdirectory
+
+      let parser = data => JSON.parse(data)
+
+      try {
+        const TryData = fs.readFileSync( process.cwd() + '/.robowr/data/' + CmdName + '.' + ext, 'utf8' )
+        const TryObj = parser(TryData)
+        const c = find_cmd( CmdName )
+        c.initData = TryObj
+        return TryObj;
+      } catch(e) {
+
+      }
+
+      // try from current directory with file having the same name
+      try {
+        const TryData = fs.readFileSync( process.cwd() + '/' + CmdName + '.' + ext, 'utf8' )
+        const TryObj = parser( TryData)
+        const c = find_cmd( CmdName )
+        c.initData = TryObj
+        
+        return TryObj;
+      } catch(e) {
+
+      }  
     }
-
-    // try from current directory with file having the same name
-    try {
-      const TryData = fs.readFileSync( process.cwd() + '/' + CmdName + '.json', 'utf8' )
-      const TryObj = JSON.parse(TryData)
-
-      const c = find_cmd( CmdName )
-      c.initData = TryObj
-      
-      return TryObj;
-    } catch(e) {
-
-    }  
     const c = find_cmd( CmdName )
     if(!c) {
       throw "Invalid Command " + CmdName
@@ -219,6 +228,7 @@ async function run_writer() {
       const cmd_wr = wr.getFileWriter('.robowr/cmds/', command.name + '.js')
       cmd_wr.raw( cmd_src ) 
 
+      // the model could also be in XML format...
       const cmd_data_wr = wr.getFileWriter('.robowr/data/', command.name + '.json')
       cmd_data_wr.raw( JSON.stringify( command.initData, null, 2 ) )    
       cmd.run( wr )
@@ -360,10 +370,13 @@ async function run_writer() {
       console.log('Nothing changed.')
     }
 
+    // The Branch checkout is disabled for now.
     // restore to the current branch
+    /*
     if(is_git && (current_branch !== new_branch)) {
       await simpleGit.checkout( current_branch )
     }  
+    */
   }
 
   save_data()

@@ -36,22 +36,24 @@ function run_writer() {
         catch (e) {
         }
         const is_git = simpleGit && (yield simpleGit.checkIsRepo());
-        let current_branch = '';
-        let new_branch = '';
-        if (is_git) {
-            // Branch summary
-            const branch_info = yield simpleGit.branchLocal();
-            if (branch_info.current != 'robowr') {
-                current_branch = branch_info.current;
-                new_branch = 'robowr';
-                if (branch_info.branches[new_branch]) {
-                    yield simpleGit.checkout(new_branch);
-                }
-                else {
-                    yield simpleGit.checkoutLocalBranch(new_branch);
-                }
+        // currently the branch check is disabled
+        /*
+        let current_branch = ''
+        let new_branch = ''
+        if(is_git) {
+          // Branch summary
+          const branch_info =  await simpleGit.branchLocal()
+          if(branch_info.current != 'robowr') {
+            current_branch = branch_info.current
+            new_branch = 'robowr'
+            if(branch_info.branches[new_branch]) {
+              await simpleGit.checkout( new_branch )
+            } else {
+              await simpleGit.checkoutLocalBranch( new_branch)
             }
+          }
         }
+        */
         let commands = [];
         const find_cmd = (name) => {
             return commands.filter(c => c.name === name).pop();
@@ -139,25 +141,29 @@ function run_writer() {
         let initData = {};
         const data_files = [];
         const readCommandData = (CmdName) => {
-            // try from .robowr subdirectory
-            try {
-                const TryData = fs.readFileSync(process.cwd() + '/.robowr/data/' + CmdName + '.json', 'utf8');
-                const TryObj = JSON.parse(TryData);
-                const c = find_cmd(CmdName);
-                c.initData = TryObj;
-                return TryObj;
-            }
-            catch (e) {
-            }
-            // try from current directory with file having the same name
-            try {
-                const TryData = fs.readFileSync(process.cwd() + '/' + CmdName + '.json', 'utf8');
-                const TryObj = JSON.parse(TryData);
-                const c = find_cmd(CmdName);
-                c.initData = TryObj;
-                return TryObj;
-            }
-            catch (e) {
+            const extensions = ['json', 'xml'];
+            for (let ext of extensions) {
+                // try from .robowr subdirectory
+                let parser = data => JSON.parse(data);
+                try {
+                    const TryData = fs.readFileSync(process.cwd() + '/.robowr/data/' + CmdName + '.' + ext, 'utf8');
+                    const TryObj = parser(TryData);
+                    const c = find_cmd(CmdName);
+                    c.initData = TryObj;
+                    return TryObj;
+                }
+                catch (e) {
+                }
+                // try from current directory with file having the same name
+                try {
+                    const TryData = fs.readFileSync(process.cwd() + '/' + CmdName + '.' + ext, 'utf8');
+                    const TryObj = parser(TryData);
+                    const c = find_cmd(CmdName);
+                    c.initData = TryObj;
+                    return TryObj;
+                }
+                catch (e) {
+                }
             }
             const c = find_cmd(CmdName);
             if (!c) {
@@ -194,6 +200,7 @@ function run_writer() {
                 const cmd_src = fs.readFileSync(command.require_path, 'utf8');
                 const cmd_wr = wr.getFileWriter('.robowr/cmds/', command.name + '.js');
                 cmd_wr.raw(cmd_src);
+                // the model could also be in XML format...
                 const cmd_data_wr = wr.getFileWriter('.robowr/data/', command.name + '.json');
                 cmd_data_wr.raw(JSON.stringify(command.initData, null, 2));
                 cmd.run(wr);
@@ -315,6 +322,7 @@ function run_writer() {
             yield fileSystem.saveTo(targetDir);
             // save and get versioned files...
             if (is_git && had_changes) {
+                yield simpleGit.add(targetDir + '/.robowr/writes/history.json');
                 yield simpleGit.commit(commitMsg);
                 yield simpleGit.push();
                 console.log('*** pushed to git ***');
@@ -322,10 +330,13 @@ function run_writer() {
             if (!had_changes) {
                 console.log('Nothing changed.');
             }
+            // The Branch checkout is disabled for now.
             // restore to the current branch
-            if (is_git && (current_branch !== new_branch)) {
-                yield simpleGit.checkout(current_branch);
+            /*
+            if(is_git && (current_branch !== new_branch)) {
+              await simpleGit.checkout( current_branch )
             }
+            */
         });
         save_data();
     });
