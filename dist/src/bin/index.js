@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const _1 = require("../writer/");
+const writer_1 = require("../writer/");
 function run_writer() {
     return __awaiter(this, void 0, void 0, function* () {
         const argv = require('minimist')(process.argv.slice(2));
@@ -183,8 +183,8 @@ function run_writer() {
             }
         }
         const save_data = () => __awaiter(this, void 0, void 0, function* () {
-            const fileSystem = new _1.CodeFileSystem();
-            const wr = new _1.CodeWriter();
+            const fileSystem = new writer_1.CodeFileSystem();
+            const wr = new writer_1.CodeWriter();
             wr.fs = fileSystem;
             // const rootFile = fileSystem.getFile('/', '.');
             // const wr = rootFile.getWriter()

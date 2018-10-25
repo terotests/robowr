@@ -1,8 +1,9 @@
 {
   "name": "robowr",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "Application Robot",
-  "main": "dist/src/index.js",
+  "main": "dist/src/writer/index.js",
+  "types": "dist/src/writer/index.js",
   "scripts": {
     "test": "find ./dist/ -name \"*.d.ts\" -delete && tsc && ./node_modules/.bin/mocha dist/test/ --recursive --reporter spec"
   },

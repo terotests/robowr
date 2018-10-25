@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 require("mocha");
-const _1 = require("../src/writer/");
+const writer_1 = require("../src/writer/");
 const expect = require("chai").expect;
 const colors = {
     colors: ['red', 'blue', 'green', 'orange']
@@ -9,7 +9,7 @@ const colors = {
 const platforms = {
     platforms: ['ios', 'android', 'macos']
 };
-const wr = new _1.CodeWriter();
+const wr = new writer_1.CodeWriter();
 wr.setState(colors, platforms);
 function write_colors(wr) {
     const colors = wr.getState().colors;
@@ -31,7 +31,7 @@ function write_colors(wr) {
 // ... etc.
 describe("writer testing", function () {
     it('simple writer', () => {
-        const wr = new _1.CodeWriter();
+        const wr = new writer_1.CodeWriter();
         const txt = `
 global.foob = function foob() {
   return 100
@@ -42,7 +42,7 @@ global.foob = function foob() {
         expect(eval('foob()')).to.equal(100);
     });
     it('test forking and tags', () => {
-        const wr = new _1.CodeWriter();
+        const wr = new writer_1.CodeWriter();
         const comments = wr.tag('comment');
         wr.out('global.foob = function foob() {', true);
         wr.indent(1);
@@ -57,7 +57,7 @@ global.foob = function foob() {
         expect(eval('foob()')).to.equal(212);
     });
     it('test filesystem', () => {
-        const wr = _1.CodeWriter.withFS('/', 'myFile.js');
+        const wr = writer_1.CodeWriter.withFS('/', 'myFile.js');
         wr.out(`
 
 // OK, this is one of the files :)
