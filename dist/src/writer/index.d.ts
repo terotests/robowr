@@ -54,7 +54,8 @@ export declare class CodeWriter {
     writeSlice(str: string, newLine: boolean): void;
     out(str: string, newLine?: boolean): CodeWriter;
     raw(str: string, newLine?: boolean): CodeWriter;
-    getCode(): string;
+    getCode(asFileName?: string, usePrettier?: boolean): string;
+    prettier(asFileName: string): string;
 }
 export declare class CodeFileSystem {
     files: CodeFile[];
@@ -63,7 +64,10 @@ export declare class CodeFileSystem {
     readTagName(str: string, index: number): string;
     openTaggedFile(path: string, name: string, tagStart: string, tagEnd: string): CodeFile;
     mkdir(path: string): void;
-    saveTo(root_path: string, onlyIfNotExists?: boolean): Promise<void>;
+    saveTo(root_path: string, options?: {
+        onlyIfNotExists?: boolean;
+        usePrettier?: boolean;
+    }): Promise<void>;
 }
 export declare class CodeFile {
     path_name: string;
@@ -78,5 +82,5 @@ export declare class CodeFile {
     rewrite(newString: string): void;
     getImports(): string[];
     getWriter(): CodeWriter;
-    getCode(): string;
+    getCode(usePrettier?: boolean): string;
 }

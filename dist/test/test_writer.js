@@ -88,5 +88,21 @@ Let see how this works out ???
         console.log(fs);
         fs.saveTo('./test/output');
     });
+    it('Test Prettier', () => {
+        const wr = writer_1.CodeWriter.withFS('/', 'someFile.js');
+        const file2 = wr.getFileWriter('/', 'example.ts');
+        file2.out(`
+
+    class meee { jee() {} joo() {}}
+  
+function foo (a:string) : string {  
+  const x = 4 
+      return  ' aaa'  
+    }
+    `);
+        console.log(file2.getCode('test.ts', true));
+        const fs = wr.getFilesystem();
+        fs.saveTo('./test/output', { usePrettier: true });
+    });
 });
 //# sourceMappingURL=test_writer.js.map

@@ -294,7 +294,7 @@ async function run_writer() {
     }
 
     // save only new files into directory
-    await fileSystem.saveTo( targetDir, true );
+    await fileSystem.saveTo( targetDir, { onlyIfNotExists : true} );
 
     let had_changes = false
 

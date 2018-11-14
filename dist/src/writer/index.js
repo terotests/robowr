@@ -1,4 +1,5 @@
 "use strict";
+// The application generator has a global state
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -8,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// The application generator has a global state
+const prettier = require("prettier");
 let globalState = {
     state: {}
 };
@@ -243,13 +244,38 @@ class CodeWriter {
         }
         return this;
     }
-    getCode() {
+    getCode(asFileName, usePrettier = false) {
+        if (usePrettier && asFileName)
+            return this.prettier(asFileName);
         let res = "";
         for (let slice of this.slices) {
             res = res + (slice.getCode());
         }
         res = res + this.currentLine;
         return res;
+    }
+    prettier(asFileName) {
+        const path = require('path');
+        const data = this.getCode();
+        switch (path.extname(asFileName)) {
+            case '.ts':
+            case '.tsx':
+                return prettier.format(data, { semi: true, parser: "typescript" });
+            case '.js':
+                return prettier.format(data, { semi: true, parser: "babylon" });
+            case '.graphql':
+            case '.gql':
+                return prettier.format(data, { semi: true, parser: "graphql" });
+            case '.md':
+                return prettier.format(data, { semi: true, parser: "markdown" });
+            case '.scss':
+                return prettier.format(data, { parser: "scss" });
+            case '.scss':
+                return prettier.format(data, { parser: "scss" });
+            case '.json':
+                return prettier.format(data, { parser: "json" });
+        }
+        return data;
     }
 }
 exports.CodeWriter = CodeWriter;
@@ -344,16 +370,17 @@ class CodeFileSystem {
         }
     }
     // onlyIfNotExists = write files only if the do exist
-    saveTo(root_path, onlyIfNotExists = false) {
+    saveTo(root_path, options = {}) {
         return __awaiter(this, void 0, void 0, function* () {
             const fs = require('fs');
+            const path = require('path');
             for (let file of this.files) {
                 const file_path = root_path + '/' + file.path_name;
                 this.mkdir(file_path);
-                const data = file.getCode();
+                let data = file.getCode(options.usePrettier);
                 if (data.length > 0) {
                     const path = file_path + '/' + file.name.trim();
-                    if (!onlyIfNotExists || (!fs.existsSync(path))) {
+                    if (!options.onlyIfNotExists || (!fs.existsSync(path))) {
                         fs.writeFileSync(path, data);
                     }
                 }
@@ -386,8 +413,8 @@ class CodeFile {
         this.writer.ownerFile = this;
         return this.writer;
     }
-    getCode() {
-        return this.writer.getCode();
+    getCode(usePrettier = false) {
+        return this.writer.getCode(this.name, usePrettier);
     }
 }
 exports.CodeFile = CodeFile;

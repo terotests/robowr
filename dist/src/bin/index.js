@@ -260,7 +260,7 @@ function run_writer() {
                 }
             }
             // save only new files into directory
-            yield fileSystem.saveTo(targetDir, true);
+            yield fileSystem.saveTo(targetDir, { onlyIfNotExists: true });
             let had_changes = false;
             const processed = {};
             for (let old_file of this_cmd_list) {

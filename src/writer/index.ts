@@ -1,9 +1,11 @@
 
 // The application generator has a global state
+
+import * as prettier from 'prettier'
+
 let globalState = {
   state : {}
 }
-
 
 export class CodeSlice {
 
@@ -279,13 +281,39 @@ export class CodeWriter {
     return this  
   }
 
-  getCode() :string {
+  getCode(asFileName?:string, usePrettier:boolean = false) :string {
+    if( usePrettier && asFileName ) return this.prettier(asFileName)
     let res = "";
     for( let slice of this.slices ) {
       res = res + (slice.getCode())
     }
     res = res + this.currentLine
     return res
+  }  
+
+
+  prettier( asFileName:string ) : string {
+    const path = require('path')
+    const data = this.getCode()
+    switch ( path.extname(asFileName) ) {
+      case '.ts':
+      case '.tsx':
+        return prettier.format( data, { semi: true, parser: "typescript" })
+      case '.js':
+        return prettier.format( data, { semi: true, parser: "babylon" })
+      case '.graphql':
+      case '.gql':
+        return prettier.format( data, { semi: true, parser: "graphql" }) 
+      case '.md':
+        return prettier.format( data, { semi: true, parser: "markdown" })             
+      case '.scss':
+        return prettier.format( data, { parser: "scss" })
+      case '.scss':
+        return prettier.format( data, { parser: "scss" })
+      case '.json':
+        return prettier.format( data, { parser: "json" })                                 
+      }
+    return data
   }  
 
 }
@@ -387,15 +415,19 @@ export class CodeFileSystem {
   }
 
   // onlyIfNotExists = write files only if the do exist
-  async saveTo (root_path:string, onlyIfNotExists:boolean = false) {
+  async saveTo (root_path:string, options:{
+    onlyIfNotExists?: boolean 
+    usePrettier?: boolean
+  } = {}) {
     const fs = require('fs')
+    const path = require('path')
     for(let file of this.files) {
       const file_path = root_path + '/' + file.path_name
       this.mkdir(file_path)     
-      const data = file.getCode()
+      let data = file.getCode(options.usePrettier)
       if(data.length > 0 ) {
         const path = file_path + '/' + file.name.trim()
-        if(!onlyIfNotExists || (!fs.existsSync(path))) {
+        if(!options.onlyIfNotExists || (!fs.existsSync(path))) {
           fs.writeFileSync( path, data )
         }
       }
@@ -438,8 +470,8 @@ export class CodeFile {
     return this.writer
   }
 
-  getCode():string {
-    return this.writer.getCode()
+  getCode(usePrettier:boolean = false):string {
+    return this.writer.getCode(this.name, usePrettier)
   }
 
 }
