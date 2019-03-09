@@ -1,3 +1,7 @@
+class meee {
+    jee() { }
+    joo() { }
+}
 function foo(a) {
     const x = 4;
     return " aaa";

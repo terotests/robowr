@@ -54,8 +54,8 @@ export declare class CodeWriter {
     writeSlice(str: string, newLine: boolean): void;
     out(str: string, newLine?: boolean): CodeWriter;
     raw(str: string, newLine?: boolean): CodeWriter;
-    getCode(asFileName?: string, usePrettier?: boolean): string;
-    prettier(asFileName: string): string;
+    getCode(asFileName?: string, usePrettier?: boolean, prettierConfig?: any): string;
+    prettier(asFileName: string, prettierConfig?: any): string;
 }
 export declare class CodeFileSystem {
     files: CodeFile[];
@@ -67,6 +67,7 @@ export declare class CodeFileSystem {
     saveTo(root_path: string, options?: {
         onlyIfNotExists?: boolean;
         usePrettier?: boolean;
+        prettierConfig?: any;
     }): Promise<void>;
 }
 export declare class CodeFile {
@@ -82,5 +83,5 @@ export declare class CodeFile {
     rewrite(newString: string): void;
     getImports(): string[];
     getWriter(): CodeWriter;
-    getCode(usePrettier?: boolean): string;
+    getCode(usePrettier?: boolean, prettierConfig?: any): string;
 }

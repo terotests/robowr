@@ -244,9 +244,9 @@ class CodeWriter {
         }
         return this;
     }
-    getCode(asFileName, usePrettier = false) {
+    getCode(asFileName, usePrettier = false, prettierConfig) {
         if (usePrettier && asFileName)
-            return this.prettier(asFileName);
+            return this.prettier(asFileName, prettierConfig);
         let res = "";
         for (let slice of this.slices) {
             res = res + (slice.getCode());
@@ -254,26 +254,26 @@ class CodeWriter {
         res = res + this.currentLine;
         return res;
     }
-    prettier(asFileName) {
+    prettier(asFileName, prettierConfig) {
         const path = require('path');
         const data = this.getCode();
         switch (path.extname(asFileName)) {
             case '.ts':
             case '.tsx':
-                return prettier.format(data, { semi: true, parser: "typescript" });
+                return prettier.format(data, Object.assign({}, prettierConfig, { semi: true, parser: "typescript" }));
             case '.js':
-                return prettier.format(data, { semi: true, parser: "babylon" });
+                return prettier.format(data, Object.assign({}, prettierConfig, { semi: true, parser: "babylon" }));
             case '.graphql':
             case '.gql':
-                return prettier.format(data, { semi: true, parser: "graphql" });
+                return prettier.format(data, Object.assign({}, prettierConfig, { semi: true, parser: "graphql" }));
             case '.md':
-                return prettier.format(data, { semi: true, parser: "markdown" });
+                return prettier.format(data, Object.assign({}, prettierConfig, { semi: true, parser: "markdown" }));
             case '.scss':
-                return prettier.format(data, { parser: "scss" });
+                return prettier.format(data, Object.assign({}, prettierConfig, { parser: "scss" }));
             case '.scss':
-                return prettier.format(data, { parser: "scss" });
+                return prettier.format(data, Object.assign({}, prettierConfig, { parser: "scss" }));
             case '.json':
-                return prettier.format(data, { parser: "json" });
+                return prettier.format(data, Object.assign({}, prettierConfig, { parser: "json" }));
         }
         return data;
     }
@@ -377,7 +377,7 @@ class CodeFileSystem {
             for (let file of this.files) {
                 const file_path = root_path + '/' + file.path_name;
                 this.mkdir(file_path);
-                let data = file.getCode(options.usePrettier);
+                let data = file.getCode(options.usePrettier, options.prettierConfig);
                 if (data.length > 0) {
                     const path = file_path + '/' + file.name.trim();
                     if (!options.onlyIfNotExists || (!fs.existsSync(path))) {
@@ -413,8 +413,8 @@ class CodeFile {
         this.writer.ownerFile = this;
         return this.writer;
     }
-    getCode(usePrettier = false) {
-        return this.writer.getCode(this.name, usePrettier);
+    getCode(usePrettier = false, prettierConfig) {
+        return this.writer.getCode(this.name, usePrettier, prettierConfig);
     }
 }
 exports.CodeFile = CodeFile;
