@@ -182,9 +182,13 @@ export class CodeWriter {
     const new_slice = new CodeSlice();
     new_slice.writer = new_writer;
     new_writer.parent = this; // connects to the file system
-
-    // think: should this be irrelevant ?
     new_writer._indentAmount = this._indentAmount;
+
+    // current slice should be also saved
+    if (this.currentLine.length > 0) {
+      this.current_slice.code = this.currentLine;
+      this.currentLine = "";
+    }
 
     this.tags[name] = new_writer;
     this.slices.push(new_slice);
@@ -203,7 +207,7 @@ export class CodeWriter {
     new_writer.parent = this;
     new_writer._indentAmount = this._indentAmount;
 
-    // current slice should be also pushed, if it's data has not been added
+    // current slice should be also saved
     if (this.currentLine.length > 0) {
       this.current_slice.code = this.currentLine;
       this.currentLine = "";

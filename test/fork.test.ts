@@ -34,4 +34,14 @@ describe("Test creating filesystem and writing into it", () => {
     fork.out("b");
     expect(w.getCode()).to.equal("abc");
   });
+
+  test("Fork tags", () => {
+    const fs = new R.CodeFileSystem();
+    const w = fs.getFile("/", "foo.txt").getWriter();
+    w.out("a");
+    const tag1 = w.tag("tag1");
+    w.out("c");
+    w.tag("tag1").out("b");
+    expect(w.getCode()).to.equal("abc");
+  });
 });
