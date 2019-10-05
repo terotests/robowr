@@ -15,7 +15,7 @@ let globalState = {
 };
 class CodeSlice {
     constructor() {
-        this.code = '';
+        this.code = "";
     }
     getCode() {
         if (!this.writer)
@@ -27,11 +27,11 @@ exports.CodeSlice = CodeSlice;
 class CodeSliceFn extends CodeSlice {
     constructor() {
         super(...arguments);
-        this.code = '';
+        this.code = "";
     }
     getCode() {
         if (!this.writer || !this.fn)
-            return '';
+            return "";
         const localWriter = new CodeWriter();
         localWriter.parent = this.writer;
         localWriter.fs = this.writer.getFilesystem();
@@ -88,12 +88,12 @@ class CodeWriter {
             return this.fs;
         if (!this.ownerFile) {
             if (!this.parent) {
-                return (this.parent.getFilesystem());
+                return this.parent.getFilesystem();
             }
-            throw 'The Writer has no filesystem assigned';
+            throw "The Writer has no filesystem assigned";
         }
         if (!this.ownerFile.fileSystem)
-            throw 'The Writer has no filesystem assigned';
+            throw "The Writer has no filesystem assigned";
         return this.ownerFile.fileSystem;
     }
     findFile(path, fileName) {
@@ -117,21 +117,19 @@ class CodeWriter {
         return wr;
     }
     static withFS(path, fileName) {
-        return (new CodeFileSystem).getFile(path, fileName).getWriter();
+        return new CodeFileSystem().getFile(path, fileName).getWriter();
     }
     static emptyWithFS() {
         const wr = new CodeWriter();
         const file = new CodeFile(".", "emptyFile.txt");
         file.writer = wr;
-        file.fileSystem = (new CodeFileSystem);
+        file.fileSystem = new CodeFileSystem();
         wr.ownerFile = file;
         return wr;
     }
-    createTag(tag) {
-    }
+    createTag(tag) { }
     // replacte all the contents of the file with this data...
-    rewrite(str) {
-    }
+    rewrite(str) { }
     indent(delta) {
         this._indentAmount = this._indentAmount + delta;
         if (this._indentAmount < 0) {
@@ -164,7 +162,7 @@ class CodeWriter {
         const new_slice = new CodeSlice();
         new_slice.writer = new_writer;
         new_writer.parent = this; // connects to the file system
-        // think: should this be irrelevant ? 
+        // think: should this be irrelevant ?
         new_writer._indentAmount = this._indentAmount;
         this.tags[name] = new_writer;
         this.slices.push(new_slice);
@@ -180,6 +178,11 @@ class CodeWriter {
         new_slice.writer = new_writer;
         new_writer.parent = this;
         new_writer._indentAmount = this._indentAmount;
+        // current slice should be also pushed, if it's data has not been added
+        if (this.currentLine.length > 0) {
+            this.current_slice.code = this.currentLine;
+            this.currentLine = "";
+        }
         this.slices.push(new_slice);
         const new_active_slice = new CodeSlice();
         this.slices.push(new_active_slice);
@@ -191,7 +194,7 @@ class CodeWriter {
         this.currentLine = "";
     }
     newline() {
-        if ((this.currentLine.length) > 0) {
+        if (this.currentLine.length > 0) {
             this.out("", true);
         }
         return this;
@@ -200,12 +203,13 @@ class CodeWriter {
         this.addIndent();
         this.currentLine = this.currentLine + str;
         if (newLine) {
-            this.current_slice.code = this.current_slice.code + this.currentLine + this.nlStr;
+            this.current_slice.code =
+                this.current_slice.code + this.currentLine + this.nlStr;
             this.currentLine = "";
         }
     }
     out(str, newLine = false) {
-        const lines = str.split('\n'); // (strsplit str "\n")
+        const lines = str.split("\n"); // (strsplit str "\n")
         const rowCnt = lines.length;
         if (rowCnt == 1) {
             this.writeSlice(str, newLine);
@@ -214,7 +218,7 @@ class CodeWriter {
             for (let i = 0; i < lines.length; i++) {
                 const row = lines[i];
                 this.addIndent();
-                if (i < (rowCnt - 1)) {
+                if (i < rowCnt - 1) {
                     this.writeSlice(row.trim(), true);
                 }
                 else {
@@ -225,7 +229,7 @@ class CodeWriter {
         return this;
     }
     raw(str, newLine = false) {
-        const lines = str.split('\n');
+        const lines = str.split("\n");
         const rowCnt = lines.length;
         if (rowCnt == 1) {
             this.writeSlice(str, newLine);
@@ -234,7 +238,7 @@ class CodeWriter {
             for (let i = 0; i < lines.length; i++) {
                 const row = lines[i];
                 this.addIndent();
-                if (i < (rowCnt - 1)) {
+                if (i < rowCnt - 1) {
                     this.writeSlice(row, true);
                 }
                 else {
@@ -249,30 +253,30 @@ class CodeWriter {
             return this.prettier(asFileName, prettierConfig);
         let res = "";
         for (let slice of this.slices) {
-            res = res + (slice.getCode());
+            res = res + slice.getCode();
         }
         res = res + this.currentLine;
         return res;
     }
     prettier(asFileName, prettierConfig) {
-        const path = require('path');
+        const path = require("path");
         const data = this.getCode();
         switch (path.extname(asFileName)) {
-            case '.ts':
-            case '.tsx':
+            case ".ts":
+            case ".tsx":
                 return prettier.format(data, Object.assign({}, prettierConfig, { semi: true, parser: "typescript" }));
-            case '.js':
+            case ".js":
                 return prettier.format(data, Object.assign({}, prettierConfig, { semi: true, parser: "babylon" }));
-            case '.graphql':
-            case '.gql':
+            case ".graphql":
+            case ".gql":
                 return prettier.format(data, Object.assign({}, prettierConfig, { semi: true, parser: "graphql" }));
-            case '.md':
+            case ".md":
                 return prettier.format(data, Object.assign({}, prettierConfig, { semi: true, parser: "markdown" }));
-            case '.scss':
+            case ".scss":
                 return prettier.format(data, Object.assign({}, prettierConfig, { parser: "scss" }));
-            case '.scss':
+            case ".scss":
                 return prettier.format(data, Object.assign({}, prettierConfig, { parser: "scss" }));
-            case '.json':
+            case ".json":
                 return prettier.format(data, Object.assign({}, prettierConfig, { parser: "json" }));
         }
         return data;
@@ -305,16 +309,16 @@ class CodeFileSystem {
         return true;
     }
     readTagName(str, index) {
-        let name = '';
+        let name = "";
         let i = 0;
         let max_len = str.length;
-        while ((index + i) < max_len) {
-            if (str.charAt(index + i) == ')') {
+        while (index + i < max_len) {
+            if (str.charAt(index + i) == ")") {
                 return str.substring(index, index + i);
             }
             i++;
         }
-        return '';
+        return "";
     }
     // tagstart can be like tag#...
     openTaggedFile(path, name, tagStart, tagEnd) {
@@ -322,7 +326,7 @@ class CodeFileSystem {
             if (file.path_name === path && file.name === name)
                 return file;
         }
-        const data = (require('fs')).readFileSync(path + name, 'utf8');
+        const data = require("fs").readFileSync(path + name, "utf8");
         const slices = [];
         let last_i = 0;
         const wr = new CodeWriter();
@@ -359,11 +363,11 @@ class CodeFileSystem {
         return new_file;
     }
     mkdir(path) {
-        const fs = require('fs');
-        const parts = path.split('/');
-        let curr_path = '';
+        const fs = require("fs");
+        const parts = path.split("/");
+        let curr_path = "";
         for (let p of parts) {
-            curr_path = curr_path + p + '/';
+            curr_path = curr_path + p + "/";
             if (!fs.existsSync(curr_path)) {
                 fs.mkdirSync(curr_path);
             }
@@ -372,15 +376,15 @@ class CodeFileSystem {
     // onlyIfNotExists = write files only if the do exist
     saveTo(root_path, options = {}) {
         return __awaiter(this, void 0, void 0, function* () {
-            const fs = require('fs');
-            const path = require('path');
+            const fs = require("fs");
+            const path = require("path");
             for (let file of this.files) {
-                const file_path = root_path + '/' + file.path_name;
+                const file_path = root_path + "/" + file.path_name;
                 this.mkdir(file_path);
                 let data = file.getCode(options.usePrettier, options.prettierConfig);
                 if (data.length > 0) {
-                    const path = file_path + '/' + file.name.trim();
-                    if (!options.onlyIfNotExists || (!fs.existsSync(path))) {
+                    const path = file_path + "/" + file.name.trim();
+                    if (!options.onlyIfNotExists || !fs.existsSync(path)) {
                         fs.writeFileSync(path, data);
                     }
                 }
@@ -395,7 +399,7 @@ class CodeFile {
         this.name = "";
         this.name = fileName;
         this.path_name = filePath;
-        this.writer = (new CodeWriter());
+        this.writer = new CodeWriter();
         this.writer.createTag("imports");
     }
     addImport(import_name) {

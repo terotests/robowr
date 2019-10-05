@@ -5,6 +5,15 @@ node_modules/
 # folder files
 data_folder/
 
+# no coverate
+coverage/
+
+# ignore output
+output/
+
+# no distribution files
+dist/
+
 # Image files
 *.jpg
 *.png

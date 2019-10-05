@@ -1,11 +1,12 @@
 {
   "name": "robowr",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Application Robot",
   "main": "dist/src/writer/index.js",
   "types": "dist/src/writer/index.js",
   "scripts": {
-    "test": "find ./dist/ -name \"*.d.ts\" -delete && tsc && ./node_modules/.bin/mocha dist/test/ --recursive --reporter spec"
+    "compile": "tsc",
+    "test": "npm run compile && jest"
   },
   "repository": {
     "type": "git",
@@ -27,7 +28,6 @@
   },
   "homepage": "https://github.com/terotests/robowr#readme",
   "dependencies": {
-    "@types/prettier": "^1.13.2",
     "minimist": "^1.2.0",
     "prettier": "^1.15.2",
     "readline-sync": "^1.4.9",
@@ -35,9 +35,17 @@
   },
   "devDependencies": {
     "@types/chai": "^4.1.6",
-    "@types/mocha": "^5.2.5",
     "@types/node": "^10.12.0",
+    "@types/prettier": "^1.13.2",
     "chai": "^4.2.0",
-    "mocha": "^5.2.0"
+    "jest": "^24.9.0"
+  },
+  "jest": {
+    "verbose": true,
+    "testMatch": [
+      "**/__tests__/**/*.[j]s?(x)",
+      "**/?(*.)+(spec|test).[j]s?(x)"
+    ],
+    "collectCoverage": true
   }
 }
