@@ -1,3 +1,23 @@
+export interface hasWriter {
+    writer: CodeWriter;
+    newLine: boolean;
+}
+export declare type generatorFunction<T extends hasWriter> = (x: T) => CodeBlock<T>;
+export declare type CodeBlock<T extends hasWriter> = Array<CodeBlock<T>> | generatorFunction<T> | undefined | void | string;
+export declare function Join<T extends hasWriter>(list: CodeBlock<T>): CodeBlock<T>;
+export declare class Ctx<T extends {}> {
+    writer: CodeWriter;
+    newLine: boolean;
+    parent?: Ctx<T>;
+    data?: Partial<T>;
+    fork(): Ctx<T>;
+}
+/**
+ *
+ * @param ctx generic context of T to use
+ * @param lines lines to be generated
+ */
+export declare function Walk<T extends hasWriter>(ctx: T, lines: CodeBlock<T>): void;
 export declare class CodeSlice {
     code: string;
     writer: CodeWriter;
@@ -59,6 +79,7 @@ export declare class CodeWriter {
 }
 export declare class CodeFileSystem {
     files: CodeFile[];
+    state: {};
     getFile(path: string, name: string): CodeFile;
     hasTagStart(str: string, tag: string, index: number): boolean;
     readTagName(str: string, index: number): string;

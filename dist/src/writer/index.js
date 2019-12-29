@@ -1,18 +1,82 @@
 "use strict";
 // The application generator has a global state
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const prettier = require("prettier");
-let globalState = {
-    state: {}
-};
+function Join(list) {
+    return (x) => {
+        const orig = x.newLine;
+        x.newLine = false;
+        Walk(x, list);
+        x.newLine = orig;
+        return "";
+    };
+}
+exports.Join = Join;
+class Ctx {
+    constructor() {
+        this.newLine = true;
+    }
+    fork() {
+        const n = new Ctx();
+        n.writer = this.writer;
+        n.parent = this;
+        n.data = {};
+        return n;
+    }
+}
+exports.Ctx = Ctx;
+/**
+ *
+ * @param ctx generic context of T to use
+ * @param lines lines to be generated
+ */
+function Walk(ctx, lines) {
+    if (!ctx.writer) {
+        return;
+    }
+    const wr = ctx.writer;
+    if (typeof lines === "undefined") {
+        return;
+    }
+    if (typeof lines === "string") {
+        wr.out(lines, ctx.newLine);
+        return;
+    }
+    if (typeof lines === "function") {
+        const value = lines(ctx);
+        Walk(ctx, value);
+        return;
+    }
+    if (lines.length === 0) {
+        return;
+    }
+    // if the first is array, we have block indent
+    if (lines[0] instanceof Array && lines.length === 1) {
+        const unwrap = (wrappedList) => {
+            if (wrappedList instanceof Array && wrappedList.length === 1) {
+                return unwrap(wrappedList[0]);
+            }
+            return wrappedList;
+        };
+        wr.indent(1);
+        Walk(ctx, unwrap(lines));
+        wr.indent(-1);
+        return;
+    }
+    for (const line of lines) {
+        Walk(ctx, line);
+    }
+}
+exports.Walk = Walk;
 class CodeSlice {
     constructor() {
         this.code = "";
@@ -77,11 +141,11 @@ class CodeWriter {
     }
     setState(...objs) {
         for (let obj of objs) {
-            globalState.state = Object.assign({}, globalState.state, obj);
+            this.getFilesystem().state = Object.assign(Object.assign({}, this.fs.state), obj);
         }
     }
     getState() {
-        return globalState.state;
+        return this.getFilesystem().state;
     }
     getFilesystem() {
         if (this.fs)
@@ -268,20 +332,20 @@ class CodeWriter {
         switch (path.extname(asFileName)) {
             case ".ts":
             case ".tsx":
-                return prettier.format(data, Object.assign({}, prettierConfig, { semi: true, parser: "typescript" }));
+                return prettier.format(data, Object.assign(Object.assign({}, prettierConfig), { semi: true, parser: "typescript" }));
             case ".js":
-                return prettier.format(data, Object.assign({}, prettierConfig, { semi: true, parser: "babylon" }));
+                return prettier.format(data, Object.assign(Object.assign({}, prettierConfig), { semi: true, parser: "babylon" }));
             case ".graphql":
             case ".gql":
-                return prettier.format(data, Object.assign({}, prettierConfig, { semi: true, parser: "graphql" }));
+                return prettier.format(data, Object.assign(Object.assign({}, prettierConfig), { semi: true, parser: "graphql" }));
             case ".md":
-                return prettier.format(data, Object.assign({}, prettierConfig, { semi: true, parser: "markdown" }));
+                return prettier.format(data, Object.assign(Object.assign({}, prettierConfig), { semi: true, parser: "markdown" }));
             case ".scss":
-                return prettier.format(data, Object.assign({}, prettierConfig, { parser: "scss" }));
+                return prettier.format(data, Object.assign(Object.assign({}, prettierConfig), { parser: "scss" }));
             case ".scss":
-                return prettier.format(data, Object.assign({}, prettierConfig, { parser: "scss" }));
+                return prettier.format(data, Object.assign(Object.assign({}, prettierConfig), { parser: "scss" }));
             case ".json":
-                return prettier.format(data, Object.assign({}, prettierConfig, { parser: "json" }));
+                return prettier.format(data, Object.assign(Object.assign({}, prettierConfig), { parser: "json" }));
         }
         return data;
     }
@@ -290,6 +354,7 @@ exports.CodeWriter = CodeWriter;
 class CodeFileSystem {
     constructor() {
         this.files = [];
+        this.state = {};
     }
     getFile(path, name) {
         for (let file of this.files) {

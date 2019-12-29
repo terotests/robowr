@@ -2,9 +2,91 @@
 
 import * as prettier from "prettier";
 
-let globalState = {
-  state: {}
-};
+export interface hasWriter {
+  writer: CodeWriter;
+  newLine: boolean;
+}
+
+export type generatorFunction<T extends hasWriter> = (x: T) => CodeBlock<T>;
+export type CodeBlock<T extends hasWriter> =
+  | Array<CodeBlock<T>>
+  | generatorFunction<T>
+  | undefined
+  | void
+  | string;
+
+export function Join<T extends hasWriter>(list: CodeBlock<T>): CodeBlock<T> {
+  return (x: T) => {
+    const orig = x.newLine;
+    x.newLine = false;
+    Walk(x, list);
+    x.newLine = orig;
+    return "";
+  };
+}
+
+export class Ctx<T extends {}> {
+  writer: CodeWriter;
+  newLine = true;
+  parent?: Ctx<T>;
+  data?: Partial<T>;
+
+  fork() {
+    const n = new Ctx<T>();
+    n.writer = this.writer;
+    n.parent = this;
+    n.data = {};
+    return n;
+  }
+}
+
+/**
+ *
+ * @param ctx generic context of T to use
+ * @param lines lines to be generated
+ */
+export function Walk<T extends hasWriter>(ctx: T, lines: CodeBlock<T>) {
+  if (!ctx.writer) {
+    return;
+  }
+  const wr = ctx.writer;
+  if (typeof lines === "undefined") {
+    return;
+  }
+
+  if (typeof lines === "string") {
+    wr.out(lines, ctx.newLine);
+    return;
+  }
+
+  if (typeof lines === "function") {
+    const value = lines(ctx);
+    Walk(ctx, value);
+    return;
+  }
+
+  if (lines.length === 0) {
+    return;
+  }
+
+  // if the first is array, we have block indent
+  if (lines[0] instanceof Array && lines.length === 1) {
+    const unwrap = (wrappedList: CodeBlock<T>) => {
+      if (wrappedList instanceof Array && wrappedList.length === 1) {
+        return unwrap(wrappedList[0]);
+      }
+      return wrappedList;
+    };
+    wr.indent(1);
+    Walk(ctx, unwrap(lines));
+    wr.indent(-1);
+    return;
+  }
+
+  for (const line of lines) {
+    Walk(ctx, line);
+  }
+}
 
 export class CodeSlice {
   code: string = "";
@@ -90,12 +172,12 @@ export class CodeWriter {
 
   setState(...objs: any[]) {
     for (let obj of objs) {
-      globalState.state = { ...globalState.state, ...obj };
+      this.getFilesystem().state = { ...this.fs.state, ...obj };
     }
   }
 
   getState(): any {
-    return globalState.state;
+    return this.getFilesystem().state;
   }
 
   getFilesystem(): CodeFileSystem {
@@ -344,6 +426,7 @@ export class CodeWriter {
 
 export class CodeFileSystem {
   files: CodeFile[] = [];
+  state = {};
 
   getFile(path: string, name: string): CodeFile {
     for (let file of this.files) {
