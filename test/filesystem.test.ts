@@ -105,6 +105,22 @@ describe("Writer generator tests", () => {
     expect(code2).to.deep.eq(`line1\nline2\nOK\n`);
   });
 
+  test("Test custom context with .walk with defined param", () => {
+    const fs = new R.CodeFileSystem();
+
+    // define a context with data
+    const ctx = new R.Ctx<{ str: string }>();
+    ctx.data = { str: "custom" };
+
+    const code = fs
+      .getFile("./builder/gen", "testout.txt")
+      .getWriter()
+      .walk([["line1"], ["line2"], ctx => ctx.data!.str], ctx)
+      .getCode();
+
+    expect(code).to.deep.eq(`line1\nline2\ncustom\n`);
+  });
+
   test("generic comment creator", () => {
     const ctx = new R.Ctx();
     const fs = new R.CodeFileSystem();

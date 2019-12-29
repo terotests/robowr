@@ -55,7 +55,7 @@ export declare class CodeWriter {
     state: {};
     constructor();
     fn(fn: WriterFn): CodeWriter;
-    walk<T>(code: CodeBlock<Ctx<T>>): this;
+    walk<T>(code: CodeBlock<Ctx<T>>, ctx?: Ctx<T>): this;
     setState(...objs: any[]): void;
     getState(): any;
     getFilesystem(): CodeFileSystem;
