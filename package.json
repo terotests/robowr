@@ -1,6 +1,6 @@
 {
   "name": "robowr",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Code Generator Library",
   "main": "dist/src/writer/index.js",
   "types": "dist/src/writer/index.js",

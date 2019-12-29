@@ -139,6 +139,12 @@ class CodeWriter {
         this.current_slice = new_active_slice;
         return this;
     }
+    walk(code) {
+        const ctx = new Ctx();
+        ctx.writer = this;
+        Walk(ctx, code);
+        return this;
+    }
     setState(...objs) {
         for (let obj of objs) {
             this.getFilesystem().state = Object.assign(Object.assign({}, this.fs.state), obj);

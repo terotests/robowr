@@ -35,7 +35,7 @@ export class Ctx<T extends {}> {
     const n = new Ctx<T>();
     n.writer = this.writer;
     n.parent = this;
-    n.data = {};
+    n.data = this.data;
     return n;
   }
 }
@@ -167,6 +167,13 @@ export class CodeWriter {
     const new_active_slice = new CodeSlice();
     this.slices.push(new_active_slice);
     this.current_slice = new_active_slice;
+    return this;
+  }
+
+  walk<T>(code: CodeBlock<Ctx<T>>) {
+    const ctx = new Ctx<T>();
+    ctx.writer = this;
+    Walk(ctx, code);
     return this;
   }
 
