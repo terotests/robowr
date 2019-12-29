@@ -6,6 +6,10 @@ function genericComment<T>(str: string) {
   return `/* ${str} */`;
 }
 
+interface CustomCtx {
+  str: string;
+}
+
 const CreateIfNode = <T extends R.hasWriter>(
   condition: R.CodeBlock<T>,
   thenBlock: R.CodeBlock<T>,
@@ -56,6 +60,51 @@ describe("Writer generator tests", () => {
     R.Walk(ctx, [["line1"], ["line2"]]);
     expect(ctx.writer.getCode()).to.deep.eq(`line1\nline2\n`);
   });
+  test("Test contextless generator", () => {
+    const fs = new R.CodeFileSystem();
+
+    const code = fs
+      .getFile("./builder/gen", "testout.txt")
+      .getWriter()
+      .walk([["line1"], ["line2"]])
+      .getCode();
+
+    expect(code).to.deep.eq(`line1\nline2\n`);
+  });
+
+  test("Test custom context with .walk", () => {
+    const fs = new R.CodeFileSystem();
+    const code = fs
+      .getFile("./builder/gen", "testout.txt")
+      .getWriter()
+      .walk<{ str: string }>([
+        ctx => {
+          ctx.data = { str: "hello" };
+        },
+        ["line1"],
+        ["line2"],
+        ctx => ctx.data!.str
+      ])
+      .getCode();
+
+    expect(code).to.deep.eq(`line1\nline2\nhello\n`);
+
+    const code2 = fs
+      .getFile("./builder/gen", "testout2.txt")
+      .getWriter()
+      .walk<string>([
+        ctx => {
+          ctx.data = "OK";
+        },
+        ["line1"],
+        ["line2"],
+        ctx => ctx.data!
+      ])
+      .getCode();
+
+    expect(code2).to.deep.eq(`line1\nline2\nOK\n`);
+  });
+
   test("generic comment creator", () => {
     const ctx = new R.Ctx();
     const fs = new R.CodeFileSystem();
