@@ -170,10 +170,15 @@ export class CodeWriter {
     return this;
   }
 
-  walk<T>(code: CodeBlock<Ctx<T>>) {
-    const ctx = new Ctx<T>();
-    ctx.writer = this;
-    Walk(ctx, code);
+  walk<T>(code: CodeBlock<Ctx<T>>, ctx?: Ctx<T>) {
+    if (ctx) {
+      ctx.writer = this;
+      Walk(ctx, code);
+    } else {
+      const ctx = new Ctx<T>();
+      ctx.writer = this;
+      Walk(ctx, code);
+    }
     return this;
   }
 

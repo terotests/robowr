@@ -29,7 +29,7 @@ class Ctx {
         const n = new Ctx();
         n.writer = this.writer;
         n.parent = this;
-        n.data = {};
+        n.data = this.data;
         return n;
     }
 }
@@ -139,10 +139,16 @@ class CodeWriter {
         this.current_slice = new_active_slice;
         return this;
     }
-    walk(code) {
-        const ctx = new Ctx();
-        ctx.writer = this;
-        Walk(ctx, code);
+    walk(code, ctx) {
+        if (ctx) {
+            ctx.writer = this;
+            Walk(ctx, code);
+        }
+        else {
+            const ctx = new Ctx();
+            ctx.writer = this;
+            Walk(ctx, code);
+        }
         return this;
     }
     setState(...objs) {
