@@ -184,7 +184,7 @@ export class CodeWriter {
 
   setState(...objs: any[]) {
     for (let obj of objs) {
-      this.getFilesystem().state = { ...this.fs.state, ...obj };
+      this.getFilesystem().state = { ...this.getFilesystem().state, ...obj };
     }
   }
 

@@ -153,7 +153,7 @@ class CodeWriter {
     }
     setState(...objs) {
         for (let obj of objs) {
-            this.getFilesystem().state = Object.assign(Object.assign({}, this.fs.state), obj);
+            this.getFilesystem().state = Object.assign(Object.assign({}, this.getFilesystem().state), obj);
         }
     }
     getState() {
