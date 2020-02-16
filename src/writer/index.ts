@@ -1,6 +1,14 @@
 // The application generator has a global state
 
 import * as prettier from "prettier";
+import * as immer from 'immer'
+
+export function CreateContext<T>(data:T, rootFileName:string = 'index.ts') {
+  const ctx = new Ctx<T>(data);
+  const fs = new CodeFileSystem();
+  ctx.writer = fs.getFile("./", rootFileName).getWriter();
+  return ctx
+}
 
 export interface hasWriter {
   writer: CodeWriter;
@@ -29,14 +37,18 @@ export class Ctx<T extends {}> {
   writer: CodeWriter;
   newLine = true;
   parent?: Ctx<T>;
-  data?: Partial<T>;
-
+  data: T;
+  constructor( data : T  = null) {
+    this.data = data;
+  }
   fork() {
-    const n = new Ctx<T>();
+    const n = new Ctx<T>(this.data);
     n.writer = this.writer;
     n.parent = this;
-    n.data = this.data;
     return n;
+  }
+  produce( fn:(data:T) => void) {
+    this.data = immer.produce( this.data, fn) 
   }
 }
 
@@ -47,26 +59,26 @@ export class Ctx<T extends {}> {
  */
 export function Walk<T extends hasWriter>(ctx: T, lines: CodeBlock<T>) {
   if (!ctx.writer) {
-    return;
+    return ctx;
   }
   const wr = ctx.writer;
   if (typeof lines === "undefined") {
-    return;
+    return ctx;
   }
 
   if (typeof lines === "string") {
     wr.out(lines, ctx.newLine);
-    return;
+    return ctx;
   }
 
   if (typeof lines === "function") {
     const value = lines(ctx);
     Walk(ctx, value);
-    return;
+    return ctx;
   }
 
   if (lines.length === 0) {
-    return;
+    return ctx;
   }
 
   // if the first is array, we have block indent
@@ -80,12 +92,13 @@ export function Walk<T extends hasWriter>(ctx: T, lines: CodeBlock<T>) {
     wr.indent(1);
     Walk(ctx, unwrap(lines));
     wr.indent(-1);
-    return;
+    return ctx;
   }
 
   for (const line of lines) {
     Walk(ctx, line);
   }
+  return ctx;
 }
 
 export class CodeSlice {
@@ -175,7 +188,7 @@ export class CodeWriter {
       ctx.writer = this;
       Walk(ctx, code);
     } else {
-      const ctx = new Ctx<T>();
+      const ctx = new Ctx(null);
       ctx.writer = this;
       Walk(ctx, code);
     }
@@ -184,7 +197,7 @@ export class CodeWriter {
 
   setState(...objs: any[]) {
     for (let obj of objs) {
-      this.getFilesystem().state = { ...this.fs.state, ...obj };
+      this.getFilesystem().state = { ...this.getFilesystem().state, ...obj };
     }
   }
 

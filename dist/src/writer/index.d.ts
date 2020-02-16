@@ -1,3 +1,4 @@
+export declare function CreateContext<T>(data: T, rootFileName?: string): Ctx<T>;
 export interface hasWriter {
     writer: CodeWriter;
     newLine: boolean;
@@ -9,15 +10,17 @@ export declare class Ctx<T extends {}> {
     writer: CodeWriter;
     newLine: boolean;
     parent?: Ctx<T>;
-    data?: Partial<T>;
+    data: T;
+    constructor(data?: T);
     fork(): Ctx<T>;
+    produce(fn: (data: T) => void): void;
 }
 /**
  *
  * @param ctx generic context of T to use
  * @param lines lines to be generated
  */
-export declare function Walk<T extends hasWriter>(ctx: T, lines: CodeBlock<T>): void;
+export declare function Walk<T extends hasWriter>(ctx: T, lines: CodeBlock<T>): T;
 export declare class CodeSlice {
     code: string;
     writer: CodeWriter;

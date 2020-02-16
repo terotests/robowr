@@ -1,5 +1,5 @@
 import { expect } from "chai";
-
+import * as immer from 'immer'
 import * as R from "../src/writer";
 
 function genericComment<T>(str: string) {
@@ -8,6 +8,16 @@ function genericComment<T>(str: string) {
 
 interface CustomCtx {
   str: string;
+}
+
+class TestClass {
+  lines : string[] = []
+}
+
+interface VariableContext {
+  prevCtx?: VariableContext;
+  definedVariables: string[]
+  intVariables : {name:string, value:number}[]
 }
 
 const CreateIfNode = <T extends R.hasWriter>(
@@ -24,7 +34,7 @@ const CreateIfNode = <T extends R.hasWriter>(
 
 describe("Writer generator tests", () => {
   test("README sample 1", () => {
-    const ctx = new R.Ctx();
+    const ctx = new R.Ctx(null);
     const fs = new R.CodeFileSystem();
     ctx.writer = fs.getFile("./builder/gen", "testout.txt").getWriter();
 
@@ -161,4 +171,185 @@ describe("Writer generator tests", () => {
     R.Walk(ctx, [ctx => ctx => ctx => "ok"]);
     expect(ctx.writer.getCode()).to.deep.eq("ok\n");
   });
+
+  test("Test simple Context Creator", () => {    
+    expect(R.Walk(R.CreateContext({cnt:1}),[
+      ctx => {
+        ctx.data.cnt++;
+      }
+    ]).data.cnt).to.equal(2)
+
+    // using immer to mutate state is quite fine
+    expect(R.Walk(R.CreateContext({cnt:1}),[
+      ctx => {
+        ctx.data = immer.produce(ctx.data, d => {
+          d.cnt+=2
+        })
+      },
+    ]).data.cnt).to.equal(3)
+
+    expect(R.Walk(R.CreateContext({cnt:1}),[
+      ctx => {
+        ctx.data = immer.produce(ctx.data, d => {
+          d.cnt+=2
+        })
+      },
+      ctx => {
+        ctx.data = immer.produce(ctx.data, d => {
+          d.cnt+=2
+        })
+      },
+    ]).data.cnt).to.equal(5)
+
+    expect(R.Walk(R.CreateContext({cnt:1}),[
+      ctx => ctx.produce( d => { d.cnt++ }),
+      ctx => ctx.produce( d => { d.cnt++ }),
+    ]).data.cnt).to.equal(3)    
+
+    const ctx = R.CreateContext({cnt:1});
+    const myFns = [
+      ctx => ctx.produce( d => { d.cnt++ }),
+      ctx => ctx.produce( d => { d.cnt++ }),
+    ];
+    R.Walk( ctx, myFns )
+    R.Walk( ctx, myFns )
+
+    expect( ctx.data.cnt ).to.equal( 5 )
+
+    expect(R.Walk( 
+      R.CreateContext(new TestClass()),
+      [
+        ctx => { ctx.data.lines.push( 'Does') },
+        ctx => { ctx.data.lines.push( 'This') },
+        ctx => { ctx.data.lines.push( 'Work') },
+      ]
+    ).data.lines.join(' ')).to.equal('Does This Work')
+
+    expect(R.Walk( 
+      R.CreateContext(new TestClass()),
+      [
+        ctx => ctx.produce( c => {c.lines.push('Does')} ),
+        ctx => ctx.produce( c => {c.lines.push('This')} ),
+        ctx => ctx.produce( c => {c.lines.push('Work')} ),
+      ]
+    ).data.lines.join(' ')).to.equal('Does This Work')
+
+
+
+    const DefineIntVariable = (name:string, value:number) => {
+      return (ctx:R.Ctx<VariableContext>) => {
+        ctx.produce( data => {
+          data.definedVariables.push(name)
+          data.intVariables.push( {
+            name, value
+          })
+        })
+      }
+    }
+
+    const IncrementVariable = (name:string, value:number) => {
+      return (ctx:R.Ctx<VariableContext>) => {
+        ctx.produce( data => {
+          for( let i=0; i< data.intVariables.length; i++) {
+            if(data.intVariables[i].name === name) {
+              data.prevCtx = ctx.data
+              data.intVariables[i].value += value              
+            }
+          }
+        })
+      }
+    }
+
+    const vCtx:VariableContext =  { intVariables : [], definedVariables:[]}
+
+    const varCtx = R.Walk( R.CreateContext( vCtx ), [
+      DefineIntVariable('x', 10),
+      DefineIntVariable('y', 200),
+      IncrementVariable('x', 11),
+      ctx => {
+        const newCtx = ctx.fork()
+        return () => {
+          R.Walk(newCtx, [
+            IncrementVariable('x', 1),
+            ctx => {
+              console.log('Sub ctx ', ctx.data)
+              expect(ctx.data.intVariables[0].value).to.equal(22)
+              expect(ctx.data.intVariables[1].value).to.equal(200)
+            }
+          ])
+        }
+      },
+      ctx => {
+        const newCtx = ctx.fork()
+        return () => {
+          R.Walk(newCtx, [
+            IncrementVariable('x', 101),
+            ctx => {
+              console.log('Sub ctx ', ctx.data)
+              expect(ctx.data.intVariables[0].value).to.equal(122)
+            }
+          ])
+        }
+      }
+    ])
+
+    expect( varCtx.data.intVariables[0].name).to.equal( 'x' )
+    expect( varCtx.data.intVariables[0].value).to.equal( 21 )
+    expect( varCtx.data.prevCtx!.intVariables[0].value).to.equal( 10 )
+
+    console.log( 'prev',  varCtx.data.prevCtx )
+
+
+  });  
+
+  test("Walk Context in Steps", () => {    
+    const DefineIntVariable = (name:string, value:number) => {
+      return (ctx:R.Ctx<VariableContext>) => {
+        ctx.produce( data => {
+          data.definedVariables.push(name)
+          data.intVariables.push( {
+            name, value
+          })
+        })
+      }
+    }
+
+    const IncrementVariable = (name:string, value:number) => {
+      return (ctx:R.Ctx<VariableContext>) => {
+        ctx.produce( data => {
+          for( let i=0; i< data.intVariables.length; i++) {
+            if(data.intVariables[i].name === name) {
+              data.prevCtx = ctx.data
+              data.intVariables[i].value += value              
+            }
+          }
+        })
+      }
+    }
+    const vCtx:VariableContext =  { intVariables : [], definedVariables:[]}
+
+    // defines something operated on the context
+    const step = [IncrementVariable('x', 1)]
+
+    const varCtx = R.Walk( R.CreateContext( vCtx ), [
+      DefineIntVariable('x', 10),
+      DefineIntVariable('y', 200)
+    ])
+
+    const ctx2 = R.Walk( varCtx, step )
+    expect( ctx2.data.intVariables[0].value).to.equal( 11 )
+    const ctx3 = R.Walk( ctx2, step )
+    expect( ctx3.data.intVariables[0].value).to.equal( 12 )
+    const ctx4 = R.Walk( varCtx, [DefineIntVariable('x2', 77)] )
+    expect( ctx4.data.intVariables[2].value).to.equal( 77 )
+
+    console.log(ctx4)
+
+    // context can be anything.
+
+    console.log(R.Walk( ctx4, ctx => {
+      return ctx.data.intVariables.map( varName => `const ${varName.name}:number = ${varName.value};`)
+    }).writer.getCode())
+
+  });    
 });

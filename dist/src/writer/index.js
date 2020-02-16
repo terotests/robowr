@@ -11,6 +11,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const prettier = require("prettier");
+const immer = require("immer");
+function CreateContext(data, rootFileName = 'index.ts') {
+    const ctx = new Ctx(data);
+    const fs = new CodeFileSystem();
+    ctx.writer = fs.getFile("./", rootFileName).getWriter();
+    return ctx;
+}
+exports.CreateContext = CreateContext;
 function Join(list) {
     return (x) => {
         const orig = x.newLine;
@@ -22,15 +30,18 @@ function Join(list) {
 }
 exports.Join = Join;
 class Ctx {
-    constructor() {
+    constructor(data = null) {
         this.newLine = true;
+        this.data = data;
     }
     fork() {
-        const n = new Ctx();
+        const n = new Ctx(this.data);
         n.writer = this.writer;
         n.parent = this;
-        n.data = this.data;
         return n;
+    }
+    produce(fn) {
+        this.data = immer.produce(this.data, fn);
     }
 }
 exports.Ctx = Ctx;
@@ -41,23 +52,23 @@ exports.Ctx = Ctx;
  */
 function Walk(ctx, lines) {
     if (!ctx.writer) {
-        return;
+        return ctx;
     }
     const wr = ctx.writer;
     if (typeof lines === "undefined") {
-        return;
+        return ctx;
     }
     if (typeof lines === "string") {
         wr.out(lines, ctx.newLine);
-        return;
+        return ctx;
     }
     if (typeof lines === "function") {
         const value = lines(ctx);
         Walk(ctx, value);
-        return;
+        return ctx;
     }
     if (lines.length === 0) {
-        return;
+        return ctx;
     }
     // if the first is array, we have block indent
     if (lines[0] instanceof Array && lines.length === 1) {
@@ -70,11 +81,12 @@ function Walk(ctx, lines) {
         wr.indent(1);
         Walk(ctx, unwrap(lines));
         wr.indent(-1);
-        return;
+        return ctx;
     }
     for (const line of lines) {
         Walk(ctx, line);
     }
+    return ctx;
 }
 exports.Walk = Walk;
 class CodeSlice {
@@ -145,7 +157,7 @@ class CodeWriter {
             Walk(ctx, code);
         }
         else {
-            const ctx = new Ctx();
+            const ctx = new Ctx(null);
             ctx.writer = this;
             Walk(ctx, code);
         }
@@ -153,7 +165,7 @@ class CodeWriter {
     }
     setState(...objs) {
         for (let obj of objs) {
-            this.getFilesystem().state = Object.assign(Object.assign({}, this.fs.state), obj);
+            this.getFilesystem().state = Object.assign(Object.assign({}, this.getFilesystem().state), obj);
         }
     }
     getState() {
