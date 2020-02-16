@@ -49,7 +49,7 @@ To get the code call `newCtx.writer.getCode()`
 
 ```typescript
     // The generated code from above
-    switch( value) {
+    switch( value ) {
       case "value1":
         console.log("Found value value1");
         break;
