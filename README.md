@@ -6,8 +6,8 @@ Robowr is a code generator, which can generate any code that can be written in t
 
 - Support for Array -based short hand syntax for indendation, block can be expressed using Array literal `[[ ]]`
 - Since TypeScript 3.7 supports recursive types, we can now generate code using generic context based generators.
-- Support for Immer for immutable context data
-- 
+- Support for Immer for immutable context data and `ctx.produce( data => ...)`
+- Easier context creation using `R.CreateContext( { ... } )` 
 
 # Example
 
