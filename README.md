@@ -26,7 +26,7 @@ const data = {
     'value3'
   ]
 }
-const ctx = R.CreateContext( { values:[] } );
+const ctx = R.CreateContext( data ); // data can be any value
 ```
 
 Then you can create code using the context and return string, arrays, nested arrays (blocks)
