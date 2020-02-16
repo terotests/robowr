@@ -343,13 +343,39 @@ describe("Writer generator tests", () => {
     const ctx4 = R.Walk( varCtx, [DefineIntVariable('x2', 77)] )
     expect( ctx4.data.intVariables[2].value).to.equal( 77 )
 
-    console.log(ctx4)
-
-    // context can be anything.
-
     console.log(R.Walk( ctx4, ctx => {
       return ctx.data.intVariables.map( varName => `const ${varName.name}:number = ${varName.value};`)
     }).writer.getCode())
+    /*
+    const x:number = 12;
+    const y:number = 200;
+    const x2:number = 77;    
+    */
 
   });    
+
+
+  test("Example in the Docs", () => {
+    const data = {
+      values : [
+        'value1',
+        'value2',
+        'value3'
+      ]
+    }
+    const ctx = R.CreateContext( data );
+    const newCtx = R.Walk( ctx, ctx => 
+      [`switch( value ) {`,
+      ...ctx.data.values.map( name => [
+        [`case "${name}":`,
+        [[
+          `console.log("Found value ${name}");`,
+          'break;'
+        ]]
+      ]
+      ]),
+      '}']
+    )
+    console.log(newCtx.writer.getCode())
+  });  
 });

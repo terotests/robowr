@@ -15,31 +15,51 @@ First initialize the context
 
 ```typescript
 import * as R from "robowr";
-const ctx = new R.Ctx();
-const fs = new R.CodeFileSystem();
-ctx.writer = fs.getFile("./builder/gen", "testout.ts").getWriter();
-```
 
-Then create the code directly by giving arrays as arguments
-
-```typescript
-R.Walk(ctx, [
-  ["if( x > 10){"],
-  [["console.log('x was bigger than ten');"]],
-  "} else {",
-  [["console.log('x was smaller or equal to ten');"]],
-  "}"
-]);
-```
-
-Which will output code
-
-```typescript
-if (x > 10) {
-  console.log("x was bigger than ten");
-} else {
-  console.log("x was smaller or equal to ten");
+// The data used by the robowr
+const data = {
+  users : [
+    'user 1',
+    'user 2',
+    'user 3'
+  ]
 }
+const ctx = R.CreateContext( { users:[] } );
+```
+
+Then you can create code using the context and return string, arrays, nested arrays (blocks)
+or functions which will be evaluated lazily.
+
+```typescript
+  const newCtx = R.Walk( ctx, ctx => 
+    [`switch( value ) {`,
+    ...ctx.data.values.map( name => [
+      [`case "${name}":`,
+      [[
+        `console.log("Found value ${name}");`,
+        'break;'
+      ]]
+    ]
+    ]),
+    '}']
+    )
+```
+
+To get the code call `newCtx.writer.getCode()`
+
+```typescript
+    // The generated code from above
+    switch( value) {
+      case "value1":
+        console.log("Found value value1");
+        break;
+      case "value2":
+        console.log("Found value value2");
+        break;
+      case "value3":
+        console.log("Found value value3");
+        break;
+    }
 ```
 
 Since context is passed to callback functions you can use them to fine grained control of the
