@@ -273,6 +273,20 @@ describe("Writer generator tests", () => {
             IncrementVariable('x', 1),
             ctx => {
               console.log('Sub ctx ', ctx.data)
+              expect(ctx.data.intVariables[0].value).to.equal(22)
+              expect(ctx.data.intVariables[1].value).to.equal(200)
+            }
+          ])
+        }
+      },
+      ctx => {
+        const newCtx = ctx.fork()
+        return () => {
+          R.Walk(newCtx, [
+            IncrementVariable('x', 101),
+            ctx => {
+              console.log('Sub ctx ', ctx.data)
+              expect(ctx.data.intVariables[0].value).to.equal(122)
             }
           ])
         }
@@ -287,4 +301,55 @@ describe("Writer generator tests", () => {
 
 
   });  
+
+  test("Walk Context in Steps", () => {    
+    const DefineIntVariable = (name:string, value:number) => {
+      return (ctx:R.Ctx<VariableContext>) => {
+        ctx.produce( data => {
+          data.definedVariables.push(name)
+          data.intVariables.push( {
+            name, value
+          })
+        })
+      }
+    }
+
+    const IncrementVariable = (name:string, value:number) => {
+      return (ctx:R.Ctx<VariableContext>) => {
+        ctx.produce( data => {
+          for( let i=0; i< data.intVariables.length; i++) {
+            if(data.intVariables[i].name === name) {
+              data.prevCtx = ctx.data
+              data.intVariables[i].value += value              
+            }
+          }
+        })
+      }
+    }
+    const vCtx:VariableContext =  { intVariables : [], definedVariables:[]}
+
+    // defines something operated on the context
+    const step = [IncrementVariable('x', 1)]
+
+    const varCtx = R.Walk( R.CreateContext( vCtx ), [
+      DefineIntVariable('x', 10),
+      DefineIntVariable('y', 200)
+    ])
+
+    const ctx2 = R.Walk( varCtx, step )
+    expect( ctx2.data.intVariables[0].value).to.equal( 11 )
+    const ctx3 = R.Walk( ctx2, step )
+    expect( ctx3.data.intVariables[0].value).to.equal( 12 )
+    const ctx4 = R.Walk( varCtx, [DefineIntVariable('x2', 77)] )
+    expect( ctx4.data.intVariables[2].value).to.equal( 77 )
+
+    console.log(ctx4)
+
+    // context can be anything.
+
+    console.log(R.Walk( ctx4, ctx => {
+      return ctx.data.intVariables.map( varName => `const ${varName.name}:number = ${varName.value};`)
+    }).writer.getCode())
+
+  });    
 });
