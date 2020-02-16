@@ -6,6 +6,8 @@ Robowr is a code generator, which can generate any code that can be written in t
 
 - Support for Array -based short hand syntax for indendation, block can be expressed using Array literal `[[ ]]`
 - Since TypeScript 3.7 supports recursive types, we can now generate code using generic context based generators.
+- Support for Immer for immutable context data
+- 
 
 # Example
 
@@ -18,13 +20,13 @@ import * as R from "robowr";
 
 // The data used by the robowr
 const data = {
-  users : [
-    'user 1',
-    'user 2',
-    'user 3'
+  values : [
+    'value1',
+    'value2',
+    'value3'
   ]
 }
-const ctx = R.CreateContext( { users:[] } );
+const ctx = R.CreateContext( { values:[] } );
 ```
 
 Then you can create code using the context and return string, arrays, nested arrays (blocks)
@@ -89,6 +91,32 @@ R.Walk(ctx, [
   )
 ]);
 ```
+
+## Modifying context by the generators
+
+Sometimes you want to modify the context before the output is written, for example you can
+run multipled passes to the context before actually outputting any code.
+
+This is very simple, any callback function can simply modify the data variable in the context
+
+```typescript
+const ctx = R.CreateContext( { users:[] } );
+const newCtx = R.Walk(ctx, ctx => {
+  ctx.data.users.push('New User')
+})
+```
+
+### Immutable context
+
+Context can be immutable, you can use any immutable library with the context data or you can
+use the built-in Immer -support like this
+
+```typescript
+  expect(R.Walk(R.CreateContext({cnt:1}),[
+    ctx => ctx.produce( d => { d.cnt++ }),
+    ctx => ctx.produce( d => { d.cnt++ }),
+  ]).data.cnt).to.equal(3)  
+```    
 
 # Installing
 
