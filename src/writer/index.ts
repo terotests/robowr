@@ -33,6 +33,68 @@ export function Join<T extends hasWriter>(list: CodeBlock<T>): CodeBlock<T> {
   };
 }
 
+export function TextGenerator(
+  inputTxt: string,
+  lineFn: (line: string, index: number, lines: string[]) => string = (s) => s
+) {
+  const lines = inputTxt.split("\n");
+  let lastTabIndex = 0;
+  let outputIndex = 0;
+  const calculateTabIndex = (line: string = lines[outputIndex]) => {
+    let cnt = 0;
+    for (let i = 0; i < line.length; i++) {
+      if (line[i].match(/\t/)) {
+        cnt += 2;
+        continue;
+      }
+      if (line[i].match(/\s/)) {
+        cnt++;
+      } else {
+        break;
+      }
+    }
+    return Math.floor(cnt / 2);
+  };
+  let currentTabIndex = 0;
+  const consumeLines = () => {
+    const initialTabIndex = calculateTabIndex();
+    currentTabIndex = initialTabIndex;
+    const result: CodeBlock<any> = [];
+    while (outputIndex < lines.length && initialTabIndex <= currentTabIndex) {
+      const lineTxt = lineFn(lines[outputIndex], outputIndex, lines).trim();
+
+      if (lineTxt.trim().length === 0) {
+        result.push("'',");
+      } else {
+        result.push(
+          "`" +
+            lineTxt
+              .split("`")
+              .join("\\`")
+              .split("$")
+              .join("\\$") +
+            "`,"
+        );
+      }
+      outputIndex++;
+      if (outputIndex >= lines.length) {
+        break;
+      }
+      currentTabIndex = calculateTabIndex();
+      if (currentTabIndex > initialTabIndex) {
+        result.push("[[");
+        result.push([consumeLines()]);
+        result.push("]],");
+        if (currentTabIndex < initialTabIndex) {
+          break;
+        }
+      }
+    }
+    return result;
+  };
+  return [`[`, consumeLines(), "]"];
+}
+
 export class Ctx<T extends {}> {
   writer: CodeWriter;
   newLine = true;

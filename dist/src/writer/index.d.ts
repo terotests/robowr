@@ -6,6 +6,7 @@ export interface hasWriter {
 export declare type generatorFunction<T extends hasWriter> = (x: T) => CodeBlock<T>;
 export declare type CodeBlock<T extends hasWriter> = Array<CodeBlock<T>> | generatorFunction<T> | undefined | void | string;
 export declare function Join<T extends hasWriter>(list: CodeBlock<T>): CodeBlock<T>;
+export declare function TextGenerator(inputTxt: string, lineFn?: (line: string, index: number, lines: string[]) => string): (string | CodeBlock<any>[])[];
 export declare class Ctx<T extends {}> {
     writer: CodeWriter;
     newLine: boolean;

@@ -1,6 +1,7 @@
 import { expect } from "chai";
-import * as immer from 'immer'
+import * as immer from "immer";
 import * as R from "../src/writer";
+import * as fs from "fs";
 
 function genericComment<T>(str: string) {
   return `/* ${str} */`;
@@ -11,13 +12,13 @@ interface CustomCtx {
 }
 
 class TestClass {
-  lines : string[] = []
+  lines: string[] = [];
 }
 
 interface VariableContext {
   prevCtx?: VariableContext;
-  definedVariables: string[]
-  intVariables : {name:string, value:number}[]
+  definedVariables: string[];
+  intVariables: { name: string; value: number }[];
 }
 
 const CreateIfNode = <T extends R.hasWriter>(
@@ -28,7 +29,7 @@ const CreateIfNode = <T extends R.hasWriter>(
   return [
     R.Join(["if(", condition, ") {"]),
     [[thenBlock]],
-    elseBlock ? ["} else {", [[elseBlock]], "}"] : "}"
+    elseBlock ? ["} else {", [[elseBlock]], "}"] : "}",
   ];
 };
 
@@ -43,7 +44,7 @@ describe("Writer generator tests", () => {
       [["console.log('x was bigger than ten');"]],
       "} else {",
       [["console.log('x was smaller or equal to ten');"]],
-      "}"
+      "}",
     ]);
     console.log(ctx.writer.getCode());
   });
@@ -58,7 +59,7 @@ describe("Writer generator tests", () => {
         "console.log('x was bigger than ten');",
         "console.log('x was smaller or equal to ten');"
       ),
-      CreateIfNode("x < 0", "console.log('x was less than zero');")
+      CreateIfNode("x < 0", "console.log('x was less than zero');"),
     ]);
     console.log(ctx.writer.getCode());
   });
@@ -88,12 +89,12 @@ describe("Writer generator tests", () => {
       .getFile("./builder/gen", "testout.txt")
       .getWriter()
       .walk<{ str: string }>([
-        ctx => {
+        (ctx) => {
           ctx.data = { str: "hello" };
         },
         ["line1"],
         ["line2"],
-        ctx => ctx.data!.str
+        (ctx) => ctx.data!.str,
       ])
       .getCode();
 
@@ -103,12 +104,12 @@ describe("Writer generator tests", () => {
       .getFile("./builder/gen", "testout2.txt")
       .getWriter()
       .walk<string>([
-        ctx => {
+        (ctx) => {
           ctx.data = "OK";
         },
         ["line1"],
         ["line2"],
-        ctx => ctx.data!
+        (ctx) => ctx.data!,
       ])
       .getCode();
 
@@ -125,7 +126,7 @@ describe("Writer generator tests", () => {
     const code = fs
       .getFile("./builder/gen", "testout.txt")
       .getWriter()
-      .walk([["line1"], ["line2"], ctx => ctx.data!.str], ctx)
+      .walk([["line1"], ["line2"], (ctx) => ctx.data!.str], ctx)
       .getCode();
 
     expect(code).to.deep.eq(`line1\nline2\ncustom\n`);
@@ -152,7 +153,7 @@ describe("Writer generator tests", () => {
     const fs = new R.CodeFileSystem();
     ctx.writer = fs.getFile("./builder/gen", "testout.txt").getWriter();
 
-    R.Walk(ctx, [["if(){"], [[ctx => "line2", "line3"]], "}"]);
+    R.Walk(ctx, [["if(){"], [[(ctx) => "line2", "line3"]], "}"]);
     expect(ctx.writer.getCode()).to.deep.eq(`if(){\n  line2\n  line3\n}\n`);
   });
   test("Test join function", () => {
@@ -160,7 +161,7 @@ describe("Writer generator tests", () => {
     const fs = new R.CodeFileSystem();
     ctx.writer = fs.getFile("./builder/gen", "testout.txt").getWriter();
 
-    R.Walk(ctx, [["if(){"], [[ctx => R.Join(["lin", "e2"]), "line3"]], "}"]);
+    R.Walk(ctx, [["if(){"], [[(ctx) => R.Join(["lin", "e2"]), "line3"]], "}"]);
     expect(ctx.writer.getCode()).to.deep.eq(`if(){\n  line2\n  line3\n}\n`);
   });
   test("generic recursive generators", () => {
@@ -168,214 +169,277 @@ describe("Writer generator tests", () => {
     const fs = new R.CodeFileSystem();
     ctx.writer = fs.getFile("./builder/gen", "testout.txt").getWriter();
 
-    R.Walk(ctx, [ctx => ctx => ctx => "ok"]);
+    R.Walk(ctx, [(ctx) => (ctx) => (ctx) => "ok"]);
     expect(ctx.writer.getCode()).to.deep.eq("ok\n");
   });
 
-  test("Test simple Context Creator", () => {    
-    expect(R.Walk(R.CreateContext({cnt:1}),[
-      ctx => {
-        ctx.data.cnt++;
-      }
-    ]).data.cnt).to.equal(2)
+  test("Test simple Context Creator", () => {
+    expect(
+      R.Walk(R.CreateContext({ cnt: 1 }), [
+        (ctx) => {
+          ctx.data.cnt++;
+        },
+      ]).data.cnt
+    ).to.equal(2);
 
     // using immer to mutate state is quite fine
-    expect(R.Walk(R.CreateContext({cnt:1}),[
-      ctx => {
-        ctx.data = immer.produce(ctx.data, d => {
-          d.cnt+=2
-        })
-      },
-    ]).data.cnt).to.equal(3)
+    expect(
+      R.Walk(R.CreateContext({ cnt: 1 }), [
+        (ctx) => {
+          ctx.data = immer.produce(ctx.data, (d) => {
+            d.cnt += 2;
+          });
+        },
+      ]).data.cnt
+    ).to.equal(3);
 
-    expect(R.Walk(R.CreateContext({cnt:1}),[
-      ctx => {
-        ctx.data = immer.produce(ctx.data, d => {
-          d.cnt+=2
-        })
-      },
-      ctx => {
-        ctx.data = immer.produce(ctx.data, d => {
-          d.cnt+=2
-        })
-      },
-    ]).data.cnt).to.equal(5)
+    expect(
+      R.Walk(R.CreateContext({ cnt: 1 }), [
+        (ctx) => {
+          ctx.data = immer.produce(ctx.data, (d) => {
+            d.cnt += 2;
+          });
+        },
+        (ctx) => {
+          ctx.data = immer.produce(ctx.data, (d) => {
+            d.cnt += 2;
+          });
+        },
+      ]).data.cnt
+    ).to.equal(5);
 
-    expect(R.Walk(R.CreateContext({cnt:1}),[
-      ctx => ctx.produce( d => { d.cnt++ }),
-      ctx => ctx.produce( d => { d.cnt++ }),
-    ]).data.cnt).to.equal(3)    
+    expect(
+      R.Walk(R.CreateContext({ cnt: 1 }), [
+        (ctx) =>
+          ctx.produce((d) => {
+            d.cnt++;
+          }),
+        (ctx) =>
+          ctx.produce((d) => {
+            d.cnt++;
+          }),
+      ]).data.cnt
+    ).to.equal(3);
 
-    const ctx = R.CreateContext({cnt:1});
+    const ctx = R.CreateContext({ cnt: 1 });
     const myFns = [
-      ctx => ctx.produce( d => { d.cnt++ }),
-      ctx => ctx.produce( d => { d.cnt++ }),
+      (ctx) =>
+        ctx.produce((d) => {
+          d.cnt++;
+        }),
+      (ctx) =>
+        ctx.produce((d) => {
+          d.cnt++;
+        }),
     ];
-    R.Walk( ctx, myFns )
-    R.Walk( ctx, myFns )
+    R.Walk(ctx, myFns);
+    R.Walk(ctx, myFns);
 
-    expect( ctx.data.cnt ).to.equal( 5 )
+    expect(ctx.data.cnt).to.equal(5);
 
-    expect(R.Walk( 
-      R.CreateContext(new TestClass()),
-      [
-        ctx => { ctx.data.lines.push( 'Does') },
-        ctx => { ctx.data.lines.push( 'This') },
-        ctx => { ctx.data.lines.push( 'Work') },
-      ]
-    ).data.lines.join(' ')).to.equal('Does This Work')
+    expect(
+      R.Walk(R.CreateContext(new TestClass()), [
+        (ctx) => {
+          ctx.data.lines.push("Does");
+        },
+        (ctx) => {
+          ctx.data.lines.push("This");
+        },
+        (ctx) => {
+          ctx.data.lines.push("Work");
+        },
+      ]).data.lines.join(" ")
+    ).to.equal("Does This Work");
 
-    expect(R.Walk( 
-      R.CreateContext(new TestClass()),
-      [
-        ctx => ctx.produce( c => {c.lines.push('Does')} ),
-        ctx => ctx.produce( c => {c.lines.push('This')} ),
-        ctx => ctx.produce( c => {c.lines.push('Work')} ),
-      ]
-    ).data.lines.join(' ')).to.equal('Does This Work')
+    expect(
+      R.Walk(R.CreateContext(new TestClass()), [
+        (ctx) =>
+          ctx.produce((c) => {
+            c.lines.push("Does");
+          }),
+        (ctx) =>
+          ctx.produce((c) => {
+            c.lines.push("This");
+          }),
+        (ctx) =>
+          ctx.produce((c) => {
+            c.lines.push("Work");
+          }),
+      ]).data.lines.join(" ")
+    ).to.equal("Does This Work");
 
+    const DefineIntVariable = (name: string, value: number) => {
+      return (ctx: R.Ctx<VariableContext>) => {
+        ctx.produce((data) => {
+          data.definedVariables.push(name);
+          data.intVariables.push({
+            name,
+            value,
+          });
+        });
+      };
+    };
 
-
-    const DefineIntVariable = (name:string, value:number) => {
-      return (ctx:R.Ctx<VariableContext>) => {
-        ctx.produce( data => {
-          data.definedVariables.push(name)
-          data.intVariables.push( {
-            name, value
-          })
-        })
-      }
-    }
-
-    const IncrementVariable = (name:string, value:number) => {
-      return (ctx:R.Ctx<VariableContext>) => {
-        ctx.produce( data => {
-          for( let i=0; i< data.intVariables.length; i++) {
-            if(data.intVariables[i].name === name) {
-              data.prevCtx = ctx.data
-              data.intVariables[i].value += value              
+    const IncrementVariable = (name: string, value: number) => {
+      return (ctx: R.Ctx<VariableContext>) => {
+        ctx.produce((data) => {
+          for (let i = 0; i < data.intVariables.length; i++) {
+            if (data.intVariables[i].name === name) {
+              data.prevCtx = ctx.data;
+              data.intVariables[i].value += value;
             }
           }
-        })
-      }
-    }
+        });
+      };
+    };
 
-    const vCtx:VariableContext =  { intVariables : [], definedVariables:[]}
+    const vCtx: VariableContext = { intVariables: [], definedVariables: [] };
 
-    const varCtx = R.Walk( R.CreateContext( vCtx ), [
-      DefineIntVariable('x', 10),
-      DefineIntVariable('y', 200),
-      IncrementVariable('x', 11),
-      ctx => {
-        const newCtx = ctx.fork()
+    const varCtx = R.Walk(R.CreateContext(vCtx), [
+      DefineIntVariable("x", 10),
+      DefineIntVariable("y", 200),
+      IncrementVariable("x", 11),
+      (ctx) => {
+        const newCtx = ctx.fork();
         return () => {
           R.Walk(newCtx, [
-            IncrementVariable('x', 1),
-            ctx => {
-              console.log('Sub ctx ', ctx.data)
-              expect(ctx.data.intVariables[0].value).to.equal(22)
-              expect(ctx.data.intVariables[1].value).to.equal(200)
-            }
-          ])
-        }
+            IncrementVariable("x", 1),
+            (ctx) => {
+              console.log("Sub ctx ", ctx.data);
+              expect(ctx.data.intVariables[0].value).to.equal(22);
+              expect(ctx.data.intVariables[1].value).to.equal(200);
+            },
+          ]);
+        };
       },
-      ctx => {
-        const newCtx = ctx.fork()
+      (ctx) => {
+        const newCtx = ctx.fork();
         return () => {
           R.Walk(newCtx, [
-            IncrementVariable('x', 101),
-            ctx => {
-              console.log('Sub ctx ', ctx.data)
-              expect(ctx.data.intVariables[0].value).to.equal(122)
-            }
-          ])
-        }
-      }
-    ])
+            IncrementVariable("x", 101),
+            (ctx) => {
+              console.log("Sub ctx ", ctx.data);
+              expect(ctx.data.intVariables[0].value).to.equal(122);
+            },
+          ]);
+        };
+      },
+    ]);
 
-    expect( varCtx.data.intVariables[0].name).to.equal( 'x' )
-    expect( varCtx.data.intVariables[0].value).to.equal( 21 )
-    expect( varCtx.data.prevCtx!.intVariables[0].value).to.equal( 10 )
+    expect(varCtx.data.intVariables[0].name).to.equal("x");
+    expect(varCtx.data.intVariables[0].value).to.equal(21);
+    expect(varCtx.data.prevCtx!.intVariables[0].value).to.equal(10);
 
-    console.log( 'prev',  varCtx.data.prevCtx )
+    console.log("prev", varCtx.data.prevCtx);
+  });
 
+  test("Walk Context in Steps", () => {
+    const DefineIntVariable = (name: string, value: number) => {
+      return (ctx: R.Ctx<VariableContext>) => {
+        ctx.produce((data) => {
+          data.definedVariables.push(name);
+          data.intVariables.push({
+            name,
+            value,
+          });
+        });
+      };
+    };
 
-  });  
-
-  test("Walk Context in Steps", () => {    
-    const DefineIntVariable = (name:string, value:number) => {
-      return (ctx:R.Ctx<VariableContext>) => {
-        ctx.produce( data => {
-          data.definedVariables.push(name)
-          data.intVariables.push( {
-            name, value
-          })
-        })
-      }
-    }
-
-    const IncrementVariable = (name:string, value:number) => {
-      return (ctx:R.Ctx<VariableContext>) => {
-        ctx.produce( data => {
-          for( let i=0; i< data.intVariables.length; i++) {
-            if(data.intVariables[i].name === name) {
-              data.prevCtx = ctx.data
-              data.intVariables[i].value += value              
+    const IncrementVariable = (name: string, value: number) => {
+      return (ctx: R.Ctx<VariableContext>) => {
+        ctx.produce((data) => {
+          for (let i = 0; i < data.intVariables.length; i++) {
+            if (data.intVariables[i].name === name) {
+              data.prevCtx = ctx.data;
+              data.intVariables[i].value += value;
             }
           }
-        })
-      }
-    }
-    const vCtx:VariableContext =  { intVariables : [], definedVariables:[]}
+        });
+      };
+    };
+    const vCtx: VariableContext = { intVariables: [], definedVariables: [] };
 
     // defines something operated on the context
-    const step = [IncrementVariable('x', 1)]
+    const step = [IncrementVariable("x", 1)];
 
-    const varCtx = R.Walk( R.CreateContext( vCtx ), [
-      DefineIntVariable('x', 10),
-      DefineIntVariable('y', 200)
-    ])
+    const varCtx = R.Walk(R.CreateContext(vCtx), [
+      DefineIntVariable("x", 10),
+      DefineIntVariable("y", 200),
+    ]);
 
-    const ctx2 = R.Walk( varCtx, step )
-    expect( ctx2.data.intVariables[0].value).to.equal( 11 )
-    const ctx3 = R.Walk( ctx2, step )
-    expect( ctx3.data.intVariables[0].value).to.equal( 12 )
-    const ctx4 = R.Walk( varCtx, [DefineIntVariable('x2', 77)] )
-    expect( ctx4.data.intVariables[2].value).to.equal( 77 )
+    const ctx2 = R.Walk(varCtx, step);
+    expect(ctx2.data.intVariables[0].value).to.equal(11);
+    const ctx3 = R.Walk(ctx2, step);
+    expect(ctx3.data.intVariables[0].value).to.equal(12);
+    const ctx4 = R.Walk(varCtx, [DefineIntVariable("x2", 77)]);
+    expect(ctx4.data.intVariables[2].value).to.equal(77);
 
-    console.log(R.Walk( ctx4, ctx => {
-      return ctx.data.intVariables.map( varName => `const ${varName.name}:number = ${varName.value};`)
-    }).writer.getCode())
+    console.log(
+      R.Walk(ctx4, (ctx) => {
+        return ctx.data.intVariables.map(
+          (varName) => `const ${varName.name}:number = ${varName.value};`
+        );
+      }).writer.getCode()
+    );
     /*
     const x:number = 12;
     const y:number = 200;
     const x2:number = 77;    
     */
-
-  });    
-
+  });
 
   test("Example in the Docs", () => {
     const data = {
-      values : [
-        'value1',
-        'value2',
-        'value3'
-      ]
-    }
-    const ctx = R.CreateContext( data );
-    const newCtx = R.Walk( ctx, ctx => 
-      [`switch( value ) {`,
-      ...ctx.data.values.map( name => [
-        [`case "${name}":`,
-        [[
-          `console.log("Found value ${name}");`,
-          'break;'
-        ]]
-      ]
+      values: ["value1", "value2", "value3"],
+    };
+    const ctx = R.CreateContext(data);
+    const newCtx = R.Walk(ctx, (ctx) => [
+      `switch( value ) {`,
+      ...ctx.data.values.map((name) => [
+        [
+          `case "${name}":`,
+          [[`console.log("Found value ${name}");`, "break;"]],
+        ],
       ]),
-      '}']
-    )
-    console.log(newCtx.writer.getCode())
-  });  
+      "}",
+    ]);
+    console.log(newCtx.writer.getCode());
+  });
+
+  test("File generator test", () => {
+    R.CreateContext({})
+      .file("./", "writer.ts")
+      .write([
+        "const fileWriterGenerator = () => ",
+        R.TextGenerator(fs.readFileSync("src/writer/index.ts", "utf8")),
+      ])
+      .save("./test/filegenerator");
+
+    R.CreateContext({})
+      .file("./", "fancywriter.ts")
+      .write([
+        "const fancyFileWriterGenerator = () => ",
+        R.TextGenerator(fs.readFileSync("src/writer/index.ts", "utf8"), (s) =>
+          s.replace("CodeBlock", "FancyCodeBlock")
+        ),
+      ])
+      .save("./test/filegenerator");
+
+    R.CreateContext({})
+      .file("./", "output_example.ts")
+      .write([
+        "const outputExample = () => ",
+        R.TextGenerator(fs.readFileSync("test/output/example.ts", "utf8")),
+      ])
+      .save("./test/filegenerator");
+
+    R.CreateContext({})
+      .file("./", "test_yml.ts")
+      .write([
+        "const outputExampleForYml = () => ",
+        R.TextGenerator(fs.readFileSync("test/test.yml", "utf8")),
+      ])
+      .save("./test/filegenerator");
+  });
 });

@@ -22,6 +22,24 @@ R.CreateContext({})
   .save("./output"); // folder to save the results
 ```
 
+# Import File as generator template
+
+```
+robowr -f docker-compose.yml
+```
+
+or if you want to specify the output file
+
+```
+robowr -f docker-compose.yml -o createDocker.ts
+```
+
+To create it you can use for example `ts-node`
+
+```
+ts-node createDocker.ts
+```
+
 # Example
 
 Contexts are now generic, so you can use any support data as parameter to the writer.

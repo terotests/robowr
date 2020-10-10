@@ -29,6 +29,64 @@ function Join(list) {
     };
 }
 exports.Join = Join;
+function TextGenerator(inputTxt, lineFn = (s) => s) {
+    const lines = inputTxt.split("\n");
+    let lastTabIndex = 0;
+    let outputIndex = 0;
+    const calculateTabIndex = (line = lines[outputIndex]) => {
+        let cnt = 0;
+        for (let i = 0; i < line.length; i++) {
+            if (line[i].match(/\t/)) {
+                cnt += 2;
+                continue;
+            }
+            if (line[i].match(/\s/)) {
+                cnt++;
+            }
+            else {
+                break;
+            }
+        }
+        return Math.floor(cnt / 2);
+    };
+    let currentTabIndex = 0;
+    const consumeLines = () => {
+        const initialTabIndex = calculateTabIndex();
+        currentTabIndex = initialTabIndex;
+        const result = [];
+        while (outputIndex < lines.length && initialTabIndex <= currentTabIndex) {
+            const lineTxt = lineFn(lines[outputIndex], outputIndex, lines).trim();
+            if (lineTxt.trim().length === 0) {
+                result.push("'',");
+            }
+            else {
+                result.push("`" +
+                    lineTxt
+                        .split("`")
+                        .join("\\`")
+                        .split("$")
+                        .join("\\$") +
+                    "`,");
+            }
+            outputIndex++;
+            if (outputIndex >= lines.length) {
+                break;
+            }
+            currentTabIndex = calculateTabIndex();
+            if (currentTabIndex > initialTabIndex) {
+                result.push("[[");
+                result.push([consumeLines()]);
+                result.push("]],");
+                if (currentTabIndex < initialTabIndex) {
+                    break;
+                }
+            }
+        }
+        return result;
+    };
+    return [`[`, consumeLines(), "]"];
+}
+exports.TextGenerator = TextGenerator;
 class Ctx {
     constructor(data = null) {
         this.newLine = true;
