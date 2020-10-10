@@ -1,6 +1,6 @@
 {
   "name": "robowr",
-  "version": "2.0.12",
+  "version": "2.0.13",
   "description": "Code Generator Library",
   "main": "dist/src/writer/index.js",
   "types": "dist/src/writer/index.js",
@@ -40,7 +40,7 @@
     "@types/prettier": "^1.13.2",
     "chai": "^4.2.0",
     "immer": "^5.3.6",
-    "jest": "^24.9.0",
+    "jest": "^26.5.2",
     "typescript": "^3.7.4"
   },
   "jest": {
