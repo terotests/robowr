@@ -7,7 +7,20 @@ Robowr is a code generator, which can generate any code that can be written in t
 - Support for Array -based short hand syntax for indendation, block can be expressed using Array literal `[[ ]]`
 - Since TypeScript 3.7 supports recursive types, we can now generate code using generic context based generators.
 - Support for Immer for immutable context data and `ctx.produce( data => ...)`
-- Easier context creation using `R.CreateContext( { ... } )` 
+- Easier context creation using `R.CreateContext( { ... } )`
+
+# Getting started
+
+```typescript
+import * as R from "robowr";
+
+R.CreateContext({})
+  .file("./", "index.html")
+  .write(["<html>", [["<body>", [["Genrated Index"]], "</body>"]], "</html>"])
+  .file("./", "home.html")
+  .write(["<html>", [["<body>", [["Generated Home"]], "</body>"]], "</html>"])
+  .save("./output"); // folder to save the results
+```
 
 # Example
 
@@ -20,48 +33,39 @@ import * as R from "robowr";
 
 // The data used by the robowr
 const data = {
-  values : [
-    'value1',
-    'value2',
-    'value3'
-  ]
-}
-const ctx = R.CreateContext( { values:[] } );
+  values: ["value1", "value2", "value3"],
+};
+const ctx = R.CreateContext({ values: [] });
 ```
 
 Then you can create code using the context and return string, arrays, nested arrays (blocks)
 or functions which will be evaluated lazily.
 
 ```typescript
-  const newCtx = R.Walk( ctx, ctx => 
-    [`switch( value ) {`,
-    ...ctx.data.values.map( name => [
-      [`case "${name}":`,
-      [[
-        `console.log("Found value ${name}");`,
-        'break;'
-      ]]
-    ]
-    ]),
-    '}']
-    )
+const newCtx = R.Walk(ctx, (ctx) => [
+  `switch( value ) {`,
+  ...ctx.data.values.map((name) => [
+    [`case "${name}":`, [[`console.log("Found value ${name}");`, "break;"]]],
+  ]),
+  "}",
+]);
 ```
 
 To get the code call `newCtx.writer.getCode()`
 
 ```typescript
-    // The generated code from above
-    switch( value ) {
-      case "value1":
-        console.log("Found value value1");
-        break;
-      case "value2":
-        console.log("Found value value2");
-        break;
-      case "value3":
-        console.log("Found value value3");
-        break;
-    }
+// The generated code from above
+switch (value) {
+  case "value1":
+    console.log("Found value value1");
+    break;
+  case "value2":
+    console.log("Found value value2");
+    break;
+  case "value3":
+    console.log("Found value value3");
+    break;
+}
 ```
 
 Since context is passed to callback functions you can use them to fine grained control of the
@@ -77,7 +81,7 @@ const CreateIfNode = <T extends R.hasWriter>(
   return [
     R.Join(["if(", condition, ") {"]),
     [[thenBlock]],
-    elseBlock ? ["} else {", [[elseBlock]], "}"] : "}"
+    elseBlock ? ["} else {", [[elseBlock]], "}"] : "}",
   ];
 };
 ```
@@ -88,7 +92,7 @@ R.Walk(ctx, [
     "x > 10",
     "console.log('x was bigger than ten');",
     "console.log('x was smaller or equal to ten');"
-  )
+  ),
 ]);
 ```
 
@@ -100,10 +104,10 @@ run multipled passes to the context before actually outputting any code.
 This is very simple, any callback function can simply modify the data variable in the context
 
 ```typescript
-const ctx = R.CreateContext( { users:[] } );
-const newCtx = R.Walk(ctx, ctx => {
-  ctx.data.users.push('New User')
-})
+const ctx = R.CreateContext({ users: [] });
+const newCtx = R.Walk(ctx, (ctx) => {
+  ctx.data.users.push("New User");
+});
 ```
 
 ### Immutable context
@@ -112,11 +116,19 @@ Context can be immutable, you can use any immutable library with the context dat
 use the built-in Immer -support like this
 
 ```typescript
-  expect(R.Walk(R.CreateContext({cnt:1}),[
-    ctx => ctx.produce( d => { d.cnt++ }),
-    ctx => ctx.produce( d => { d.cnt++ }),
-  ]).data.cnt).to.equal(3)  
-```    
+expect(
+  R.Walk(R.CreateContext({ cnt: 1 }), [
+    (ctx) =>
+      ctx.produce((d) => {
+        d.cnt++;
+      }),
+    (ctx) =>
+      ctx.produce((d) => {
+        d.cnt++;
+      }),
+  ]).data.cnt
+).to.equal(3);
+```
 
 # Installing
 
@@ -136,7 +148,7 @@ CodeWriter is the class used for writing data into files. It has some useful fun
 
 ```typescript
 const prettierCode = someFilesystem.saveTo("./test/output", {
-  usePrettier: true
+  usePrettier: true,
 });
 ```
 

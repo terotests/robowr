@@ -14,6 +14,9 @@ export declare class Ctx<T extends {}> {
     constructor(data?: T);
     fork(): Ctx<T>;
     produce(fn: (data: T) => void): void;
+    file(path: string, filename: string, tag?: string): Ctx<T>;
+    write(code: CodeBlock<Ctx<T>>): this;
+    save(path: string, usePrettier?: boolean): this;
 }
 /**
  *

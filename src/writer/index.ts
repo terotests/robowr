@@ -1,13 +1,13 @@
 // The application generator has a global state
 
 import * as prettier from "prettier";
-import * as immer from 'immer'
+import * as immer from "immer";
 
-export function CreateContext<T>(data:T, rootFileName:string = 'index.ts') {
+export function CreateContext<T>(data: T, rootFileName: string = "index.ts") {
   const ctx = new Ctx<T>(data);
   const fs = new CodeFileSystem();
   ctx.writer = fs.getFile("./", rootFileName).getWriter();
-  return ctx
+  return ctx;
 }
 
 export interface hasWriter {
@@ -38,7 +38,7 @@ export class Ctx<T extends {}> {
   newLine = true;
   parent?: Ctx<T>;
   data: T;
-  constructor( data : T  = null) {
+  constructor(data: T = null) {
     this.data = data;
   }
   fork() {
@@ -47,8 +47,24 @@ export class Ctx<T extends {}> {
     n.parent = this;
     return n;
   }
-  produce( fn:(data:T) => void) {
-    this.data = immer.produce( this.data, fn) 
+  produce(fn: (data: T) => void) {
+    this.data = immer.produce(this.data, fn);
+  }
+  file(path: string, filename: string, tag?: string) {
+    const forked = this.fork();
+    forked.writer = forked.writer.getFileWriter(path, filename);
+    if (tag) {
+      forked.writer = forked.writer.tag(tag);
+    }
+    return forked;
+  }
+  write(code: CodeBlock<Ctx<T>>) {
+    Walk(this, code);
+    return this;
+  }
+  save(path: string, usePrettier: boolean = true) {
+    this.writer.getFilesystem().saveTo(path, { usePrettier });
+    return this;
   }
 }
 
@@ -411,38 +427,38 @@ export class CodeWriter {
       case ".tsx":
         return prettier.format(data, {
           ...prettierConfig,
-          ...{ semi: true, parser: "typescript" }
+          ...{ semi: true, parser: "typescript" },
         });
       case ".js":
         return prettier.format(data, {
           ...prettierConfig,
-          ...{ semi: true, parser: "babylon" }
+          ...{ semi: true, parser: "babylon" },
         });
       case ".graphql":
       case ".gql":
         return prettier.format(data, {
           ...prettierConfig,
-          ...{ semi: true, parser: "graphql" }
+          ...{ semi: true, parser: "graphql" },
         });
       case ".md":
         return prettier.format(data, {
           ...prettierConfig,
-          ...{ semi: true, parser: "markdown" }
+          ...{ semi: true, parser: "markdown" },
         });
       case ".scss":
         return prettier.format(data, {
           ...prettierConfig,
-          ...{ parser: "scss" }
+          ...{ parser: "scss" },
         });
       case ".scss":
         return prettier.format(data, {
           ...prettierConfig,
-          ...{ parser: "scss" }
+          ...{ parser: "scss" },
         });
       case ".json":
         return prettier.format(data, {
           ...prettierConfig,
-          ...{ parser: "json" }
+          ...{ parser: "json" },
         });
     }
     return data;

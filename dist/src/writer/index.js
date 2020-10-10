@@ -12,7 +12,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const prettier = require("prettier");
 const immer = require("immer");
-function CreateContext(data, rootFileName = 'index.ts') {
+function CreateContext(data, rootFileName = "index.ts") {
     const ctx = new Ctx(data);
     const fs = new CodeFileSystem();
     ctx.writer = fs.getFile("./", rootFileName).getWriter();
@@ -42,6 +42,22 @@ class Ctx {
     }
     produce(fn) {
         this.data = immer.produce(this.data, fn);
+    }
+    file(path, filename, tag) {
+        const forked = this.fork();
+        forked.writer = forked.writer.getFileWriter(path, filename);
+        if (tag) {
+            forked.writer = forked.writer.tag(tag);
+        }
+        return forked;
+    }
+    write(code) {
+        Walk(this, code);
+        return this;
+    }
+    save(path, usePrettier = true) {
+        this.writer.getFilesystem().saveTo(path, { usePrettier });
+        return this;
     }
 }
 exports.Ctx = Ctx;
