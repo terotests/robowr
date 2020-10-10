@@ -16,11 +16,29 @@ function run_writer() {
     return __awaiter(this, void 0, void 0, function* () {
         const argv = require("minimist")(process.argv.slice(2));
         var readlineSync = require("readline-sync");
-        const rootPath = process.env.ROBOWR || process.cwd() + "/.robowr/";
         const fs = require("fs");
         const path = require("path");
-        console.log("RoboWR 2.0.12");
-        console.log(argv);
+        var stdinput = fs.readFileSync(0, "utf-8");
+        if (stdinput.length > 0) {
+            try {
+                const outputFile = argv.o || "generator.ts";
+                const dirName = path.dirname(outputFile);
+                const fileName = path.basename(outputFile);
+                const ctx = R.CreateContext({})
+                    .file("/", "test")
+                    .write([
+                    'import * as R from "robowr"',
+                    `R.CreateContext({}).file("${dirName}", "${fileName}").write(`,
+                    R.TextGenerator(stdinput),
+                    ').save("./")',
+                ]);
+                process.stdout.write(ctx.writer.getCode());
+            }
+            catch (e) {
+                console.error(e);
+            }
+            process.exit();
+        }
         if (argv.f) {
             try {
                 const dirNameInput = path.dirname(argv.f);
