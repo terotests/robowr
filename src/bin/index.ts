@@ -12,27 +12,35 @@ async function run_writer() {
   const fs = require("fs");
   const path = require("path");
 
-  var stdinput = fs.readFileSync(0, "utf-8");
+  if (!argv.f) {
+    let hadData = false;
+    process.stdin.on("end", function() {
+      if (!hadData) {
+        process.exit();
+      }
+    });
+    var stdinput = fs.readFileSync(0, "utf-8");
+    hadData = true;
+    if (stdinput.length > 0) {
+      try {
+        const outputFile = argv.o || "generator.ts";
+        const dirName = path.dirname(outputFile);
+        const fileName = path.basename(outputFile);
+        const ctx = R.CreateContext({})
+          .file("/", "test")
+          .write([
+            'import * as R from "robowr"',
+            `R.CreateContext({}).file("${dirName}", "${fileName}").write(`,
+            R.TextGenerator(stdinput),
+            ').save("./")',
+          ]);
 
-  if (stdinput.length > 0) {
-    try {
-      const outputFile = argv.o || "generator.ts";
-      const dirName = path.dirname(outputFile);
-      const fileName = path.basename(outputFile);
-      const ctx = R.CreateContext({})
-        .file("/", "test")
-        .write([
-          'import * as R from "robowr"',
-          `R.CreateContext({}).file("${dirName}", "${fileName}").write(`,
-          R.TextGenerator(stdinput),
-          ').save("./")',
-        ]);
-
-      process.stdout.write(ctx.writer.getCode());
-    } catch (e) {
-      console.error(e);
+        process.stdout.write(ctx.writer.getCode());
+      } catch (e) {
+        console.error(e);
+      }
+      process.exit();
     }
-    process.exit();
   }
 
   if (argv.f) {
