@@ -501,6 +501,11 @@ describe("Writer generator tests", () => {
     );
 
     R.CreateContext({})
+      .file("./", "diff_test2.ts")
+      .write(input2)
+      .save("./test/difftest", { useDiff: true, usePrettier: true });
+
+    R.CreateContext({})
       .file("./", "diff_test.ts")
       .write([`if(true) {`, [[`console.log("OK");`]], `}`])
       .save("./test/difftest", { useDiff: true, usePrettier: true });

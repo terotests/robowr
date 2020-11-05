@@ -6,7 +6,7 @@ import * as path3 from "path";
 
 class Foo {
   anotherRoute() {
-    return "This is good!!!";
+    return "This is good! And works, is this written by me?";
   }
 
   caller() {
@@ -20,7 +20,7 @@ class Foo {
 function abc() {
   // Comment
   return () => {
-    return 1 + 2 + 3;
+    return 1 + 2 + 3000;
   };
 }
 

@@ -3,7 +3,7 @@ const outputExampleForYml = () => [
   [
     [
       `abc:`,
-      [[`nested:`, [[`-heippa!!!`]], `second:`, [[`-something33`]]]],
+      [[`nested:`, [[`-try4`]], `second:`, [[`-something33`]]]],
       `abc:`,
       [[`nested:`, [[`-something`]], `second:`, [[`-something`]]]]
     ]

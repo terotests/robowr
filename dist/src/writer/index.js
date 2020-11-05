@@ -666,28 +666,56 @@ class CodeFileSystem {
                                         }
                                     }
                                     while (ci < current.length) {
-                                        if (AreEqual(generated[i], current[ci], prevGenerated[pci])) {
-                                            const prevArr = prevGenerated instanceof Array
-                                                ? prevGenerated
-                                                : undefined;
-                                            output.push(GetValue(generated[i], current[ci], prevGenerated[pci]));
+                                        if (AreEqual(generated[i], current[ci])) {
+                                            output.push(GetValue(generated[i], current[ci]));
                                             ci++;
                                             i++;
                                             pci++;
                                             continue;
+                                        }
+                                        if (i < generated.length &&
+                                            AreEqual(current[ci], prevGenerated ? prevGenerated[pci] : undefined)) {
+                                            console.log("Possibly new item at ", i);
+                                            let ci2 = ci;
+                                            let i2 = i;
+                                            while (i2 < generated.length &&
+                                                !AreEqual(generated[i2], current[ci2])) {
+                                                console.log(i2);
+                                                i2++;
+                                            }
+                                            if (i2 < generated.length && i < i2) {
+                                                console.log("gens ", i, i2);
+                                                // i2 is the next equal line, we can push until it
+                                                for (let ii = i; ii < i2; ii++) {
+                                                    output.push(generated[ii]);
+                                                    i = ii;
+                                                }
+                                                i++;
+                                            }
+                                            else {
+                                                ci++;
+                                                pci++;
+                                                continue;
+                                            }
                                         }
                                         output.push(current[ci]);
                                         ci++;
                                     }
                                     return output;
                                 }
-                                const codeBlock = WalkCode(TextToArray(data), TextToArray(fs.readFileSync(path, "utf8")), TextToArray(diffCode));
-                                const ctx = CreateContext({})
-                                    .file("./", file.name.trim())
-                                    .write(codeBlock);
-                                const codeText = ctx.writer.getCode(file.name.trim(), true);
-                                fs.writeFileSync(diff_file, data); // the code generator wants to write
-                                fs.writeFileSync(path, codeText);
+                                try {
+                                    const codeBlock = WalkCode(TextToArray(data), TextToArray(fs.readFileSync(path, "utf8")), TextToArray(diffCode));
+                                    const ctx = CreateContext({})
+                                        .file("./", file.name.trim())
+                                        .write(codeBlock);
+                                    console.log(ctx.writer.getCode(file.name.trim(), false));
+                                    const codeText = ctx.writer.getCode(file.name.trim(), true);
+                                    fs.writeFileSync(diff_file, data); // the code generator wants to write
+                                    fs.writeFileSync(path, codeText);
+                                }
+                                catch (e) {
+                                    console.log(e);
+                                }
                             }
                         }
                         else {
