@@ -1339,19 +1339,10 @@ const fancyFileWriterGenerator = () => [
           `if (prevGenerated) {`,
           [
             [
-              `console.log("had prev gen", JSON.stringify(prevGenerated));`,
-              `console.log("had prev gen current", JSON.stringify(current));`,
               `if (`,
               [[`JSON.stringify(prevGenerated) === JSON.stringify(current)`]],
               `) {`,
-              [
-                [
-                  `console.log(`,
-                  [[`" ARE EQUAL!!! ",`, `JSON.stringify(prevGenerated)`]],
-                  `);`,
-                  `return generated;`
-                ]
-              ],
+              [[`return generated;`]],
               `}`
             ]
           ],

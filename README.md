@@ -2,7 +2,7 @@
 
 Robowr is a code generator, which can generate any code that can be written in text format.
 
-# New: code difference added to code writer
+# New: Code difference added to code writer
 
 Current version adds `useDiff` option, which is enabled by default. Each directory will have `.diff` subdirectory which
 is generated for the purpose of diffing the originally written file to the current version.
