@@ -10,7 +10,7 @@ class Foo {
   }
 
   caller() {
-    console.log("ABC123");
+    console.log("ABC123555");
     for (let i = 0; i < 10; i++) {
       console.log(" i = ", i);
     }
@@ -18,7 +18,7 @@ class Foo {
 }
 // Nicer!!!
 function abc() {
-  // Comment
+  // Comment changed
   return () => {
     return 1 + 2 + 3000;
   };

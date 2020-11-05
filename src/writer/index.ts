@@ -771,8 +771,12 @@ export class CodeFileSystem {
                   }
                 }
                 while (ci < current.length) {
-                  if (AreEqual(generated[i], current[ci])) {
-                    output.push(GetValue(generated[i], current[ci]));
+                  const prevArr =
+                    prevGenerated instanceof Array
+                      ? prevGenerated[pci]
+                      : undefined;
+                  if (AreEqual(generated[i], current[ci], prevArr)) {
+                    output.push(GetValue(generated[i], current[ci], prevArr));
                     ci++;
                     i++;
                     pci++;
@@ -823,7 +827,6 @@ export class CodeFileSystem {
                   .file("./", file.name.trim())
                   .write(codeBlock);
 
-                console.log(ctx.writer.getCode(file.name.trim(), false));
                 const codeText = ctx.writer.getCode(file.name.trim(), true);
                 fs.writeFileSync(diff_file, data); // the code generator wants to write
                 fs.writeFileSync(path, codeText);
