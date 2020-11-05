@@ -3,9 +3,17 @@ export interface hasWriter {
     writer: CodeWriter;
     newLine: boolean;
 }
+export interface SaveOptions {
+    onlyIfNotExists?: boolean;
+    usePrettier?: boolean;
+    prettierConfig?: any;
+    useDiff?: boolean;
+}
 export declare type generatorFunction<T extends hasWriter> = (x: T) => CodeBlock<T>;
 export declare type CodeBlock<T extends hasWriter> = Array<CodeBlock<T>> | generatorFunction<T> | undefined | void | string;
 export declare function Join<T extends hasWriter>(list: CodeBlock<T>): CodeBlock<T>;
+declare type CodeRow = string | Array<CodeRow>;
+export declare function TextToArray(inputTxt: string): CodeRow[];
 export declare function TextGenerator(inputTxt: string, lineFn?: (line: string, index: number, lines: string[]) => string): (string | CodeBlock<any>[])[];
 export declare class Ctx<T extends {}> {
     writer: CodeWriter;
@@ -17,7 +25,7 @@ export declare class Ctx<T extends {}> {
     produce(fn: (data: T) => void): void;
     file(path: string, filename: string, tag?: string): Ctx<T>;
     write(code: CodeBlock<Ctx<T>>): this;
-    save(path: string, usePrettier?: boolean): this;
+    save(path: string, options?: boolean | SaveOptions): this;
 }
 /**
  *
@@ -93,11 +101,7 @@ export declare class CodeFileSystem {
     readTagName(str: string, index: number): string;
     openTaggedFile(path: string, name: string, tagStart: string, tagEnd: string): CodeFile;
     mkdir(path: string): void;
-    saveTo(root_path: string, options?: {
-        onlyIfNotExists?: boolean;
-        usePrettier?: boolean;
-        prettierConfig?: any;
-    }): Promise<void>;
+    saveTo(root_path: string, options?: SaveOptions): Promise<void>;
 }
 export declare class CodeFile {
     path_name: string;
@@ -114,3 +118,4 @@ export declare class CodeFile {
     getWriter(): CodeWriter;
     getCode(usePrettier?: boolean, prettierConfig?: any): string;
 }
+export {};

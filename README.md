@@ -1,6 +1,21 @@
-# Robowr Code Generator Library 2.0
+# Robowr Code Generator Library 3.0
 
 Robowr is a code generator, which can generate any code that can be written in text format.
+
+# New: code difference added to code writer
+
+Current version adds `useDiff` option, which is enabled by default. Each directory will have `.diff` subdirectory which
+is generated for the purpose of diffing the originally written file to the current version.
+
+1. If the files are not changed, the code generator will overrride changes
+2. If the files are changed the code generator will follow the changes made in the changed files
+
+```
+    R.CreateContext({})
+      .file("./", "diff_test.ts")
+      .write([`if(true) {`, [[`console.log("OK");`]], `}`])
+      .save("./test/difftest", { useDiff: true, usePrettier: true });
+```
 
 # Installing
 

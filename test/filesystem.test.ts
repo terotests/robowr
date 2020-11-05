@@ -407,6 +407,105 @@ describe("Writer generator tests", () => {
     console.log(newCtx.writer.getCode());
   });
 
+  test("Test input test", () => {
+    const code1 = [
+      'import * as fs from "fs";',
+      "",
+      "class Foo {",
+      [["abc() {", [['console.log("ABC");', "return true"]], "}"]],
+      "}",
+      "",
+    ];
+    const code2 = [
+      'import * as fs from "fs";',
+      "",
+      "class Foo {",
+      [
+        [
+          "anotherRoute() {",
+          [['return "This is good!";']],
+          "}",
+          "",
+          "abc() {",
+          [
+            [
+              'console.log("ABC");',
+              "for (let i = 0; i < 10; i++) {",
+              [['console.log(" i = ", i);']],
+              "}",
+              "return true",
+            ],
+          ],
+          "}",
+        ],
+      ],
+      "}",
+      "",
+    ];
+
+    type CodeRow = string | Array<CodeRow>;
+    function AreEqual(generated: CodeRow, current: CodeRow) {
+      if (typeof generated === typeof current) {
+        if (generated instanceof Array) {
+          return true;
+        }
+        return generated === current;
+      }
+      return false;
+    }
+
+    function GetValue(generated: CodeRow, current: CodeRow) {
+      if (typeof generated === typeof current) {
+        if (generated instanceof Array) {
+          return WalkCode(generated, current as CodeRow[]);
+        }
+        return generated;
+      }
+      return "";
+    }
+
+    function WalkCode(generated: CodeRow[], current: CodeRow[]) {
+      let ci = 0;
+      let i = 0;
+      const output: CodeRow = [];
+      while (ci < current.length) {
+        if (AreEqual(generated[i], current[ci])) {
+          output.push(GetValue(generated[i], current[ci]));
+          ci++;
+          i++;
+          continue;
+        }
+        output.push(current[ci]);
+        ci++;
+      }
+      return output;
+    }
+    fs.writeFileSync(
+      "./test/filegenerator/merged.json",
+      JSON.stringify(WalkCode(code1, code2), null, 2)
+    );
+
+    const input1 = R.TextToArray(
+      fs.readFileSync("test/input/testinput.ts", "utf8")
+    );
+    const input2 = R.TextToArray(
+      fs.readFileSync("test/input/testinput_changed.ts", "utf8")
+    );
+    fs.writeFileSync(
+      "./test/filegenerator/input1.json",
+      JSON.stringify(input1, null, 2)
+    );
+    fs.writeFileSync(
+      "./test/filegenerator/input2.json",
+      JSON.stringify(input2, null, 2)
+    );
+
+    R.CreateContext({})
+      .file("./", "diff_test.ts")
+      .write([`if(true) {`, [[`console.log("OK");`]], `}`])
+      .save("./test/difftest", { useDiff: true, usePrettier: true });
+  });
+
   test("File generator test", () => {
     R.CreateContext({})
       .file("./", "writer.ts")

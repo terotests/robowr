@@ -2,6 +2,7 @@
 
 import * as prettier from "prettier";
 import * as immer from "immer";
+import * as node_path from "path";
 
 export function CreateContext<T>(data: T, rootFileName: string = "index.ts") {
   const ctx = new Ctx<T>(data);
@@ -13,6 +14,13 @@ export function CreateContext<T>(data: T, rootFileName: string = "index.ts") {
 export interface hasWriter {
   writer: CodeWriter;
   newLine: boolean;
+}
+
+export interface SaveOptions {
+  onlyIfNotExists?: boolean;
+  usePrettier?: boolean;
+  prettierConfig?: any;
+  useDiff?: boolean;
 }
 
 export type generatorFunction<T extends hasWriter> = (x: T) => CodeBlock<T>;
@@ -31,6 +39,56 @@ export function Join<T extends hasWriter>(list: CodeBlock<T>): CodeBlock<T> {
     x.newLine = orig;
     return "";
   };
+}
+type CodeRow = string | Array<CodeRow>;
+export function TextToArray(inputTxt: string) {
+  const lines = inputTxt.split("\n");
+  let outputIndex = 0;
+  const calculateTabIndex = (line: string = lines[outputIndex]) => {
+    if (line.trim().length === 0) {
+      return currentTabIndex;
+    }
+    let cnt = 0;
+    for (let i = 0; i < line.length; i++) {
+      if (line[i].match(/\t/)) {
+        cnt += 2;
+        continue;
+      }
+      if (line[i].match(/\s/)) {
+        cnt++;
+      } else {
+        break;
+      }
+    }
+    return Math.floor(cnt / 2);
+  };
+  let currentTabIndex = 0;
+  const consumeLines = () => {
+    const initialTabIndex = calculateTabIndex();
+    currentTabIndex = initialTabIndex;
+    const result: CodeRow = [];
+    while (outputIndex < lines.length && initialTabIndex <= currentTabIndex) {
+      const lineTxt = lines[outputIndex].trim();
+      if (lineTxt.trim().length === 0) {
+        result.push("");
+      } else {
+        result.push(lineTxt);
+      }
+      outputIndex++;
+      if (outputIndex >= lines.length) {
+        break;
+      }
+      currentTabIndex = calculateTabIndex();
+      if (currentTabIndex > initialTabIndex) {
+        result.push([consumeLines()]);
+        if (currentTabIndex < initialTabIndex) {
+          break;
+        }
+      }
+    }
+    return result;
+  };
+  return consumeLines();
 }
 
 export function TextGenerator(
@@ -124,8 +182,21 @@ export class Ctx<T extends {}> {
     Walk(this, code);
     return this;
   }
-  save(path: string, usePrettier: boolean = true) {
-    this.writer.getFilesystem().saveTo(path, { usePrettier });
+  save(path: string, options?: boolean | SaveOptions) {
+    let opts: SaveOptions = {};
+    if (typeof options === "boolean") {
+      opts.usePrettier = options;
+    }
+    if (typeof options === "undefined") {
+      opts.usePrettier = true;
+    }
+    if (typeof options === "object") {
+      opts = { ...options };
+      opts.usePrettier =
+        typeof options.usePrettier === "undefined" ? true : options.usePrettier;
+    }
+    opts.useDiff = typeof opts.useDiff === "undefined" ? true : opts.useDiff;
+    this.writer.getFilesystem().saveTo(path, opts);
     return this;
   }
 }
@@ -627,24 +698,124 @@ export class CodeFileSystem {
   }
 
   // onlyIfNotExists = write files only if the do exist
-  async saveTo(
-    root_path: string,
-    options: {
-      onlyIfNotExists?: boolean;
-      usePrettier?: boolean;
-      prettierConfig?: any;
-    } = {}
-  ) {
+  async saveTo(root_path: string, options: SaveOptions = {}) {
     const fs = require("fs");
     const path = require("path");
     for (let file of this.files) {
       const file_path = root_path + "/" + file.path_name;
-      this.mkdir(file_path);
       let data = file.getCode(options.usePrettier, options.prettierConfig);
       if (data.length > 0) {
+        this.mkdir(file_path);
         const path = file_path + "/" + file.name.trim();
-        if (!options.onlyIfNotExists || !fs.existsSync(path)) {
-          fs.writeFileSync(path, data);
+        if (options.useDiff) {
+          const diff_path = file_path + "/.diff/";
+          this.mkdir(diff_path);
+          const diff_file = diff_path + file.name.trim();
+          if (fs.existsSync(diff_file)) {
+            const diffCode = fs.readFileSync(diff_file, "utf8");
+            const origCode = fs.readFileSync(path, "utf8");
+            // if the code is equal, replace
+            if (diffCode === origCode) {
+              // no changes since the last write
+              fs.writeFileSync(diff_file, data);
+              fs.writeFileSync(path, data);
+            } else {
+              function AreEqual(
+                generated: CodeRow,
+                current: CodeRow,
+                prev?: CodeRow
+              ) {
+                if (prev) {
+                  if (JSON.stringify(current) === JSON.stringify(prev)) {
+                    return true;
+                  }
+                }
+                if (typeof generated === typeof current) {
+                  if (generated instanceof Array) {
+                    return true;
+                  }
+                  return generated === current;
+                }
+                return false;
+              }
+
+              // , prevGenerated: CodeRow)
+              function GetValue(
+                generated: CodeRow,
+                current: CodeRow,
+                prev?: CodeRow
+              ) {
+                if (typeof generated === typeof current) {
+                  if (generated instanceof Array) {
+                    const prevArr = prev instanceof Array ? prev : undefined;
+                    return WalkCode(generated, current as CodeRow[], prevArr);
+                  }
+                  return generated;
+                }
+                return "";
+              }
+              function WalkCode(
+                generated: CodeRow[],
+                current: CodeRow[],
+                prevGenerated?: CodeRow[]
+              ) {
+                let ci = 0;
+                let i = 0;
+                let pci = 0;
+                const output: CodeRow = [];
+                if (prevGenerated) {
+                  console.log("had prev gen", JSON.stringify(prevGenerated));
+                  console.log("had prev gen current", JSON.stringify(current));
+                  if (
+                    JSON.stringify(prevGenerated) === JSON.stringify(current)
+                  ) {
+                    console.log(
+                      " ARE EQUAL!!! ",
+                      JSON.stringify(prevGenerated)
+                    );
+                    return generated;
+                  }
+                }
+                while (ci < current.length) {
+                  if (AreEqual(generated[i], current[ci], prevGenerated[pci])) {
+                    const prevArr =
+                      prevGenerated instanceof Array
+                        ? prevGenerated
+                        : undefined;
+                    output.push(
+                      GetValue(generated[i], current[ci], prevGenerated[pci])
+                    );
+                    ci++;
+                    i++;
+                    pci++;
+                    continue;
+                  }
+                  output.push(current[ci]);
+                  ci++;
+                }
+                return output;
+              }
+              const codeBlock = WalkCode(
+                TextToArray(data),
+                TextToArray(fs.readFileSync(path, "utf8")),
+                TextToArray(diffCode)
+              );
+              const ctx = CreateContext({})
+                .file("./", file.name.trim())
+                .write(codeBlock);
+              const codeText = ctx.writer.getCode(file.name.trim(), true);
+              fs.writeFileSync(diff_file, data); // the code generator wants to write
+              fs.writeFileSync(path, codeText);
+            }
+          } else {
+            // write the file
+            fs.writeFileSync(diff_file, data);
+            fs.writeFileSync(path, data);
+          }
+        } else {
+          if (!options.onlyIfNotExists || !fs.existsSync(path)) {
+            fs.writeFileSync(path, data);
+          }
         }
       }
     }
