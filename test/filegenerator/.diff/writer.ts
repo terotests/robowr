@@ -1245,7 +1245,7 @@ const fileWriterGenerator = () => [
                           `} else {`,
                           [
                             [
-                              `function AreEqual(`,
+                              `function areEqual(`,
                               [
                                 [
                                   `generated: CodeRow,`,
@@ -1296,8 +1296,16 @@ const fileWriterGenerator = () => [
   "",
   [
     [
+      `function areStrictlyEqual(a: CodeRow, b?: CodeRow) {`,
+      [[`return JSON.stringify(a) === JSON.stringify(b);`]],
+      `}`
+    ]
+  ],
+  "",
+  [
+    [
       `// , prevGenerated: CodeRow)`,
-      `function GetValue(`,
+      `function getValue(`,
       [[`generated: CodeRow,`, `current: CodeRow,`, `prev?: CodeRow`]],
       `) {`,
       [
@@ -1321,6 +1329,9 @@ const fileWriterGenerator = () => [
         ]
       ],
       `}`,
+      `const isEmptyString = (s: CodeRow) => {`,
+      [[`return typeof s === "string" && s.trim().length === 0;`]],
+      `};`,
       `function WalkCode(`,
       [
         [
@@ -1336,6 +1347,9 @@ const fileWriterGenerator = () => [
           `let i = 0;`,
           `let pci = 0;`,
           `const output: CodeRow = [];`,
+          `// if the previously generated block is exactly the same as the currrenlyt saved`,
+          `// then we wan assume user has not modified it and we can replace it with the`,
+          `// newly generated block straight awayt`,
           `if (prevGenerated) {`,
           [
             [
@@ -1346,28 +1360,24 @@ const fileWriterGenerator = () => [
               `}`
             ]
           ],
-          `}`,
-          `while (ci < current.length) {`,
+          `}`
+        ]
+      ]
+    ]
+  ],
+  "",
+  [
+    [
+      `// each line of the current file is compared tu the generated lines and possbily to the`,
+      `// previously generated lines`,
+      `while (ci < current.length) {`,
+      [
+        [
+          `const prevArr =`,
           [
             [
-              `const prevArr =`,
-              [
-                [
-                  `prevGenerated instanceof Array`,
-                  [[`? prevGenerated[pci]`, `: undefined;`]]
-                ]
-              ],
-              `if (AreEqual(generated[i], current[ci], prevArr)) {`,
-              [
-                [
-                  `output.push(GetValue(generated[i], current[ci], prevArr));`,
-                  `ci++;`,
-                  `i++;`,
-                  `pci++;`,
-                  `continue;`
-                ]
-              ],
-              `}`
+              `prevGenerated instanceof Array`,
+              [[`? prevGenerated[pci]`, `: undefined;`]]
             ]
           ]
         ]
@@ -1377,11 +1387,31 @@ const fileWriterGenerator = () => [
   "",
   [
     [
+      `// The simplest case is that the lines are the same.`,
+      `// In case of block getValue will walk the block and compare it's values`,
+      `// using recursively this same function`,
+      `if (areEqual(generated[i], current[ci])) {`,
+      [
+        [
+          `output.push(getValue(generated[i], current[ci], prevArr));`,
+          `ci++;`,
+          `i++;`,
+          `pci++;`,
+          `continue;`
+        ]
+      ],
+      `}`
+    ]
+  ],
+  "",
+  [
+    [
+      `// Check if theer has not been a change in the currrent document at this line`,
       `if (`,
       [
         [
           `i < generated.length &&`,
-          `AreEqual(`,
+          `areStrictlyEqual(`,
           [[`current[ci],`, `prevGenerated ? prevGenerated[pci] : undefined`]],
           `)`
         ]
@@ -1391,38 +1421,76 @@ const fileWriterGenerator = () => [
         [
           `let ci2 = ci;`,
           `let i2 = i;`,
+          `// here we try to find a line which equals some generated line in the existing output`,
           `while (`,
           [
             [
               `i2 < generated.length &&`,
-              `!AreEqual(generated[i2], current[ci2])`
+              `(!(`,
+              [
+                [
+                  `JSON.stringify(generated[i2]) ===`,
+                  `JSON.stringify(current[ci2])`
+                ]
+              ],
+              `) ||`,
+              [[`isEmptyString(generated[i2]))`]]
             ]
           ],
           `) {`,
-          [[`console.log(i2);`, `i2++;`]],
+          [[`i2++;`]],
           `}`,
           `if (i2 < generated.length && i < i2) {`,
           [
             [
-              `// i2 is the next equal line, we can push until it`,
+              `// insert lines which seem to be missing from the current version`,
               `for (let ii = i; ii < i2; ii++) {`,
               [[`output.push(generated[ii]);`, `i = ii;`]],
               `}`,
-              `i++;`
+              `i++;`,
+              `continue;`
             ]
           ],
           `} else {`,
-          [[`ci++;`, `pci++;`, `continue;`]],
+          [[`// current line is removed`, `ci++;`, `pci++;`, `continue;`]],
+          `}`
+        ]
+      ],
+      `} else {`,
+      [
+        [
+          `// test if they arer deeply equal, in case of array this will walk the`,
+          `// subarray trees`,
+          `if (areEqual(generated[i], current[ci], prevArr)) {`,
+          [
+            [
+              `output.push(getValue(generated[i], current[ci], prevArr));`,
+              `ci++;`,
+              `i++;`,
+              `pci++;`,
+              `continue;`
+            ]
+          ],
           `}`
         ]
       ],
       `}`,
       `output.push(current[ci]);`,
-      `ci++;`
+      `ci++;`,
+      `i++;`,
+      `pci++;`
     ]
   ],
   `}`,
-  [[`return output;`]],
+  [
+    [
+      `// insert newly added rows`,
+      `for (let ii = i; ii < generated.length; ii++) {`,
+      [[`output.push(generated[ii]);`, `i = ii;`]],
+      `}`,
+      `return output;`
+    ]
+  ],
   `}`,
   [
     [
