@@ -39,7 +39,7 @@
     "@types/node": "^10.17.13",
     "@types/prettier": "^1.13.2",
     "chai": "^4.2.0",
-    "immer": "^5.3.6",
+    "immer": "^8.0.1",
     "jest": "^26.5.2",
     "typescript": "^3.7.4"
   },
