@@ -31,7 +31,7 @@
     "minimist": "^1.2.0",
     "prettier": "^1.15.2",
     "readline-sync": "^1.4.9",
-    "simple-git": "^1.96.0"
+    "simple-git": "^3.3.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.6",
